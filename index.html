@@ -1,0 +1,3319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LashPro — Interactive Prototype</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+        }
+
+        :root {
+            --bg:        #0D0D0D;
+            --bg2:       #161616;
+            --bg3:       #1E1E1E;
+            --gold:      #C8A84B;
+            --gold-light:#E8C97A;
+            --gold-dark: #9A7B2E;
+            --white:     #F5F5F5;
+            --muted:     #888888;
+            --border:    rgba(200, 168, 75, 0.18);
+            --green:     #5CB87A;
+            --red:       #E07060;
+            --orange:    #E87040;
+        }
+
+        /* ── Light theme ── */
+        :root.light {
+            --bg:        #F5F3EF;
+            --bg2:       #EDEAE2;
+            --bg3:       #E4E0D4;
+            --gold:      #9A7B2E;
+            --gold-light:#C8A84B;
+            --gold-dark: #6B5520;
+            --white:     #1A1506;
+            --muted:     #7A6A50;
+            --border:    rgba(154, 123, 46, 0.25);
+            --green:     #2E7D46;
+            --red:       #B03020;
+            --orange:    #B05020;
+        }
+        :root.light .step-circle.done { color: #fff; }
+        :root.light .phone { box-shadow: 0 8px 40px rgba(0,0,0,.18); }
+        :root.light .svc-chip.active { background: rgba(154,123,46,.18); }
+        :root.light .modal-sheet { background: var(--bg2); }
+        :root.light .field { color: var(--white); }
+
+        /* ── Phone Frame ── */
+        .phone {
+            width: 393px;
+            height: 852px;
+            background: var(--bg);
+            border-radius: 46px;
+            border: 2px solid var(--gold);
+            overflow: hidden;
+            position: relative;
+            box-shadow:
+                0 0 0 6px #0a0a0a,
+                0 0 0 8px #1a1a1a,
+                0 0 80px rgba(200,168,75,0.12),
+                0 30px 80px rgba(0,0,0,0.9);
+        }
+
+        /* ── Screens ── */
+        .screen {
+            position: absolute; inset: 0;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .screen.active { display: flex; }
+
+        .scroll {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+        .scroll::-webkit-scrollbar { display: none; }
+
+        /* ── Header ── */
+        .hdr {
+            padding: 52px 20px 14px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+        .hdr-row { display: flex; align-items: center; justify-content: space-between; }
+        .hdr h1 { font-size: 22px; font-weight: 700; color: var(--white); letter-spacing: 0.3px; }
+        .eyebrow { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 2.5px; margin-bottom: 2px; }
+
+        /* ── Bottom Nav ── */
+        .nav {
+            display: flex;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            padding: 8px 0 26px;
+            flex-shrink: 0;
+        }
+        .nav-btn {
+            flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+            background: none; border: none; cursor: pointer; padding: 6px 0;
+        }
+        .nav-btn .ico { font-size: 21px; }
+        .nav-btn .lbl { font-size: 9px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-btn.active .lbl { color: var(--gold); }
+        .nav-btn.active .ico { filter: drop-shadow(0 0 5px rgba(200,168,75,0.7)); }
+
+        /* ── Buttons ── */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: #0D0D0D; border: none; border-radius: 12px;
+            padding: 14px 20px; font-size: 15px; font-weight: 800;
+            cursor: pointer; width: 100%; letter-spacing: 0.3px; transition: opacity .15s;
+        }
+        .btn-primary:active { opacity: 0.85; }
+
+        .btn-outline {
+            background: transparent; color: var(--gold);
+            border: 1px solid rgba(200,168,75,0.5); border-radius: 10px;
+            padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer;
+        }
+        .btn-ghost { background: none; border: none; color: var(--muted); cursor: pointer; padding: 6px; font-size: 18px; }
+
+        /* ── Inputs ── */
+        .lbl-s { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 7px; display: block; }
+        .field {
+            width: 100%; background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 11px; padding: 13px 15px; color: var(--white);
+            font-size: 14px; outline: none; transition: border-color .2s;
+            font-family: inherit;
+        }
+        .field:focus { border-color: var(--gold); }
+        .field option { background: #1a1a1a; }
+        .form-r { margin-bottom: 15px; }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 16px; padding: 16px; margin: 0 16px 12px;
+        }
+
+        /* ── Badges ── */
+        .badge {
+            font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .b-gold  { background: rgba(200,168,75,.12); color: var(--gold);   border: 1px solid rgba(200,168,75,.35); }
+        .b-grey  { background: rgba(255,255,255,.06); color: #aaa;          border: 1px solid rgba(255,255,255,.1); }
+        .b-warn  { background: rgba(232,112,64,.12); color: var(--orange);  border: 1px solid rgba(232,112,64,.4); }
+
+        /* ── Client rows ── */
+        .cli-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+            cursor: pointer; transition: background .15s;
+        }
+        .cli-row:active { background: var(--bg2); }
+        .ava {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 800; color: #0D0D0D;
+            border: 1.5px solid rgba(200,168,75,.5); flex-shrink: 0;
+        }
+        .cli-info { flex: 1; }
+        .cli-name { font-size: 15px; font-weight: 600; color: var(--white); }
+        .cli-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+        /* ── Section headers ── */
+        .sec-hdr { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 8px; }
+        .sec-ttl { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+        .sec-act { font-size: 12px; color: var(--gold); font-weight: 700; cursor: pointer; }
+
+        /* ── Calendar ── */
+        .cal-hdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px 10px; }
+        .cal-month { font-size: 18px; font-weight: 700; color: var(--white); }
+        .cal-nav-btn {
+            width: 30px; height: 30px; background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--gold); font-size: 14px;
+        }
+        .cal-grid { padding: 0 10px 12px; }
+        .cal-day-hdr { display: grid; grid-template-columns: repeat(7,1fr); text-align: center; margin-bottom: 6px; }
+        .cal-dlbl { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; padding: 4px 0; }
+        .cal-cells { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
+        .cal-cell {
+            aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; border-radius: 8px; cursor: pointer;
+            position: relative; font-size: 13px; color: var(--white);
+        }
+        .cal-cell.empty { cursor: default; }
+        .cal-cell.today {
+            background: rgba(200,168,75,.15); color: var(--gold);
+            font-weight: 800; border: 1px solid rgba(200,168,75,.4);
+        }
+        .cal-cell.has-appt { background: var(--bg2); border: 1px solid var(--border); }
+        .cal-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); position: absolute; bottom: 3px; }
+
+        /* ── Appointment rows in calendar ── */
+        .appt-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; border-bottom: 1px solid var(--border);
+            cursor: pointer; transition: background .15s;
+        }
+        .appt-row:active { background: var(--bg2); }
+        .appt-time { font-size: 12px; font-weight: 800; color: var(--gold); width: 38px; flex-shrink: 0; }
+        .appt-info { flex: 1; }
+        .appt-name { font-size: 14px; font-weight: 600; color: var(--white); }
+        .appt-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+        /* ── Profile ── */
+        .prof-hdr { padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start; }
+        .prof-ava {
+            width: 70px; height: 70px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; font-weight: 800; color: #0D0D0D;
+            border: 2px solid var(--gold); flex-shrink: 0;
+        }
+        .prof-name  { font-size: 20px; font-weight: 800; color: var(--white); }
+        .prof-phone { font-size: 13px; color: var(--muted); margin-top: 4px; }
+        .prof-total { font-size: 12px; color: var(--gold); font-weight: 700; margin-top: 6px; }
+
+        /* ── Cycle tracker ── */
+        .cycle-box { margin: 0 16px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
+        .cycle-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+        .cycle-row { display: flex; align-items: center; }
+        .cycle-step { flex: 1; text-align: center; }
+        .step-circle {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 6px; font-size: 12px; font-weight: 800;
+            border: 2px solid var(--border); color: var(--muted);
+            background: var(--bg); position: relative; z-index: 1;
+        }
+        .step-circle.done   { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: #0D0D0D; border-color: var(--gold); }
+        .step-circle.active { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 14px rgba(200,168,75,.4); }
+        .step-circle.warn   { border-color: var(--orange); color: var(--orange); box-shadow: 0 0 14px rgba(232,112,64,.4); }
+        .step-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3px; }
+        .step-conn { height: 2px; flex: 0 0 14px; background: var(--border); margin-bottom: 22px; }
+        .step-conn.done { background: var(--gold); }
+
+        /* ── Notification banner ── */
+        .notif {
+            margin: 10px 16px; background: rgba(232,112,64,.08);
+            border: 1px solid rgba(232,112,64,.35); border-radius: 12px;
+            padding: 13px; display: flex; gap: 11px; align-items: flex-start;
+        }
+        .notif-ico { font-size: 19px; flex-shrink: 0; margin-top: 1px; }
+        .notif-body { font-size: 13px; color: var(--white); line-height: 1.5; }
+        .notif-body strong { color: #E8A070; display: block; margin-bottom: 3px; font-size: 13px; }
+        .notif-reset { font-size: 12px; color: var(--gold); font-weight: 700; cursor: pointer; margin-top: 8px; display: inline-block; }
+
+        /* ── History items ── */
+        .hist-item { padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,.05); }
+        .hist-row { display: flex; justify-content: space-between; align-items: flex-start; }
+        .hist-date { font-size: 11px; color: var(--gold); font-weight: 700; }
+        .hist-price { font-size: 15px; font-weight: 800; color: var(--white); }
+        .hist-type { font-size: 13px; font-weight: 600; color: var(--white); margin-top: 3px; }
+        .hist-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .hist-item.cancelled { background: rgba(224,80,80,.04); border-left: 3px solid rgba(224,80,80,.4); padding-left: 13px; }
+        .hist-item.cancelled .hist-date { color: var(--red); }
+        .hist-item.cancelled .hist-type { color: var(--red); }
+        .hist-cancelled-tag { display:inline-block;font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:2px 7px;margin-top:5px; }
+        /* ── Blocked banner on profile ── */
+        .blocked-banner { margin:10px 16px;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:13px;display:flex;gap:11px;align-items:flex-start; }
+        .blocked-banner .bb-ico { font-size:19px;flex-shrink:0;margin-top:1px; }
+        .blocked-banner .bb-body { font-size:13px;color:var(--white);line-height:1.5; }
+        .blocked-banner .bb-body strong { color:var(--red);display:block;margin-bottom:3px;font-size:14px; }
+        .bb-unblock { font-size:12px;color:var(--gold);font-weight:700;cursor:pointer;margin-top:8px;display:inline-block; }
+        /* ── Cancel dot in calendar ── */
+        .cal-dot.cancel-dot { background:var(--red) !important; }
+        /* ── Blocked clients in picker ── */
+        .cpicker-item.is-blocked { opacity:0.5;cursor:not-allowed !important;pointer-events:none;background:rgba(224,80,80,.04); }
+        .ci-blocked-tag { font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.12);border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle; }
+        /* ── Cancellation count on profile ── */
+        .cancel-count { font-size:11px;color:var(--red);font-weight:700;margin-top:4px; }
+        /* ── Today's appt row states ── */
+        .appt-row.completed-row { background:rgba(92,184,122,.06);border-left:3px solid rgba(92,184,122,.5);padding-left:13px; }
+        .appt-row.completed-row .appt-name { color:var(--green); }
+        .appt-row.completed-row .appt-time { color:var(--green); }
+        .appt-row.cancelled-row { background:rgba(224,80,80,.04);border-left:3px solid rgba(224,80,80,.3);padding-left:13px;opacity:.7; }
+        /* ── Invoice block ── */
+        .invoice-box { background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:14px; }
+        .invoice-hdr { font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px; }
+        .invoice-row { display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04); }
+        .invoice-row:last-child { border-bottom:none; }
+        .invoice-row.total { border-top:1px solid var(--border);margin-top:4px;padding-top:10px; }
+        .invoice-row.total .inv-lbl { font-weight:800;color:var(--white);font-size:14px; }
+        .invoice-row.total .inv-val { font-weight:800;color:var(--gold);font-size:18px; }
+        .inv-lbl { font-size:13px;color:var(--muted); }
+        .inv-val { font-size:13px;font-weight:700;color:var(--white); }
+        /* ── QR placeholder ── */
+        .qr-wrap { display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 0; }
+        .qr-label { font-size:11px;color:var(--muted);text-align:center;line-height:1.5; }
+        /* ── Price input row ── */
+        .price-row { display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border); }
+        .price-svc { flex:1;font-size:14px;color:var(--white);font-weight:600; }
+        .price-svc small { display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:1px; }
+        .price-input { width:80px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:8px 10px;color:var(--gold);font-size:15px;font-weight:800;text-align:right;font-family:inherit; }
+        .price-input:focus { border-color:var(--gold);outline:none; }
+        /* ── Tier badges ── */
+        .tier-badge { font-size:20px;line-height:1;flex-shrink:0; }
+        .top-client-row { display:flex;align-items:center;gap:11px;padding:12px 16px;border-bottom:1px solid var(--border); }
+        .top-client-row:last-child { border-bottom:none; }
+        .tc-rank { font-size:12px;font-weight:800;color:var(--muted);width:20px;text-align:center;flex-shrink:0; }
+        .tc-rank.gold-rank   { color:var(--gold); }
+        .tc-rank.silver-rank { color:#BABAC8; }
+        .tc-rank.bronze-rank { color:#C87840; }
+        .tc-info { flex:1;min-width:0; }
+        .tc-name { font-size:14px;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+        .tc-sub  { font-size:11px;color:var(--muted);margin-top:2px; }
+        .tc-amt  { font-size:15px;font-weight:800;color:var(--gold);flex-shrink:0; }
+        .tc-blocked-row { opacity:.5; }
+        /* ── History filter tabs ── */
+        .hist-filter { display:flex;gap:6px;padding:0 16px 10px; }
+        .hf-btn { background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:5px 12px;cursor:pointer;font-family:inherit;transition:all .2s; }
+        .hf-btn.active { background:rgba(200,168,75,.15);border-color:var(--gold);color:var(--gold); }
+        .hf-btn.cancel-filter.active { background:rgba(224,80,80,.12);border-color:rgba(224,80,80,.5);color:var(--red); }
+
+        /* ── Finance ── */
+        .fin-card { margin: 14px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
+        .fin-big { font-size: 38px; font-weight: 800; color: var(--gold); margin-bottom: 3px; }
+        .fin-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+        .fin-row { display: flex; gap: 10px; margin-top: 16px; }
+        .fin-mini { flex: 1; background: var(--bg); border-radius: 12px; padding: 12px; border: 1px solid var(--border); }
+        .fin-mini-num { font-size: 20px; font-weight: 800; }
+        .pos { color: var(--green); }
+        .neg { color: var(--red); }
+
+        /* ── Segment control ── */
+        .seg { display: flex; background: var(--bg2); border-radius: 10px; padding: 3px; margin: 0 16px 14px; border: 1px solid var(--border); }
+        .seg-btn { flex: 1; padding: 8px; border-radius: 8px; border: none; background: transparent; color: var(--muted); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all .2s; }
+        .seg-btn.active { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: #0D0D0D; }
+
+        /* ── Expense / Income rows ── */
+        .exp-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .exp-ico { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .exp-name { flex: 1; font-size: 14px; color: var(--white); }
+        .exp-name small { font-size: 11px; color: var(--muted); display: block; margin-top: 1px; }
+        .exp-amt { font-size: 14px; font-weight: 800; }
+
+        /* ── Lash profile grid ── */
+        .lash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .lash-item .lash-k { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+        .lash-item .lash-v { font-size: 14px; font-weight: 700; color: var(--white); }
+
+        /* ── Modal ── */
+        .modal-overlay {
+            position: absolute; inset: 0; background: rgba(0,0,0,.82);
+            display: none; align-items: flex-end; z-index: 200;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-sheet {
+            width: 100%; background: var(--bg2); border-radius: 24px 24px 0 0;
+            padding: 0 20px 36px; border-top: 1px solid var(--border);
+            max-height: 90%; overflow-y: auto;
+        }
+        .modal-sheet::-webkit-scrollbar { display: none; }
+        .modal-handle { width: 36px; height: 4px; background: rgba(255,255,255,.18); border-radius: 2px; margin: 18px auto 18px; }
+        .modal-ttl { font-size: 18px; font-weight: 800; color: var(--white); margin-bottom: 20px; }
+
+        /* ── Back button ── */
+        .back-btn { background: none; border: none; color: var(--gold); font-size: 14px; font-weight: 700; cursor: pointer; padding: 2px 0; display: flex; align-items: center; gap: 6px; font-family: inherit; }
+
+        /* ── Login ── */
+        .login-wrap { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 48px 36px; height: 100%; gap: 0; }
+        .login-logo { text-align: center; margin-bottom: 52px; }
+        .login-logo .star { font-size: 52px; display: block; margin-bottom: 16px; line-height: 1; }
+        .login-logo h1 { font-size: 34px; font-weight: 200; color: var(--white); letter-spacing: 10px; text-transform: uppercase; }
+        .login-logo p { font-size: 10px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-top: 8px; font-weight: 700; }
+        .login-form { width: 100%; display: flex; flex-direction: column; gap: 14px; }
+
+        /* ── Settings rows ── */
+        .set-row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .set-ico { font-size: 20px; width: 28px; text-align: center; }
+        .set-lbl { flex: 1; font-size: 14px; color: var(--white); font-weight: 500; }
+        .set-val { font-size: 12px; color: var(--gold); font-weight: 700; }
+        .set-arr { color: var(--muted); font-size: 14px; margin-left: 6px; }
+
+        /* ── Stat cards ── */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 16px 14px; }
+        .stat-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+        .stat-num { font-size: 22px; font-weight: 800; color: var(--white); }
+        .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* decorative label outside phone */
+        .proto-label {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            font-size: 11px; color: rgba(200,168,75,.4); letter-spacing: 3px;
+            text-transform: uppercase; font-family: sans-serif;
+        }
+
+        /* ── Searchable client picker ── */
+        .cpicker { position: relative; }
+        .cpicker-list {
+            position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 12px; max-height: 210px; overflow-y: auto;
+            z-index: 400; display: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,.6);
+        }
+        .cpicker-list::-webkit-scrollbar { display: none; }
+        .cpicker-list.open { display: block; }
+        .cpicker-item {
+            display: flex; flex-direction: column;
+            padding: 10px 14px; cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            transition: background .15s;
+        }
+        .cpicker-item:last-child { border-bottom: none; }
+        .cpicker-item:active, .cpicker-item.selected { background: rgba(200,168,75,.12); }
+        .cpicker-item .ci-name { font-size: 14px; font-weight: 600; color: var(--white); }
+        .cpicker-item .ci-phone { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .cpicker-empty { padding: 16px; text-align: center; font-size: 13px; color: var(--muted); }
+        /* ── Service picker ── */
+        .svc-picker { display: flex; flex-direction: column; gap: 10px; }
+        .svc-group-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 7px; }
+        .svc-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+        .svc-chip { background: var(--bg3); border: 1px solid var(--border); border-radius: 20px; color: var(--muted); font-size: 12px; font-weight: 700; padding: 7px 14px; cursor: pointer; font-family: inherit; transition: all .2s; }
+        .svc-chip.active { background: rgba(200,168,75,.15); border-color: var(--gold); color: var(--gold); }
+        /* ── Instagram link ── */
+        .prof-insta { font-size: 13px; color: var(--gold); margin-top: 4px; cursor: pointer; }
+        .prof-insta a { color: var(--gold); text-decoration: none; }
+        .prof-insta a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+
+    <!-- ════════════════════════ LOGIN ════════════════════════ -->
+    <div class="screen active" id="s-login">
+        <div class="login-wrap">
+            <div class="login-logo">
+                <span class="star">✦</span>
+                <h1>LashPro</h1>
+                <p>Studio Management</p>
+            </div>
+            <div class="login-form">
+                <div class="form-r">
+                    <label class="lbl-s">Email</label>
+                    <input class="field" type="email" value="artist@lashpro.com">
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Password</label>
+                    <input class="field" type="password" value="••••••••">
+                </div>
+                <div style="margin-top:6px;">
+                    <button class="btn-primary" onclick="go('dashboard')">Sign In</button>
+                </div>
+                <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:14px;cursor:pointer;">Forgot password?</p>
+            </div>
+            <!-- Sync restore notice -->
+            <div id="restore-notice" style="display:none;margin-top:28px;width:100%;background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.3);border-radius:13px;padding:14px 16px;display:none;align-items:center;gap:12px;">
+                <span style="font-size:22px;">☁️</span>
+                <div>
+                    <div style="font-size:12px;font-weight:800;color:#5CB87A;margin-bottom:3px;">Backup Restored</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;">All your data has been synced from the cloud.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ DASHBOARD / CALENDAR ════════════════════════ -->
+    <div class="screen" id="s-dashboard">
+        <div class="hdr">
+            <div class="hdr-row">
+                <div>
+                    <p class="eyebrow">LashPro</p>
+                    <h1>Calendar</h1>
+                </div>
+                <button class="btn-outline" onclick="openModal('m-book')">+ Book</button>
+            </div>
+        </div>
+        <div class="scroll">
+            <!-- Month nav -->
+            <div class="cal-hdr">
+                <span class="cal-month">March 2026</span>
+                <div style="display:flex;gap:6px;">
+                    <div class="cal-nav-btn">‹</div>
+                    <div class="cal-nav-btn">›</div>
+                </div>
+            </div>
+            <!-- Calendar grid -->
+            <div class="cal-grid">
+                <div class="cal-day-hdr">
+                    <div class="cal-dlbl">M</div><div class="cal-dlbl">T</div><div class="cal-dlbl">W</div>
+                    <div class="cal-dlbl">T</div><div class="cal-dlbl">F</div><div class="cal-dlbl">S</div><div class="cal-dlbl">S</div>
+                </div>
+                <div class="cal-cells" id="cal-cells"></div>
+            </div>
+            <!-- Today's income strip -->
+            <div style="display:flex;gap:10px;padding:12px 16px 4px;">
+                <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">💰</span>
+                    <div>
+                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Today's Income</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--gold);">360€</div>
+                    </div>
+                </div>
+                <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:20px;">📅</span>
+                    <div>
+                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Sessions</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--white);">4 <span style="font-size:13px;color:var(--muted);font-weight:500;">today</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's appointments -->
+            <div class="sec-hdr">
+                <span class="sec-ttl">Today · Mar 15</span>
+                <span class="sec-act" id="today-appt-count">4 appointments</span>
+            </div>
+            <div id="today-appt-list"><!-- rendered by JS --></div>
+            <div style="height:16px;"></div>
+        </div>
+        <div class="nav">
+            <button class="nav-btn active" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ CLIENTS ════════════════════════ -->
+    <div class="screen" id="s-clients">
+        <div class="hdr">
+            <div class="hdr-row">
+                <div><p class="eyebrow">LashPro</p><h1>Clients</h1></div>
+                <button class="btn-outline" onclick="openModal('m-new-client')">+ Add</button>
+            </div>
+            <div style="margin-top:12px;">
+                <input class="field" id="cl-search" style="height:40px;font-size:13px;" placeholder="🔍  Search clients…" oninput="filterClients()" autocomplete="off">
+            </div>
+        </div>
+        <div class="scroll">
+            <div style="padding-top:6px;" id="cl-list">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+        <div class="nav">
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
+            <button class="nav-btn active" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ CLIENT PROFILE ════════════════════════ -->
+    <div class="screen" id="s-profile">
+        <div class="hdr">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <div class="hdr-row" style="margin-top:8px;">
+                <h1 id="p-title">Ana Jovanović</h1>
+                <button class="btn-ghost" onclick="openModal('m-edit-client')" style="font-size:20px;color:var(--gold);">✏️</button>
+            </div>
+        </div>
+
+        <!-- Warning banner — only shown when cycle complete -->
+        <div class="notif" id="p-notif">
+            <span class="notif-ico">⚠️</span>
+            <div class="notif-body">
+                <strong>New Set Required</strong>
+                This client has completed 3 corrections. The next appointment should be a full new set (remove old, apply from scratch).
+                <span class="notif-reset" onclick="resetCycle()">↺ Reset cycle manually</span>
+            </div>
+        </div>
+
+        <!-- Blocked banner — only shown when client is blocked -->
+        <div class="blocked-banner" id="p-blocked-banner" style="display:none;">
+            <span class="bb-ico">🚫</span>
+            <div class="bb-body">
+                <strong>Client is Blocked</strong>
+                <span id="p-block-reason"></span>
+                <span class="bb-unblock" onclick="unblockClient()">↩ Unblock client</span>
+            </div>
+        </div>
+
+        <div class="scroll">
+            <!-- Profile header -->
+            <div class="prof-hdr">
+                <div style="position:relative;flex-shrink:0;" onclick="syncPhotoModal();openModal('m-photo')">
+                    <div class="prof-ava" id="p-ava">AJ</div>
+                    <div style="position:absolute;bottom:0;right:0;width:22px;height:22px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;border:2px solid var(--bg);cursor:pointer;">📷</div>
+                </div>
+                <div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div class="prof-name" id="p-name">Ana Jovanović</div>
+                        <span id="p-tier-badge" style="font-size:20px;line-height:1;"></span>
+                    </div>
+                    <div class="prof-phone" id="p-phone">📞 +381 63 123 456</div>
+                    <div class="prof-insta" id="p-insta"></div>
+                    <div class="cancel-count" id="p-cancel-count" style="display:none;"></div>
+                    <div class="prof-total" id="p-total">Total earned: 620€</div>
+                    <div style="margin-top:8px;" id="p-badge-wrap">
+                        <span class="badge b-warn">⚠️ New Set Required</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cycle tracker (hidden for blocked clients) -->
+            <div class="cycle-box" id="p-cycle-section">
+                <div class="cycle-label">Current Cycle</div>
+                <div class="cycle-row" id="cycle-row">
+                    <!-- Filled by JS -->
+                </div>
+            </div>
+
+            <!-- Lash profile -->
+            <div class="card" style="margin-bottom:0;">
+                <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;">Lash Profile</div>
+                <div class="lash-grid" id="p-lash">
+                    <div class="lash-item"><div class="lash-k">Shape</div><div class="lash-v">Cat Eye</div></div>
+                    <div class="lash-item"><div class="lash-k">Length</div><div class="lash-v">11 / 13 mm</div></div>
+                    <div class="lash-item"><div class="lash-k">Type</div><div class="lash-v">Classic</div></div>
+                    <div class="lash-item"><div class="lash-k">Curl</div><div class="lash-v">C Curl</div></div>
+                </div>
+                <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+                    <div style="font-size:10px;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px;font-weight:700;">Notes</div>
+                    <div id="p-notes" style="font-size:13px;color:#aaa;line-height:1.6;">Sensitive to glue. Use sensitive adhesive. Prefers natural look. No allergies.</div>
+                </div>
+            </div>
+
+            <!-- Action buttons (hidden for blocked clients) -->
+            <div id="p-action-btns" style="margin:14px 16px 0;display:flex;gap:10px;">
+                <button class="btn-outline" style="flex:1;padding:12px 8px;font-size:13px;" onclick="openModal('m-log')">+ Log Appointment</button>
+                <button id="p-block-btn" onclick="openBlockClient()" style="flex:1;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:12px;padding:12px 8px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">🚫 Block Client</button>
+            </div>
+            <div id="p-action-hint" style="margin:8px 16px 0;background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.15);border-radius:10px;padding:10px 12px;">
+                <div style="font-size:11px;color:var(--muted);line-height:1.5;">
+                    <span style="color:var(--gold);font-weight:700;">Log Appointment</span> — dodaje novi termin u istoriju klijenta (bez veze sa kalendarom).
+                </div>
+            </div>
+
+            <!-- History -->
+            <div class="sec-hdr">
+                <span class="sec-ttl">Appointment History</span>
+                <span class="sec-act" id="p-hist-total">Total: 620€</span>
+            </div>
+            <div class="hist-filter">
+                <button class="hf-btn active" id="hf-all" onclick="filterHistory('all')">All</button>
+                <button class="hf-btn cancel-filter" id="hf-cancelled" onclick="filterHistory('cancelled')">❌ Cancellations <span id="hf-cancel-count" style="background:rgba(224,80,80,.2);border-radius:10px;padding:1px 6px;margin-left:3px;">0</span></button>
+            </div>
+            <div id="p-history">
+                <!-- Filled by JS -->
+            </div>
+            <div style="height:24px;"></div>
+        </div>
+
+        <div class="nav">
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
+            <button class="nav-btn active"><span class="ico">👤</span><span class="lbl">Clients</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ FINANCE ════════════════════════ -->
+    <div class="screen" id="s-finance">
+        <div class="hdr">
+            <div class="hdr-row">
+                <div><p class="eyebrow">LashPro</p><h1>Finance</h1></div>
+                <div style="display:flex;gap:6px;align-items:center;">
+                    <div class="cal-nav-btn">‹</div>
+                    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--gold);font-weight:800;">Mar 2026</div>
+                    <div class="cal-nav-btn">›</div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll">
+            <!-- Summary -->
+            <div class="fin-card">
+                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:14px;">Net Profit · March 2026</div>
+                <div class="fin-big">1,240€</div>
+                <div class="fin-lbl">Running Balance</div>
+                <div class="fin-row">
+                    <div class="fin-mini">
+                        <div class="fin-mini-num pos">1,840€</div>
+                        <div class="fin-lbl" style="margin-top:4px;">Income</div>
+                    </div>
+                    <div class="fin-mini">
+                        <div class="fin-mini-num neg">−600€</div>
+                        <div class="fin-lbl" style="margin-top:4px;">Expenses</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat cards -->
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-num">23</div>
+                    <div class="stat-lbl">Sessions this month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" style="color:var(--gold);">80€</div>
+                    <div class="stat-lbl">Avg. per session</div>
+                </div>
+            </div>
+
+            <!-- Segment -->
+            <div class="seg">
+                <button class="seg-btn" id="seg-inc" onclick="finTab('income')" style="font-size:11px;">Income</button>
+                <button class="seg-btn active" id="seg-exp" onclick="finTab('expenses')" style="font-size:11px;">Expenses</button>
+                <button class="seg-btn" id="seg-top" onclick="finTab('top')" style="font-size:11px;">🏆 Rankings</button>
+                <button class="seg-btn" id="seg-prices" onclick="finTab('prices')" style="font-size:11px;">💰 Prices</button>
+            </div>
+
+            <!-- EXPENSES -->
+            <div id="tab-exp">
+                <div class="sec-hdr">
+                    <span class="sec-ttl">Expenses · March</span>
+                    <span class="sec-act" onclick="openModal('m-expense')">+ Add</span>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(232,112,64,.1);">🏠</div>
+                    <div class="exp-name">Studio Rent<small>Mar 1, 2026</small></div>
+                    <div class="exp-amt neg">−350€</div>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(200,168,75,.1);">✨</div>
+                    <div class="exp-name">Lash Supplies<small>Mar 5, 2026</small></div>
+                    <div class="exp-amt neg">−180€</div>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(200,168,75,.1);">🧴</div>
+                    <div class="exp-name">Glue & Primers<small>Mar 10, 2026</small></div>
+                    <div class="exp-amt neg">−70€</div>
+                </div>
+            </div>
+
+            <!-- INCOME -->
+            <div id="tab-inc" style="display:none;">
+                <div class="sec-hdr">
+                    <span class="sec-ttl">Income · March</span>
+                    <span class="sec-act">23 sessions</span>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                    <div class="exp-name">Ana Jovanović<small>Mar 8 · Correction 3</small></div>
+                    <div class="exp-amt pos">+80€</div>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                    <div class="exp-name">Maja Petrović<small>Mar 3 · Correction 1</small></div>
+                    <div class="exp-amt pos">+80€</div>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                    <div class="exp-name">Tamara Lukić<small>Mar 12 · New Set</small></div>
+                    <div class="exp-amt pos">+120€</div>
+                </div>
+                <div class="exp-row">
+                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                    <div class="exp-name">Sofija Nikolić<small>Mar 2 · Correction 2</small></div>
+                    <div class="exp-amt pos">+80€</div>
+                </div>
+                <div class="exp-row" style="border:none;">
+                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                    <div class="exp-name">Katarina Milić<small>Mar 1 · Correction 3</small></div>
+                    <div class="exp-amt pos">+80€</div>
+                </div>
+            </div>
+
+            <!-- TOP CLIENTS -->
+            <div id="tab-top" style="display:none;">
+                <div class="sec-hdr">
+                    <span class="sec-ttl">🏆 Rankings by Earnings</span>
+                    <span class="sec-act" style="font-size:11px;">All time</span>
+                </div>
+                <div style="display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥇</span> Top 10</div>
+                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥈</span> 11–20</div>
+                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥉</span> 21–30</div>
+                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(224,80,80,.7);"><span style="font-size:14px;">🚫</span> Blocked</div>
+                </div>
+                <div style="background:var(--bg2);border-radius:16px;margin:0 16px;border:1px solid var(--border);">
+                    <div id="top-clients-list"><!-- filled by JS --></div>
+                </div>
+            </div>
+
+            <!-- PRICES TAB -->
+            <div id="tab-prices" style="display:none;">
+                <!-- Bank account card -->
+                <div class="sec-hdr"><span class="sec-ttl">Bank Account</span></div>
+                <div style="margin:0 16px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:22px;">🏦</span>
+                    <div style="flex:1;">
+                        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:4px;">Račun banke</div>
+                        <div id="bank-account-display" style="font-size:16px;font-weight:800;color:var(--white);letter-spacing:.5px;">115-0343043400-23</div>
+                    </div>
+                    <button onclick="openEditBankAccount()" style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.25);border-radius:9px;padding:6px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">✏️ Edit</button>
+                </div>
+
+                <div class="sec-hdr">
+                    <span class="sec-ttl">Service Rates</span>
+                    <span class="sec-act" onclick="openPricingModal()" style="color:var(--gold);">Edit</span>
+                </div>
+                <div id="prices-display" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;margin:0 16px;overflow:hidden;">
+                    <!-- filled by JS renderPricesTab() -->
+                </div>
+                <div style="padding:12px 16px 0;">
+                    <button class="btn-primary" style="width:100%;" onclick="openPricingModal()">✏️ Edit Prices</button>
+                </div>
+            </div>
+
+            <div style="height:20px;"></div>
+        </div>
+        <div class="nav">
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
+            <button class="nav-btn active" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ SETTINGS ════════════════════════ -->
+    <div class="screen" id="s-settings">
+        <div class="hdr">
+            <p class="eyebrow">LashPro</p>
+            <h1>Settings</h1>
+        </div>
+        <div class="scroll">
+            <!-- Salon card -->
+            <div style="padding:16px 16px 6px;">
+                <div class="card" style="margin:0;display:flex;align-items:center;gap:14px;">
+                    <div id="salon-logo-preview" onclick="openModal('m-salon')" style="width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;border:1.5px solid rgba(200,168,75,.4);flex-shrink:0;">✦</div>
+                    <div style="flex:1;">
+                        <div id="salon-name-display" style="font-size:16px;font-weight:800;color:var(--white);">Lash Artist Studio</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">artist@lashpro.com</div>
+                        <div style="font-size:11px;color:var(--gold);margin-top:5px;font-weight:700;">Pro Plan · Active</div>
+                    </div>
+                    <button onclick="openModal('m-salon')" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px;">✏️</button>
+                </div>
+            </div>
+
+            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Studio Branding</span></div>
+            <div class="set-row" onclick="openModal('m-salon')">
+                <span class="set-ico">🎨</span>
+                <div style="flex:1;">
+                    <div class="set-lbl">Salon Name & Logo</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Edit studio name and upload logo</div>
+                </div>
+                <span class="set-arr">›</span>
+            </div>
+            <div class="set-row" onclick="openModal('m-colors')">
+                <span class="set-ico">🌈</span>
+                <div style="flex:1;">
+                    <div class="set-lbl">App Color Theme</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Choose accent color for the whole app</div>
+                </div>
+                <div style="display:flex;gap:5px;margin-right:8px;">
+                    <div style="width:14px;height:14px;border-radius:50%;background:#C8A84B;border:2px solid #fff;"></div>
+                </div>
+                <span class="set-arr">›</span>
+            </div>
+
+            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Preferences</span></div>
+            <div class="set-row">
+                <span class="set-ico">🌐</span>
+                <span class="set-lbl">Language</span>
+                <span class="set-val">English</span><span class="set-arr">›</span>
+            </div>
+            <div class="set-row" style="cursor:default;">
+                <span class="set-ico">🌓</span>
+                <span class="set-lbl" style="flex:1;">Theme</span>
+                <div style="display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;gap:0;">
+                    <button id="theme-dark-btn" onclick="setTheme('dark')"
+                        style="padding:6px 14px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;border:none;border-radius:9px 0 0 9px;transition:all .2s;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#000;">
+                        🌙 Dark
+                    </button>
+                    <button id="theme-light-btn" onclick="setTheme('light')"
+                        style="padding:6px 14px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;border:none;border-radius:0 9px 9px 0;transition:all .2s;background:transparent;color:var(--muted);">
+                        ☀️ Light
+                    </button>
+                </div>
+            </div>
+            <div class="set-row">
+                <span class="set-ico">💱</span>
+                <span class="set-lbl">Currency</span>
+                <span class="set-val">EUR (€)</span><span class="set-arr">›</span>
+            </div>
+            <div class="set-row">
+                <span class="set-ico">🔔</span>
+                <span class="set-lbl">Notifications</span>
+                <span class="set-arr">›</span>
+            </div>
+
+            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Account</span></div>
+            <div class="set-row">
+                <span class="set-ico">🔒</span>
+                <span class="set-lbl">Change Password</span>
+                <span class="set-arr">›</span>
+            </div>
+            <div class="set-row">
+                <span class="set-ico">📊</span>
+                <span class="set-lbl">Export Data</span>
+                <span class="set-arr">›</span>
+            </div>
+            <div class="set-row">
+                <span class="set-ico">👥</span>
+                <span class="set-lbl">Manage Subscription</span>
+                <span class="set-val" style="color:var(--gold);">Pro</span><span class="set-arr">›</span>
+            </div>
+
+            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Data & Backup</span></div>
+            <div class="set-row" style="align-items:flex-start;padding-top:16px;padding-bottom:16px;" onclick="toggleBackup()">
+                <span class="set-ico" style="margin-top:1px;">☁️</span>
+                <div style="flex:1;">
+                    <div class="set-lbl" style="margin-bottom:3px;">Auto Cloud Backup</div>
+                    <div style="font-size:11px;color:var(--muted);line-height:1.5;">Data is synced to the cloud after every change. Sign into any device to restore instantly.</div>
+                    <div id="backup-status" style="font-size:11px;color:#5CB87A;font-weight:700;margin-top:6px;">✓ Last backup: Today, 14:32</div>
+                </div>
+                <div id="backup-toggle" onclick="toggleBackup()" style="margin-left:10px;margin-top:2px;width:44px;height:26px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:13px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;">
+                    <div id="backup-knob" style="position:absolute;top:3px;right:3px;width:20px;height:20px;background:#0D0D0D;border-radius:50%;transition:right .2s;"></div>
+                </div>
+            </div>
+            <div class="set-row">
+                <span class="set-ico">🔄</span>
+                <div style="flex:1;">
+                    <div class="set-lbl">Restore from Backup</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Manually restore data from a previous backup point.</div>
+                </div>
+                <span class="set-arr">›</span>
+            </div>
+
+            <div style="margin:24px 16px 0;">
+                <button class="btn-outline" style="width:100%;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="go('login')">Sign Out</button>
+            </div>
+            <div style="height:20px;"></div>
+        </div>
+        <div class="nav">
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
+            <button class="nav-btn active" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+        </div>
+    </div>
+
+
+    <!-- ════════════════════════ MODALS ════════════════════════ -->
+
+    <!-- Log Appointment -->
+    <div class="modal-overlay" id="m-log">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-ttl">Log Appointment</div>
+            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
+            <div class="form-r">
+                <label class="lbl-s">Services</label>
+                <div class="svc-picker" id="svc-log">
+                    <div>
+                        <div class="svc-group-label">Nadogradnja Trepavica</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-log','new-set')">New Set</button>
+                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-log','c2w')">Corr. · 2w</button>
+                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-log','c3w')">Corr. · 3w</button>
+                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-log','c4w')">Corr. · 4w</button>
+                            <button class="svc-chip" data-key="reklamacija" onclick="toggleSvc('svc-log','reklamacija')">Reklamacija 🆓</button>
+                            <button class="svc-chip" data-key="skidanje" onclick="toggleSvc('svc-log','skidanje')">Skidanje</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-log','lash-lift')">Lash Lift</button>
+                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-log','brow-lift')">Brow Lift</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-r"><label class="lbl-s">What was done</label><input class="field" placeholder="e.g. Classic, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm"></div>
+            <div class="form-r"><label class="lbl-s">Amount Charged (€)</label><input class="field" type="number" placeholder="0" value="80"></div>
+            <div class="form-r"><label class="lbl-s">Notes (optional)</label><input class="field" placeholder="Any notes for this session…"></div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-log')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-log')">Save Appointment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Book Appointment -->
+    <div class="modal-overlay" id="m-book">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-ttl">Book Appointment</div>
+            <div class="form-r">
+                <label class="lbl-s">Client</label>
+                <div class="cpicker">
+                    <input class="field" id="book-search" placeholder="🔍  Search by name or phone…" autocomplete="off"
+                        oninput="filterPicker('book-search','book-list')"
+                        onfocus="filterPicker('book-search','book-list')">
+                    <div class="cpicker-list" id="book-list"></div>
+                </div>
+                <div id="book-selected" style="display:none;margin-top:8px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);border-radius:10px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <div id="book-sel-name" style="font-size:13px;font-weight:700;color:var(--white)"></div>
+                        <div id="book-sel-phone" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+                    </div>
+                    <button onclick="clearPicker('book-search','book-selected')" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">×</button>
+                </div>
+            </div>
+            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
+            <div class="form-r"><label class="lbl-s">Time</label><input class="field" type="time" value="10:00"></div>
+            <div class="form-r">
+                <label class="lbl-s">Services</label>
+                <div class="svc-picker" id="svc-book">
+                    <div>
+                        <div class="svc-group-label">Nadogradnja Trepavica</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-book','new-set')">New Set</button>
+                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-book','c2w')">Corr. · 2w</button>
+                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-book','c3w')">Corr. · 3w</button>
+                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-book','c4w')">Corr. · 4w</button>
+                            <button class="svc-chip" data-key="reklamacija" onclick="toggleSvc('svc-book','reklamacija')">Reklamacija 🆓</button>
+                            <button class="svc-chip" data-key="skidanje" onclick="toggleSvc('svc-book','skidanje')">Skidanje</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-book','lash-lift')">Lash Lift</button>
+                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-book','brow-lift')">Brow Lift</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-book')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-book')">Book</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Expense -->
+    <div class="modal-overlay" id="m-expense">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-ttl">Add Expense</div>
+            <div class="form-r">
+                <label class="lbl-s">Category</label>
+                <select class="field">
+                    <option>Studio Rent</option>
+                    <option>Lash Supplies</option>
+                    <option>Glue & Adhesives</option>
+                    <option>Equipment</option>
+                    <option>Marketing</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="form-r"><label class="lbl-s">Description</label><input class="field" placeholder="e.g. Monthly studio rent"></div>
+            <div class="form-r"><label class="lbl-s">Amount (€)</label><input class="field" type="number" placeholder="0"></div>
+            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-expense')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-expense')">Add Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Client -->
+    <div class="modal-overlay" id="m-new-client">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-ttl">New Client</div>
+            <div class="form-r"><label class="lbl-s">Full Name</label><input class="field" placeholder="e.g. Marija Stojanović"></div>
+            <div class="form-r"><label class="lbl-s">Phone</label><input class="field" type="tel" placeholder="+381 …"></div>
+            <div class="form-r"><label class="lbl-s">Email (optional)</label><input class="field" type="email" placeholder="client@email.com"></div>
+            <div class="form-r"><label class="lbl-s">Notes / Allergies</label><input class="field" placeholder="Any important notes…"></div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-new-client')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-new-client')">Add Client</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ DAY DETAIL MODAL ════ -->
+    <div class="modal-overlay" id="m-day-detail">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;" id="day-detail-title">March 15</div>
+                <button onclick="closeModal('m-day-detail')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div id="day-detail-list"><!-- filled by JS --></div>
+            <div style="margin-top:16px;">
+                <button class="btn-primary" onclick="closeModal('m-day-detail');openModal('m-book')">+ Book New Appointment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ EDIT APPOINTMENT MODAL ════ -->
+    <div class="modal-overlay" id="m-edit-appt">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;">Edit Appointment</div>
+                <button onclick="closeModal('m-edit-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Client</label>
+                <div class="cpicker">
+                    <input class="field" id="ea-search" placeholder="🔍  Search by name or phone…" autocomplete="off"
+                        oninput="filterPicker('ea-search','ea-list')"
+                        onfocus="filterPicker('ea-search','ea-list')">
+                    <div class="cpicker-list" id="ea-list"></div>
+                </div>
+                <div id="ea-selected" style="margin-top:8px;background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);border-radius:10px;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;">
+                    <div>
+                        <div id="ea-sel-name" style="font-size:13px;font-weight:700;color:var(--white)"></div>
+                        <div id="ea-sel-phone" style="font-size:11px;color:var(--muted);margin-top:2px"></div>
+                    </div>
+                    <button onclick="clearPicker('ea-search','ea-selected')" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">×</button>
+                </div>
+                <!-- Hidden value read by checkOverlap() -->
+                <input type="hidden" id="ea-client" value="">
+            </div>
+            <div style="display:flex;gap:10px;">
+                <div class="form-r" style="flex:1;"><label class="lbl-s">Date</label><input class="field" id="ea-date" type="date" value="2026-03-15"></div>
+                <div class="form-r" style="flex:1;"><label class="lbl-s">Time</label><input class="field" id="ea-time" type="time" value="10:00"></div>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Services</label>
+                <div class="svc-picker" id="svc-ea">
+                    <div>
+                        <div class="svc-group-label">Nadogradnja Trepavica</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-ea','new-set')">New Set</button>
+                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-ea','c2w')">Corr. · 2w</button>
+                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-ea','c3w')">Corr. · 3w</button>
+                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-ea','c4w')">Corr. · 4w</button>
+                            <button class="svc-chip" data-key="reklamacija" onclick="toggleSvc('svc-ea','reklamacija')">Reklamacija 🆓</button>
+                            <button class="svc-chip" data-key="skidanje" onclick="toggleSvc('svc-ea','skidanje')">Skidanje</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-ea','lash-lift')">Lash Lift</button>
+                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-ea','brow-lift')">Brow Lift</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Reason for change (optional)</label>
+                <input class="field" id="ea-reason" placeholder="e.g. Client requested different time…">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="closeModal('m-edit-appt');openCancelAppt(currentApptId)">Cancel Appt.</button>
+                <button class="btn-primary" style="flex:1.5;" onclick="checkOverlap()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ OVERLAP WARNING MODAL ════ -->
+    <div class="modal-overlay" id="m-overlap">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="margin-bottom:16px;">
+                <div style="font-size:22px;margin-bottom:10px;">⚠️</div>
+                <div class="modal-ttl" style="margin-bottom:6px;">Time Conflict Detected</div>
+                <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="overlap-msg">
+                    This time overlaps with <strong style="color:var(--white);">Maja Petrović at 12:00</strong>. Choose how to resolve it.
+                </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                <button class="btn-primary" onclick="resolveOverlap('move')" style="text-align:left;padding:14px 16px;">
+                    <div style="font-size:14px;font-weight:800;">↔ Move conflicting appointment</div>
+                    <div style="font-size:11px;font-weight:500;opacity:.8;margin-top:3px;">Reschedule the other appointment to a free slot</div>
+                </button>
+                <button onclick="resolveOverlap('cancel')" style="background:rgba(224,112,96,.1);border:1px solid rgba(224,112,96,.35);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;">
+                    <div style="font-size:14px;font-weight:800;color:var(--red);">✕ Cancel conflicting appointment</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:3px;">Remove the other appointment from the calendar</div>
+                </button>
+                <button class="btn-outline" onclick="closeModal('m-overlap')" style="width:100%;">Go back and change time</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ PHOTO MODAL ════ -->
+    <div class="modal-overlay" id="m-photo">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-ttl">Client Photo</div>
+            <div style="display:flex;justify-content:center;margin-bottom:20px;">
+                <div id="photo-preview" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#0D0D0D;border:2px solid var(--gold);">AJ</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+                <button onclick="simulatePhoto('camera')" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:20px;">📷</span> Take Photo
+                </button>
+                <button onclick="simulatePhoto('gallery')" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:20px;">🖼</span> Choose from Gallery
+                </button>
+                <button onclick="simulatePhoto('remove')" style="background:rgba(224,112,96,.08);border:1px solid rgba(224,112,96,.3);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
+                    <span style="font-size:20px;">🗑</span> Remove Photo
+                </button>
+            </div>
+            <button class="btn-outline" style="width:100%;" onclick="closeModal('m-photo')">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ════ SALON BRANDING MODAL ════ -->
+    <div class="modal-overlay" id="m-salon">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;">Studio Branding</div>
+                <button onclick="closeModal('m-salon')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <!-- Logo upload area -->
+            <div style="margin-bottom:18px;">
+                <label class="lbl-s">Studio Logo</label>
+                <div onclick="simulateLogo()" style="border:2px dashed rgba(200,168,75,.4);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;background:rgba(200,168,75,.04);">
+                    <div id="logo-upload-preview" style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:28px;">✦</div>
+                    <div style="font-size:13px;color:var(--gold);font-weight:700;">Tap to upload logo</div>
+                    <div style="font-size:11px;color:var(--muted);">PNG, JPG · max 5MB</div>
+                </div>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Studio Name</label>
+                <input class="field" id="salon-name-input" placeholder="e.g. Lash Studio by Ana" value="Lash Artist Studio">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Tagline (optional)</label>
+                <input class="field" placeholder="e.g. Premium Lash Extensions">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-salon')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="saveSalon()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ COLOR THEME MODAL ════ -->
+    <div class="modal-overlay" id="m-colors">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;">App Color Theme</div>
+                <button onclick="closeModal('m-colors')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Choose an accent color that will be applied throughout the app.</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+                <div onclick="applyTheme('#C8A84B','#9A7B2E')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#9A7B2E,#C8A84B);margin:0 auto 6px;border:2px solid rgba(200,168,75,.6);"></div>
+                    <div style="font-size:10px;color:var(--white);font-weight:700;">Gold ✓</div>
+                </div>
+                <div onclick="applyTheme('#E8B4CB','#C4749A')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C4749A,#E8B4CB);margin:0 auto 6px;border:2px solid rgba(232,180,203,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Rose</div>
+                </div>
+                <div onclick="applyTheme('#A8C8E8','#5A8AB4')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#5A8AB4,#A8C8E8);margin:0 auto 6px;border:2px solid rgba(168,200,232,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Sky</div>
+                </div>
+                <div onclick="applyTheme('#B8E8C8','#5AB490')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#5AB490,#B8E8C8);margin:0 auto 6px;border:2px solid rgba(184,232,200,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Mint</div>
+                </div>
+                <div onclick="applyTheme('#E8D0A8','#C4A060')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C4A060,#E8D0A8);margin:0 auto 6px;border:2px solid rgba(232,208,168,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Champagne</div>
+                </div>
+                <div onclick="applyTheme('#D4A8E8','#9A60C4')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#9A60C4,#D4A8E8);margin:0 auto 6px;border:2px solid rgba(212,168,232,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Lavender</div>
+                </div>
+                <div onclick="applyTheme('#E8C0A8','#C47850')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C47850,#E8C0A8);margin:0 auto 6px;border:2px solid rgba(232,192,168,.3);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Peach</div>
+                </div>
+                <div onclick="applyTheme('#F0F0F0','#AAAAAA')" style="cursor:pointer;text-align:center;">
+                    <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#888,#eee);margin:0 auto 6px;border:2px solid rgba(255,255,255,.2);"></div>
+                    <div style="font-size:10px;color:var(--muted);">Silver</div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="closeModal('m-colors')">Apply Theme</button>
+        </div>
+    </div>
+
+    <!-- ════ EDIT CLIENT MODAL ════ -->
+    <div class="modal-overlay" id="m-edit-client">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+                <div class="modal-ttl" style="margin-bottom:0;">Edit Client</div>
+                <button onclick="closeModal('m-edit-client')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
+            </div>
+
+            <!-- Sub-tabs: Info / Lash Profile -->
+            <div class="seg" style="margin:0 0 18px;">
+                <button class="seg-btn active" id="et-info-btn" onclick="editTab('info')">Client Info</button>
+                <button class="seg-btn" id="et-lash-btn" onclick="editTab('lash')">Lash Profile</button>
+            </div>
+
+            <!-- Info tab -->
+            <div id="et-info">
+                <div class="form-r"><label class="lbl-s">First Name</label><input class="field" id="e-fname" placeholder="e.g. Ana"></div>
+                <div class="form-r"><label class="lbl-s">Last Name</label><input class="field" id="e-lname" placeholder="e.g. Jovanović"></div>
+                <div class="form-r"><label class="lbl-s">Phone</label><input class="field" id="e-phone" type="tel" placeholder="+381 …"></div>
+                <div class="form-r">
+                    <label class="lbl-s">Instagram (optional)</label>
+                    <div style="position:relative;">
+                        <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;">@</span>
+                        <input class="field" id="e-instagram" placeholder="username" style="padding-left:26px;">
+                    </div>
+                </div>
+                <div class="form-r"><label class="lbl-s">Notes / Allergies</label><textarea class="field" id="e-notes" rows="3" style="resize:none;line-height:1.5;" placeholder="Allergies, preferences…"></textarea></div>
+            </div>
+
+            <!-- Lash profile tab -->
+            <div id="et-lash" style="display:none;">
+                <div class="form-r">
+                    <label class="lbl-s">Shape</label>
+                    <select class="field" id="e-shape">
+                        <option>Cat Eye</option><option>Doll Eye</option><option>Natural</option>
+                        <option>Squirrel</option><option>Open Eye</option><option>Fox Eye</option>
+                    </select>
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Length</label>
+                    <input class="field" id="e-length" placeholder="e.g. 11 / 13 mm">
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Type</label>
+                    <select class="field" id="e-type">
+                        <option>Classic</option><option>Volume</option><option>Hybrid</option>
+                        <option>Mega Volume</option><option>Wet Look</option>
+                    </select>
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Curl</label>
+                    <select class="field" id="e-curl">
+                        <option>B Curl</option><option>C Curl</option><option>D Curl</option>
+                        <option>L Curl</option><option>M Curl</option><option>CC Curl</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-edit-client')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="saveEditClient()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ COMPLETE SESSION MODAL ════ -->
+    <div class="modal-overlay" id="m-complete">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <div class="modal-ttl" style="margin-bottom:0;">Complete Session</div>
+                <button onclick="closeModal('m-complete')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
+            </div>
+            <!-- Info note -->
+            <div style="background:rgba(200,168,75,.07);border:1px solid rgba(200,168,75,.2);border-radius:10px;padding:10px 12px;margin-bottom:18px;">
+                <div style="font-size:12px;color:var(--muted);line-height:1.5;">Ova sesija će biti upisana kao <strong style="color:var(--gold);">ostvareni prihod</strong> i dodana u istoriju klijenta. Zakazani termin u kalendaru ostaje nepromenjen.</div>
+            </div>
+
+            <!-- Scheduled appointment picker -->
+            <div class="form-r">
+                <label class="lbl-s">Zakazani termin (today)</label>
+                <select class="field">
+                    <option>Today, 10:00 — Ana Jovanović (booked)</option>
+                    <option>Today, 12:00 — Maja Petrović (booked)</option>
+                </select>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Services</label>
+                <div class="svc-picker" id="svc-complete">
+                    <div>
+                        <div class="svc-group-label">Nadogradnja Trepavica</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-complete','new-set')">New Set</button>
+                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-complete','c2w')">Corr. · 2w</button>
+                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-complete','c3w')">Corr. · 3w</button>
+                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-complete','c4w')">Corr. · 4w</button>
+                            <button class="svc-chip" data-key="reklamacija" onclick="toggleSvc('svc-complete','reklamacija')">Reklamacija 🆓</button>
+                            <button class="svc-chip" data-key="skidanje" onclick="toggleSvc('svc-complete','skidanje')">Skidanje</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-chips">
+                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-complete','lash-lift')">Lash Lift</button>
+                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-complete','brow-lift')">Brow Lift</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">What was done</label>
+                <input class="field" placeholder="e.g. Classic, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Amount Charged (€)</label>
+                <input class="field" type="number" placeholder="0" value="80">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Notes (optional)</label>
+                <input class="field" placeholder="Anything worth noting…">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-complete')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-complete')">✓ Confirm & Save Income</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ TODAY APPOINTMENT DETAIL MODAL ════ -->
+    <div class="modal-overlay" id="m-today-appt">
+        <div class="modal-sheet" style="max-height:90%;overflow-y:auto;">
+            <div class="modal-handle"></div>
+            <div id="ta-content"><!-- rendered by JS --></div>
+        </div>
+    </div>
+
+    <!-- ════ SERVICE PRICING MODAL ════ -->
+    <div class="modal-overlay" id="m-pricing">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;">💰 Service Prices</div>
+                <button onclick="closeModal('m-pricing')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div style="background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.15);border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.5;">
+                Set your default prices per service. These are used when opening appointment details.
+            </div>
+            <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;">
+                <div class="price-row">
+                    <div class="price-svc">New Set<small>Nadogradnja — od pocetka</small></div>
+                    <input class="price-input" id="pr-new-set" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Correction · 2 weeks<small>Korekcija posle 2 nedelje</small></div>
+                    <input class="price-input" id="pr-c2w" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Correction · 3 weeks<small>Korekcija posle 3 nedelje</small></div>
+                    <input class="price-input" id="pr-c3w" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Correction · 4 weeks<small>Korekcija posle 4 nedelje</small></div>
+                    <input class="price-input" id="pr-c4w" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Reklamacija<small>Besplatno — u toku prve nedelje</small></div>
+                    <input class="price-input" id="pr-reklamacija" type="number" min="0" disabled style="opacity:.4;cursor:not-allowed;">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Skidanje nadogradnje<small>Uklanjanje trepavica</small></div>
+                    <input class="price-input" id="pr-skidanje" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row">
+                    <div class="price-svc">Lash Lift<small>Podizanje trepavica</small></div>
+                    <input class="price-input" id="pr-lash-lift" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+                <div class="price-row" style="border-bottom:none;">
+                    <div class="price-svc">Brow Lift<small>Podizanje obrva</small></div>
+                    <input class="price-input" id="pr-brow-lift" type="number" min="0">
+                    <span style="font-size:13px;color:var(--muted);">€</span>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-pricing')">Cancel</button>
+                <button class="btn-primary" style="flex:2;" onclick="savePricing()">Save Prices</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ PRICE QR MODAL (full-screen) ════ -->
+    <div id="m-price-qr" style="display:none;position:absolute;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;">
+        <div id="pqr-content" style="width:100%;max-width:340px;"><!-- filled by JS --></div>
+    </div>
+
+    <!-- ════ CANCELLATION DETAIL MODAL ════ -->
+    <div class="modal-overlay" id="m-cancel-detail">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:22px;">❌</span>
+                    <div class="modal-ttl" style="margin-bottom:0;">Cancellation Details</div>
+                </div>
+                <button onclick="closeModal('m-cancel-detail')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div style="background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.25);border-radius:14px;padding:16px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+                    <div>
+                        <div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:1px;" id="cd-date">Mar 8, 2026</div>
+                        <div style="font-size:16px;font-weight:800;color:var(--white);margin-top:4px;" id="cd-type">New Set</div>
+                    </div>
+                    <span style="font-size:12px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:8px;padding:5px 10px;" id="cd-who">Client</span>
+                </div>
+                <div style="border-top:1px solid rgba(224,80,80,.2);padding-top:12px;">
+                    <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Reason</div>
+                    <div style="font-size:14px;color:var(--white);line-height:1.6;font-style:italic;" id="cd-reason">"No-show"</div>
+                </div>
+            </div>
+            <div style="margin-top:18px;">
+                <button class="btn-outline" style="width:100%;" onclick="closeModal('m-cancel-detail')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ APPOINTMENT OPTIONS MODAL ════ -->
+    <div class="modal-overlay" id="m-appt-options">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                <div class="modal-ttl" style="margin-bottom:0;" id="ao-title">Appointment Details</div>
+                <button onclick="closeModal('m-appt-options')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <!-- Appointment summary card -->
+            <div id="ao-summary" style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:18px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div style="font-size:16px;font-weight:800;color:var(--gold);width:44px;flex-shrink:0;" id="ao-time">10:00</div>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:700;color:var(--white);" id="ao-client">Ana Jovanović</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="ao-type">New Set</div>
+                    </div>
+                    <span id="ao-status-badge"></span>
+                </div>
+                <div id="ao-cancel-info" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(224,80,80,.2);">
+                    <div style="font-size:11px;color:var(--red);font-weight:700;">Cancelled by: <span id="ao-cancelled-by"></span></div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="ao-cancel-reason-text"></div>
+                </div>
+            </div>
+            <!-- Action buttons -->
+            <div id="ao-actions" style="display:flex;flex-direction:column;gap:10px;">
+                <button id="ao-edit-btn" onclick="closeModal('m-appt-options');openEditAppt(currentApptId)" style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);border-radius:14px;padding:16px;color:var(--gold);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;text-align:left;">
+                    <div>✏️ Edit / Reschedule</div>
+                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Change date, time, or services</div>
+                </button>
+                <button id="ao-cancel-btn" onclick="closeModal('m-appt-options');openCancelAppt(currentApptId)" style="background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:14px;padding:16px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;text-align:left;">
+                    <div>❌ Cancel Appointment</div>
+                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Mark as cancelled and log who cancelled</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ CANCEL APPOINTMENT MODAL ════ -->
+    <div class="modal-overlay" id="m-cancel-appt">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;">Cancel Appointment</div>
+                <button onclick="closeModal('m-cancel-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div style="background:rgba(224,80,80,.07);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:10px 12px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.5;">
+                This appointment will be marked as <strong style="color:var(--red);">cancelled</strong> and logged in the client's history. The slot will be freed in the calendar.
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Who cancelled?</label>
+                <select class="field" id="ca-who">
+                    <option value="client">Client cancelled</option>
+                    <option value="no-show">No-show (client didn't appear)</option>
+                    <option value="artist">Artist cancelled</option>
+                    <option value="emergency">Emergency / Force majeure</option>
+                </select>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Reason (optional)</label>
+                <input class="field" id="ca-reason" placeholder="e.g. Sick, work conflict, no response…">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-cancel-appt')">Go Back</button>
+                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="confirmCancelAppt()">✕ Confirm Cancellation</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════ BLOCK CLIENT MODAL ════ -->
+    <div class="modal-overlay" id="m-block-client">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div class="modal-ttl" style="margin-bottom:0;" id="block-modal-title">Block Client</div>
+                <button onclick="closeModal('m-block-client')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
+            </div>
+            <div style="background:rgba(224,80,80,.07);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:10px 12px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.5;">
+                Blocked clients are <strong style="color:var(--red);">disabled in the booking picker</strong> and their profile will show a blocked notice. All appointment history is preserved.
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Reason for blocking</label>
+                <textarea class="field" id="bl-reason" rows="3" style="resize:none;line-height:1.5;" placeholder="e.g. No-show 3× in a row, disrespectful behaviour…"></textarea>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:4px;">
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-block-client')">Cancel</button>
+                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="saveBlockClient()">🚫 Block Client</button>
+            </div>
+        </div>
+    </div>
+
+</div><!-- /phone -->
+
+<p class="proto-label">LashPro · Interactive Prototype</p>
+
+<script>
+// ── Client data ──────────────────────────────────────────────────
+const CLIENTS = [
+    {
+        name: 'Ana Jovanović', initials: 'AJ', phone: '+381 63 123 456',
+        instagram: 'ana.jovanovic',
+        total: '620€', cycleStep: 'done-all',
+        cancellations: 2, blocked: false, blockReason: '',
+        lash: { shape:'Cat Eye', length:'11 / 13 mm', type:'Classic', curl:'C Curl' },
+        notes: 'Sensitive to glue. Use sensitive adhesive. Prefers natural look. No allergies.',
+        cycleDates: [{step:'new-set',date:'Jan 27, 2026',daysFromPrev:null},{step:'c1',date:'Feb 10, 2026',daysFromPrev:14},{step:'c2',date:'Feb 24, 2026',daysFromPrev:14},{step:'c3',date:'Mar 8, 2026',daysFromPrev:12}],
+        history: [
+            { date:'Mar 8, 2026',  type:'Correction 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Mar 1, 2026',  type:'Correction 3', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Sick — called 2h before' },
+            { date:'Feb 24, 2026', type:'Correction 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Feb 17, 2026', type:'Correction 2', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
+            { date:'Feb 10, 2026', type:'Correction 1', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Jan 27, 2026', type:'New Set',      desc:'Classic · Cat Eye · Applied from scratch', price:'120€' },
+            { date:'Dec 30, 2025', type:'Correction 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Dec 16, 2025', type:'Correction 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+        ]
+    },
+    {
+        name: 'Maja Petrović', initials: 'MP', phone: '+381 64 234 567',
+        instagram: 'maja.petrovic_lashes',
+        total: '380€', cycleStep: 'c1',
+        cancellations: 0, blocked: false, blockReason: '',
+        lash: { shape:'Doll Eye', length:'12 mm', type:'Volume', curl:'D Curl' },
+        notes: 'Prefers full volume look. No sensitivities.',
+        cycleDates: [{step:'new-set',date:'Feb 17, 2026',daysFromPrev:null},{step:'c1',date:'Mar 3, 2026',daysFromPrev:14}],
+        history: [
+            { date:'Mar 3, 2026',  type:'Correction 1', desc:'Volume · Doll Eye · D Curl · 12mm', price:'80€' },
+            { date:'Feb 17, 2026', type:'New Set',      desc:'Volume · Doll Eye · Applied from scratch', price:'130€' },
+            { date:'Jan 20, 2026', type:'Correction 3', desc:'Volume · Doll Eye · D Curl · 12mm', price:'80€' },
+        ]
+    },
+    {
+        name: 'Sofija Nikolić', initials: 'SN', phone: '+381 65 345 678',
+        instagram: '',
+        total: '890€', cycleStep: 'c2',
+        cancellations: 0, blocked: false, blockReason: '',
+        lash: { shape:'Natural', length:'10 / 12 mm', type:'Hybrid', curl:'B Curl' },
+        notes: 'Sparse natural lashes. Use extra bond. Very gentle with removal.',
+        cycleDates: [{step:'new-set',date:'Jan 31, 2026',daysFromPrev:null},{step:'c1',date:'Feb 14, 2026',daysFromPrev:14},{step:'c2',date:'Feb 28, 2026',daysFromPrev:14}],
+        history: [
+            { date:'Feb 28, 2026', type:'Correction 2', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'90€' },
+            { date:'Feb 14, 2026', type:'Correction 1', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'90€' },
+            { date:'Jan 31, 2026', type:'New Set',      desc:'Hybrid · Natural · Applied from scratch', price:'150€' },
+        ]
+    },
+    {
+        name: 'Tamara Lukić', initials: 'TL', phone: '+381 66 456 789',
+        instagram: 'tamara_lukic',
+        total: '120€', cycleStep: 'new-set',
+        cancellations: 3, blocked: true, blockReason: 'No-show 3× in a row, not responding to calls or messages after appointments.',
+        lash: { shape:'Cat Eye', length:'13 mm', type:'Classic', curl:'C Curl' },
+        notes: 'First time client as of March 2026. Wants long dramatic look.',
+        cycleDates: [{step:'new-set',date:'Mar 12, 2026',daysFromPrev:null}],
+        history: [
+            { date:'Mar 12, 2026', type:'New Set', desc:'Classic · Cat Eye · Applied from scratch', price:'120€' },
+            { date:'Mar 5, 2026',  type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client (no-show)', cancelReason:'Did not show up, did not respond to calls. Third no-show in a row. Decision made to block.' },
+            { date:'Feb 19, 2026', type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Texted 30 min before: "can\'t make it today". Rescheduled to Mar 5.' },
+            { date:'Feb 5, 2026',  type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Called 2 hours before: "something came up at work". First cancellation — gave benefit of the doubt.' },
+        ]
+    },
+    {
+        name: 'Katarina Milić', initials: 'KM', phone: '+381 67 567 890',
+        instagram: 'katarina.milic_beauty',
+        total: '1,140€', cycleStep: 'c3',
+        cancellations: 1, blocked: false, blockReason: '',
+        lash: { shape:'Squirrel', length:'11 / 14 mm', type:'Mega Volume', curl:'L Curl' },
+        notes: 'Has hooded eyelids. Apply with slight upward angle. Allergic to latex tape.',
+        cycleDates: [{step:'new-set',date:'Jan 18, 2026',daysFromPrev:null},{step:'c1',date:'Feb 1, 2026',daysFromPrev:14},{step:'c2',date:'Feb 15, 2026',daysFromPrev:14},{step:'c3',date:'Mar 1, 2026',daysFromPrev:14}],
+        history: [
+            { date:'Mar 1, 2026',  type:'Correction 3', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
+            { date:'Feb 15, 2026', type:'Correction 2', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
+            { date:'Feb 1, 2026',  type:'Correction 1', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
+            { date:'Jan 18, 2026', type:'New Set',      desc:'Mega Vol · Squirrel · Applied from scratch', price:'180€' },
+        ]
+    },
+];
+
+// ── Full client list for picker (20 clients) ──────────────────────
+const ALL_CLIENTS_PICKER = [
+    { name: 'Ana Jovanović',     phone: '+381 63 123 456' },
+    { name: 'Maja Petrović',     phone: '+381 64 234 567' },
+    { name: 'Sofija Nikolić',    phone: '+381 65 345 678' },
+    { name: 'Tamara Lukić',      phone: '+381 66 456 789' },
+    { name: 'Katarina Milić',    phone: '+381 67 567 890' },
+    { name: 'Ivana Ristić',      phone: '+381 63 678 901' },
+    { name: 'Jelena Đorđević',   phone: '+381 64 789 012' },
+    { name: 'Marija Stojanović', phone: '+381 65 890 123' },
+    { name: 'Ana Popović',       phone: '+381 66 901 234' },
+    { name: 'Dragana Ilić',      phone: '+381 67 012 345' },
+    { name: 'Milica Stanković',  phone: '+381 63 111 222' },
+    { name: 'Jovana Vasić',      phone: '+381 64 222 333' },
+    { name: 'Tijana Marković',   phone: '+381 65 333 444' },
+    { name: 'Nikoleta Savić',    phone: '+381 66 444 555' },
+    { name: 'Aleksandra Vukić',  phone: '+381 67 555 666' },
+    { name: 'Bojana Todorović',  phone: '+381 63 666 777' },
+    { name: 'Slađana Lazić',     phone: '+381 64 777 888' },
+    { name: 'Vesna Đukić',       phone: '+381 65 888 999' },
+    { name: 'Ana Jovanović',     phone: '+381 66 999 000' },  // duplicate name — distinguished by phone
+    { name: 'Zorana Blagojević', phone: '+381 67 000 111' },
+];
+
+// Cycle step definitions
+const CYCLE_STEPS = [
+    { label: 'New Set', key: 'new-set' },
+    { label: 'Corr. 1',  key: 'c1' },
+    { label: 'Corr. 2',  key: 'c2' },
+    { label: 'Corr. 3',  key: 'c3' },
+];
+
+// ── Navigation ───────────────────────────────────────────────────
+let navStack = ['login'];
+let currentClientIdx = 0;
+const screenIds = {
+    login: 's-login', dashboard: 's-dashboard', clients: 's-clients',
+    profile: 's-profile', finance: 's-finance', settings: 's-settings'
+};
+
+function go(name, clientIndex) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(screenIds[name]);
+    if (el) el.classList.add('active');
+    navStack.push(name);
+    if (name === 'profile' && clientIndex !== undefined) {
+        currentClientIdx = clientIndex;
+        renderProfile(CLIENTS[clientIndex]);
+    }
+}
+
+function goBack() {
+    navStack.pop();
+    const prev = navStack[navStack.length - 1] || 'clients';
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(screenIds[prev]);
+    if (el) el.classList.add('active');
+}
+
+// ── Profile renderer ─────────────────────────────────────────────
+function renderProfile(c) {
+    document.getElementById('p-title').textContent = c.name;
+    document.getElementById('p-name').textContent  = c.name;
+    // Tier badge on profile
+    const tierEl = document.getElementById('p-tier-badge');
+    if (tierEl) tierEl.textContent = tierEmoji(getClientTier(c.name));
+    document.getElementById('p-ava').textContent   = c.initials;
+    document.getElementById('p-phone').textContent = '📞 ' + c.phone;
+    const instaEl = document.getElementById('p-insta');
+    if (c.instagram) {
+        instaEl.innerHTML = `<a href="https://instagram.com/${c.instagram}" target="_blank">📸 @${c.instagram}</a>`;
+    } else {
+        instaEl.innerHTML = '';
+    }
+    // Cancellation count
+    const cancelCountEl = document.getElementById('p-cancel-count');
+    const cancelCount = c.cancellations || 0;
+    if (cancelCount > 0) {
+        cancelCountEl.textContent = `❌ ${cancelCount} cancellation${cancelCount > 1 ? 's' : ''}`;
+        cancelCountEl.style.display = 'block';
+    } else {
+        cancelCountEl.style.display = 'none';
+    }
+    document.getElementById('p-total').textContent = 'Total earned: ' + c.total;
+    document.getElementById('p-hist-total').textContent = 'Total: ' + c.total;
+    document.getElementById('p-notes').textContent = c.notes;
+
+    // Lash profile
+    const l = c.lash;
+    document.getElementById('p-lash').innerHTML = `
+        <div class="lash-item"><div class="lash-k">Shape</div><div class="lash-v">${l.shape}</div></div>
+        <div class="lash-item"><div class="lash-k">Length</div><div class="lash-v">${l.length}</div></div>
+        <div class="lash-item"><div class="lash-k">Type</div><div class="lash-v">${l.type}</div></div>
+        <div class="lash-item"><div class="lash-k">Curl</div><div class="lash-v">${l.curl}</div></div>
+    `;
+
+    // Warning notif
+    const notif = document.getElementById('p-notif');
+    notif.style.display = c.cycleStep === 'done-all' ? 'flex' : 'none';
+
+    // Blocked banner + show/hide sections
+    const blockedBanner = document.getElementById('p-blocked-banner');
+    const blockBtn      = document.getElementById('p-block-btn');
+    const actionBtns    = document.getElementById('p-action-btns');
+    const actionHint    = document.getElementById('p-action-hint');
+    const cycleSection  = document.getElementById('p-cycle-section');
+    if (c.blocked) {
+        blockedBanner.style.display = 'flex';
+        document.getElementById('p-block-reason').textContent = c.blockReason || '';
+        // Show only the block btn row (repurposed as unblock), hide log btn
+        if (actionBtns) {
+            actionBtns.style.display = 'flex';
+            const logBtn = actionBtns.querySelector('.btn-outline');
+            if (logBtn) logBtn.style.display = 'none';
+        }
+        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '↩ Unblock Client'; blockBtn.style.background = 'rgba(200,168,75,.08)'; blockBtn.style.borderColor = 'rgba(200,168,75,.3)'; blockBtn.style.color = 'var(--gold)'; blockBtn.onclick = unblockClient; }
+        if (actionHint) actionHint.style.display = 'none';
+        if (cycleSection) cycleSection.style.display = 'none';
+    } else {
+        blockedBanner.style.display = 'none';
+        if (actionBtns) {
+            actionBtns.style.display = 'flex';
+            const logBtn = actionBtns.querySelector('.btn-outline');
+            if (logBtn) logBtn.style.display = '';
+        }
+        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '🚫 Block Client'; blockBtn.style.background = 'rgba(224,80,80,.08)'; blockBtn.style.borderColor = 'rgba(224,80,80,.3)'; blockBtn.style.color = 'var(--red)'; blockBtn.onclick = openBlockClient; }
+        if (actionHint)  actionHint.style.display = 'block';
+        if (cycleSection) cycleSection.style.display = 'block';
+    }
+
+    // Cancellation filter count badge
+    const cancelledItems = c.history.filter(h => h.cancelled);
+    document.getElementById('hf-cancel-count').textContent = cancelledItems.length;
+
+    // Badge
+    const badge = document.getElementById('p-badge-wrap');
+    const cycleLabels  = { 'new-set':'New Set', c1:'Correction 1', c2:'Correction 2', c3:'Correction 3', 'done-all':'✓ Cycle Done' };
+    const cycleClasses = { 'new-set':'b-gold', c1:'b-grey', c2:'b-grey', c3:'b-grey', 'done-all':'b-grey' };
+    badge.innerHTML = `<span class="badge ${cycleClasses[c.cycleStep]}">${cycleLabels[c.cycleStep]}</span>`;
+
+    // Cycle tracker
+    const stepOrder  = ['new-set', 'c1', 'c2', 'c3'];
+    const currentIdx = stepOrder.indexOf(c.cycleStep === 'done-all' ? 'c3' : c.cycleStep);
+    const today = new Date(2026, 2, 15); // Mar 15, 2026
+
+    // Days since last cycle event
+    const lastCycleDate = c.cycleDates && c.cycleDates.length > 0 ? c.cycleDates[c.cycleDates.length - 1].date : null;
+    let daysAgoStr = '';
+    if (lastCycleDate) {
+        const last = new Date(lastCycleDate);
+        const diffDays = Math.round((today - last) / 86400000);
+        daysAgoStr = diffDays === 0 ? 'today' : diffDays + 'd ago';
+    }
+
+    let cycleHtml = '';
+    CYCLE_STEPS.forEach((step, i) => {
+        if (i > 0) {
+            const connDone = i <= currentIdx ? 'done' : '';
+            cycleHtml += `<div class="step-conn ${connDone}"></div>`;
+        }
+        let circClass = '';
+        const circContent = i === 0 ? '✦' : i;
+        if (i < currentIdx || (i === currentIdx && c.cycleStep === 'done-all')) circClass = 'done';
+        else if (i === currentIdx) circClass = 'active';
+
+        // Find date info for this step
+        const dateInfo = c.cycleDates ? c.cycleDates.find(d => d.step === step.key) : null;
+        const tooltipHtml = dateInfo
+            ? `<div id="cycle-tip-${i}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:7px 10px;white-space:nowrap;z-index:99;font-size:11px;color:var(--white);text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.5);">
+            <div style="font-weight:700;color:var(--gold);">${dateInfo.date}</div>
+            ${dateInfo.daysFromPrev ? `<div style="color:var(--muted);margin-top:2px;">${dateInfo.daysFromPrev}d since prev.</div>` : ''}
+          </div>`
+            : '';
+        const clickable = dateInfo ? `onclick="toggleCycleTip(${i})" style="cursor:pointer;"` : '';
+
+        cycleHtml += `
+        <div class="cycle-step" style="position:relative;" ${clickable}>
+            ${tooltipHtml}
+            <div class="step-circle ${circClass}">${circContent}</div>
+            <div class="step-lbl">${step.label}</div>
+        </div>`;
+    });
+    document.getElementById('cycle-row').innerHTML = cycleHtml;
+
+    // Update cycle header to show days since last
+    const cycleLabelEl = document.querySelector('#p-cycle-section .cycle-label');
+    if (cycleLabelEl) {
+        cycleLabelEl.innerHTML = `CURRENT CYCLE${daysAgoStr ? ` <span style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:0;text-transform:none;margin-left:6px;">${daysAgoStr}</span>` : ''}`;
+    }
+
+    // History — with cancel styling and delete button
+    renderHistoryList(c, 'all');
+}
+
+// ── Render history list (with filter support) ─────────────────────
+let currentHistFilter = 'all';
+function toggleCycleTip(idx) {
+    const tip = document.getElementById('cycle-tip-' + idx);
+    if (!tip) return;
+    const isVisible = tip.style.display !== 'none';
+    // hide all tips first
+    document.querySelectorAll('[id^="cycle-tip-"]').forEach(t => t.style.display = 'none');
+    if (!isVisible) tip.style.display = 'block';
+}
+
+function renderHistoryList(c, filter) {
+    currentHistFilter = filter || 'all';
+    // Update filter buttons
+    document.getElementById('hf-all').classList.toggle('active', filter === 'all');
+    document.getElementById('hf-cancelled').classList.toggle('active', filter === 'cancelled');
+
+    const items = filter === 'cancelled'
+        ? c.history.filter(h => h.cancelled)
+        : c.history;
+
+    if (items.length === 0) {
+        document.getElementById('p-history').innerHTML = filter === 'cancelled'
+            ? '<div style="padding:20px 16px;color:var(--muted);font-size:13px;text-align:center;">No cancellations recorded for this client. 🎉</div>'
+            : '<div style="padding:16px;color:var(--muted);font-size:13px;text-align:center;">No appointments yet.</div>';
+        return;
+    }
+
+    const histHtml = items.map((h, i) => {
+        const realIdx = c.history.indexOf(h);
+        const isCancelled = !!h.cancelled;
+        const cancelledCls = isCancelled ? ' cancelled' : '';
+        // Escape strings for onclick attribute
+        const safeReason = (h.cancelReason || '').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+        const safeType   = (h.type || '').replace(/'/g,"\\'");
+        const safeDate   = (h.date || '').replace(/'/g,"\\'");
+        const safeWho    = (h.cancelledBy || 'unknown').replace(/'/g,"\\'");
+        const cancelClickable = isCancelled
+            ? `onclick="openCancelDetail('${safeDate}','${safeType}','${safeWho}','${safeReason}')" style="cursor:pointer;"`
+            : '';
+        const cancelTag = isCancelled
+            ? `<div style="margin-top:5px;"><span class="hist-cancelled-tag" ${cancelClickable}>❌ Cancelled by ${h.cancelledBy || 'unknown'} · tap for details</span></div>`
+            : '';
+        return `
+        <div class="hist-item${cancelledCls}" id="hist-row-${realIdx}">
+            <div class="hist-row">
+                <div style="flex:1;">
+                    <div class="hist-date">${h.date}</div>
+                    <div class="hist-type">${h.type}</div>
+                    ${h.desc ? `<div class="hist-desc">${h.desc}</div>` : ''}
+                    ${cancelTag}
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="hist-price" style="${isCancelled ? 'color:var(--red);' : ''}">${h.price}</div>
+                    <button onclick="deleteHistItem(${realIdx})" style="background:rgba(224,112,96,.1);border:1px solid rgba(224,112,96,.25);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;flex-shrink:0;" title="Delete">🗑</button>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+    document.getElementById('p-history').innerHTML = histHtml;
+}
+
+function filterHistory(type) {
+    const c = CLIENTS[currentClientIdx];
+    if (c) renderHistoryList(c, type);
+}
+
+// ── Appointment Options (from calendar) ───────────────────────────
+let currentApptId = null;
+function openApptOptions(id) {
+    const a = APPOINTMENTS.find(x => x.id === id);
+    if (!a) return;
+    currentApptId = id;
+    document.getElementById('ao-title').textContent = `March ${a.day}, 2026`;
+    document.getElementById('ao-time').textContent  = a.time;
+    document.getElementById('ao-client').textContent = a.client;
+    document.getElementById('ao-type').textContent   = a.type;
+    // Status badge
+    const badge = document.getElementById('ao-status-badge');
+    if (a.cancelled) {
+        badge.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 8px;">Cancelled</span>`;
+    } else {
+        badge.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--green);background:rgba(92,184,122,.12);border:1px solid rgba(92,184,122,.3);border-radius:6px;padding:3px 8px;">Booked</span>`;
+    }
+    // Cancel info section
+    const cancelInfo = document.getElementById('ao-cancel-info');
+    if (a.cancelled) {
+        cancelInfo.style.display = 'block';
+        document.getElementById('ao-cancelled-by').textContent = a.cancelledBy || '—';
+        document.getElementById('ao-cancel-reason-text').textContent = a.cancelReason ? `"${a.cancelReason}"` : '';
+    } else {
+        cancelInfo.style.display = 'none';
+    }
+    // Hide cancel button if already cancelled
+    document.getElementById('ao-cancel-btn').style.display = a.cancelled ? 'none' : 'block';
+    document.getElementById('ao-edit-btn').style.display   = a.cancelled ? 'none' : 'block';
+    openModal('m-appt-options');
+}
+
+// ── Cancel Appointment ────────────────────────────────────────────
+function openCancelAppt(id) {
+    currentApptId = id;
+    document.getElementById('ca-who').value    = 'client';
+    document.getElementById('ca-reason').value = '';
+    openModal('m-cancel-appt');
+}
+
+function confirmCancelAppt() {
+    const a = APPOINTMENTS.find(x => x.id === currentApptId);
+    if (!a) return;
+    const who    = document.getElementById('ca-who').value;
+    const reason = document.getElementById('ca-reason').value.trim();
+    a.cancelled    = true;
+    a.cancelledBy  = who;
+    a.cancelReason = reason;
+    // If client cancelled, increment client's cancellation count
+    if (who === 'client' || who === 'no-show') {
+        const client = CLIENTS.find(c => c.name === a.client);
+        if (client) {
+            client.cancellations = (client.cancellations || 0) + 1;
+            // Add to history
+            const typeLabel = {'client':'client','no-show':'client (no-show)','artist':'artist','emergency':'emergency'}[who];
+            client.history.unshift({ date: `Mar ${a.day}, 2026`, type: a.type, desc: '', price: '—', cancelled: true, cancelledBy: typeLabel, cancelReason: reason });
+        }
+    }
+    closeModal('m-cancel-appt');
+    buildCalendar();
+    showToast('Appointment cancelled ✓');
+}
+
+// ── Block / Unblock Client ────────────────────────────────────────
+function openBlockClient() {
+    const c = CLIENTS[currentClientIdx];
+    if (!c) return;
+    document.getElementById('bl-reason').value = c.blockReason || '';
+    openModal('m-block-client');
+}
+
+function saveBlockClient() {
+    const c = CLIENTS[currentClientIdx];
+    if (!c) return;
+    c.blocked     = true;
+    c.blockReason = document.getElementById('bl-reason').value.trim();
+    closeModal('m-block-client');
+    renderProfile(c);
+    renderClientList(document.getElementById('cl-search')?.value || '');
+    showToast('Client blocked 🚫');
+}
+
+function unblockClient() {
+    const c = CLIENTS[currentClientIdx];
+    if (!c) return;
+    c.blocked     = false;
+    c.blockReason = '';
+    renderProfile(c);
+    renderClientList(document.getElementById('cl-search')?.value || '');
+    showToast('Client unblocked ✓');
+}
+
+// ── Cancellation detail modal ─────────────────────────────────────
+function openCancelDetail(date, type, who, reason) {
+    document.getElementById('cd-date').textContent   = date;
+    document.getElementById('cd-type').textContent   = type;
+    document.getElementById('cd-who').textContent    = who;
+    const whoMap = { 'client':'Client cancelled', 'client (no-show)':'No-show', 'no-show':'No-show', 'artist':'Artist cancelled', 'emergency':'Emergency' };
+    document.getElementById('cd-who').textContent = whoMap[who] || who;
+    document.getElementById('cd-reason').textContent = reason ? `"${reason}"` : 'No reason provided.';
+    openModal('m-cancel-detail');
+}
+
+// ── Delete history item ───────────────────────────────────────────
+function deleteHistItem(idx) {
+    const row = document.getElementById('hist-row-' + idx);
+    if (!row) return;
+    // Confirmation inline
+    row.style.background = 'rgba(224,112,96,.06)';
+    row.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:13px;color:var(--muted);">Delete this entry?</span>
+            <div style="display:flex;gap:8px;">
+                <button onclick="renderHistoryList(CLIENTS[currentClientIdx],currentHistFilter)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;">Cancel</button>
+                <button onclick="confirmDeleteHist(${idx})" style="background:rgba(224,112,96,.15);border:1px solid rgba(224,112,96,.4);border-radius:8px;padding:6px 12px;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;">Delete</button>
+            </div>
+        </div>`;
+}
+
+function confirmDeleteHist(idx) {
+    const c = CLIENTS[currentClientIdx];
+    if (c) {
+        c.history.splice(idx, 1);
+        // Recount cancellations
+        c.cancellations = c.history.filter(h => h.cancelled && (h.cancelledBy === 'client' || h.cancelledBy === 'client (no-show)' || h.cancelledBy === 'no-show')).length;
+        renderProfile(c);
+    }
+}
+
+// ── Reset cycle ──────────────────────────────────────────────────
+function resetCycle() {
+    document.getElementById('p-notif').style.display = 'none';
+    document.getElementById('p-badge-wrap').innerHTML = '<span class="badge b-gold">New Set (Reset)</span>';
+    // Re-render cycle as starting fresh
+    let cycleHtml = '';
+    CYCLE_STEPS.forEach((step, i) => {
+        if (i > 0) cycleHtml += `<div class="step-conn"></div>`;
+        const circContent = i === 0 ? '✦' : (i < 4 ? i : '!');
+        const circClass = i === 0 ? 'active' : '';
+        cycleHtml += `
+            <div class="cycle-step">
+                <div class="step-circle ${circClass}">${circContent}</div>
+                <div class="step-lbl">${step.label}</div>
+            </div>`;
+    });
+    document.getElementById('cycle-row').innerHTML = cycleHtml;
+}
+
+// ── Modals ───────────────────────────────────────────────────────
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
+});
+
+// ── Finance tabs ─────────────────────────────────────────────────
+function finTab(tab) {
+    document.getElementById('tab-inc').style.display    = tab === 'income'   ? 'block' : 'none';
+    document.getElementById('tab-exp').style.display    = tab === 'expenses' ? 'block' : 'none';
+    document.getElementById('tab-top').style.display    = tab === 'top'      ? 'block' : 'none';
+    const tabPrices = document.getElementById('tab-prices');
+    if (tabPrices) tabPrices.style.display = tab === 'prices' ? 'block' : 'none';
+    document.getElementById('seg-inc').classList.toggle('active',    tab === 'income');
+    document.getElementById('seg-exp').classList.toggle('active',    tab === 'expenses');
+    document.getElementById('seg-top').classList.toggle('active',    tab === 'top');
+    const segPrices = document.getElementById('seg-prices');
+    if (segPrices) segPrices.classList.toggle('active', tab === 'prices');
+    if (tab === 'top')    buildTopClients();
+    if (tab === 'prices') renderPricesTab();
+}
+
+// ── Searchable client picker ──────────────────────────────────────
+function filterPicker(searchId, listId) {
+    const input = document.getElementById(searchId);
+    const list  = document.getElementById(listId);
+    const q     = input.value.trim().toLowerCase();
+
+    const matches = q.length === 0
+        ? ALL_CLIENTS_PICKER
+        : ALL_CLIENTS_PICKER.filter(c =>
+            c.name.toLowerCase().includes(q) ||
+            c.phone.replace(/\s/g,'').includes(q.replace(/\s/g,''))
+          );
+
+    list.innerHTML = matches.length > 0
+        ? matches.map((c, i) => {
+            const clientData = CLIENTS.find(cl => cl.name === c.name && cl.phone === c.phone);
+            const isBlocked  = clientData?.blocked === true;
+            const blockedCls = isBlocked ? ' is-blocked' : '';
+            const blockedTag = isBlocked ? `<span class="ci-blocked-tag">Blocked</span>` : '';
+            const onclick    = isBlocked ? '' : `onclick="selectPicker('${searchId}','${listId}','${c.name.replace(/'/g,"\\'")}','${c.phone}')"`;
+            return `
+            <div class="cpicker-item${blockedCls}" ${onclick}>
+                <div class="ci-name">${highlightMatch(c.name, q)}${blockedTag}</div>
+                <div class="ci-phone">${c.phone}</div>
+            </div>`;
+          }).join('')
+        : '<div class="cpicker-empty">No clients found</div>';
+
+    list.classList.add('open');
+}
+
+function highlightMatch(text, q) {
+    if (!q) return text;
+    const idx = text.toLowerCase().indexOf(q);
+    if (idx === -1) return text;
+    return text.slice(0, idx) +
+        `<span style="color:var(--gold);font-weight:800">${text.slice(idx, idx + q.length)}</span>` +
+        text.slice(idx + q.length);
+}
+
+function selectPicker(searchId, listId, name, phone) {
+    const list = document.getElementById(listId);
+    // Determine which modal we're in and update the selected card
+    if (searchId === 'book-search') {
+        document.getElementById('book-sel-name').textContent  = name;
+        document.getElementById('book-sel-phone').textContent = phone;
+        document.getElementById('book-selected').style.display = 'flex';
+        document.getElementById('book-search').value = '';
+        document.getElementById('book-search').placeholder = name;
+    } else if (searchId === 'ea-search') {
+        document.getElementById('ea-sel-name').textContent  = name;
+        document.getElementById('ea-sel-phone').textContent = phone;
+        document.getElementById('ea-selected').style.display = 'flex';
+        document.getElementById('ea-search').value = '';
+        document.getElementById('ea-search').placeholder = name;
+        document.getElementById('ea-client').value = name; // sync hidden input
+    }
+    list.classList.remove('open');
+}
+
+function clearPicker(searchId, selectedId) {
+    document.getElementById(searchId).value = '';
+    document.getElementById(searchId).placeholder = '🔍  Search by name or phone…';
+    document.getElementById(selectedId).style.display = 'none';
+    if (searchId === 'ea-search') document.getElementById('ea-client').value = '';
+}
+
+// Close pickers when clicking outside
+document.addEventListener('click', function(e) {
+    ['book-search','ea-search'].forEach(id => {
+        const input = document.getElementById(id);
+        const list  = document.getElementById(id.replace('search','list'));
+        if (input && list && !input.contains(e.target) && !list.contains(e.target)) {
+            list.classList.remove('open');
+        }
+    });
+});
+
+// ── Build calendar ────────────────────────────────────────────────
+function buildCalendar() {
+    const apptDays     = new Set(APPOINTMENTS.filter(a => !a.cancelled).map(a => a.day));
+    const cancelDays   = new Set(APPOINTMENTS.filter(a => a.cancelled).map(a => a.day));
+    let html = '';
+    for (let i = 0; i < 6; i++) html += '<div class="cal-cell empty"></div>';
+    for (let d = 1; d <= 31; d++) {
+        const today  = d === 15;
+        const hasA   = apptDays.has(d);
+        const hasC   = cancelDays.has(d);
+        const hasAny = APPOINTMENTS.some(a => a.day === d);
+        const cnt    = APPOINTMENTS.filter(a => a.day === d && !a.cancelled).length;
+        const cls    = ['cal-cell', today ? 'today' : '', hasA && !today ? 'has-appt' : ''].filter(Boolean).join(' ');
+        let dots = '';
+        if (hasA)  dots += `<span class="cal-dot"></span>`;
+        if (hasC && !hasA) dots += `<span class="cal-dot cancel-dot"></span>`;
+        if (hasC && hasA)  dots += `<span class="cal-dot cancel-dot" style="margin-left:2px;"></span>`;
+        const countBadge = hasAny && cnt > 1 ? `<span style="position:absolute;top:2px;right:2px;font-size:8px;font-weight:800;color:var(--gold);">${cnt}</span>` : '';
+        html += `<div class="${cls}" onclick="dayClick(${d})" style="cursor:pointer;">${d}${dots}${countBadge}</div>`;
+    }
+    document.getElementById('cal-cells').innerHTML = html;
+}
+
+// ── Appointments data (for calendar + overlap detection) ──────────
+const APPOINTMENTS = [
+    { id:1, day:3,  time:'10:00', client:'Sofija Nikolić',  type:'Correction 2' },
+    { id:2, day:8,  time:'11:00', client:'Ana Jovanović',   type:'Correction 3' },
+    { id:3, day:10, time:'14:00', client:'Maja Petrović',   type:'Correction 1' },
+    { id:4, day:12, time:'16:00', client:'Tamara Lukić',    type:'New Set', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
+    { id:5, day:15, time:'10:00', client:'Ana Jovanović',   type:'New Set Required', cancelled:true, cancelledBy:'client', cancelReason:'Sick — texted morning of' },
+    { id:6, day:15, time:'12:00', client:'Maja Petrović',   type:'Correction 1' },
+    { id:7, day:15, time:'14:30', client:'Sofija Nikolić',  type:'Correction 2' },
+    { id:8, day:15, time:'16:00', client:'Tamara Lukić',    type:'New Set' },
+    { id:9, day:17, time:'10:00', client:'Katarina Milić',  type:'Correction 3' },
+    { id:10,day:19, time:'13:00', client:'Ivana Ristić',    type:'Correction 1' },
+    { id:11,day:22, time:'11:00', client:'Ana Jovanović',   type:'New Set' },
+    { id:12,day:24, time:'10:00', client:'Maja Petrović',   type:'Correction 2' },
+    { id:13,day:26, time:'15:00', client:'Jelena Đorđević', type:'Correction 3' },
+    { id:14,day:29, time:'12:00', client:'Sofija Nikolić',  type:'Correction 3' },
+];
+let editingApptId = null;
+
+buildCalendar();
+
+// ── Calendar: click on day ────────────────────────────────────────
+function dayClick(day) {
+    const appts = APPOINTMENTS.filter(a => a.day === day);
+    const isPast = day < 15;
+    const title  = `March ${day}, 2026${day === 15 ? ' · Today' : isPast ? ' · Past' : ' · Upcoming'}`;
+    document.getElementById('day-detail-title').textContent = title;
+    if (appts.length === 0) {
+        document.getElementById('day-detail-list').innerHTML =
+            `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">No appointments on this day.</div>`;
+    } else {
+        document.getElementById('day-detail-list').innerHTML = appts.map(a => {
+            const isCancelled = !!a.cancelled;
+            const rowBg  = isCancelled ? 'background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);' : 'background:var(--bg3);border:1px solid transparent;';
+            const timeColor = isCancelled ? 'color:var(--red);' : 'color:var(--gold);';
+            const typeColor = isCancelled ? 'color:var(--red);' : 'color:var(--muted);';
+            const badge = isCancelled
+                ? `<span style="font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 7px;">Cancelled</span>`
+                : isPast
+                ? `<span class="badge b-grey">Done</span>`
+                : `<button onclick="openApptOptions(${a.id});closeModal('m-day-detail')" style="background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:6px 10px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;">Options</button>`;
+            return `
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px;${rowBg}">
+                <div style="font-size:13px;font-weight:800;width:38px;flex-shrink:0;${timeColor}">${a.time}</div>
+                <div style="flex:1;">
+                    <div style="font-size:14px;font-weight:700;color:var(--white);">${a.client}</div>
+                    <div style="font-size:11px;margin-top:2px;${typeColor}">${a.type}${isCancelled && a.cancelledBy ? ` · by ${a.cancelledBy}` : ''}</div>
+                    ${isCancelled && a.cancelReason ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic;">"${a.cancelReason}"</div>` : ''}
+                </div>
+                ${badge}
+            </div>`;
+        }).join('');
+    }
+    openModal('m-day-detail');
+}
+
+// ── Open Edit Appointment modal ───────────────────────────────────
+function openEditAppt(id) {
+    const a = APPOINTMENTS.find(x => x.id === id);
+    if (!a) return;
+    editingApptId = id;
+    // Pre-fill searchable picker
+    const clientData = ALL_CLIENTS_PICKER.find(c => c.name === a.client);
+    const phone = clientData ? clientData.phone : '';
+    document.getElementById('ea-sel-name').textContent  = a.client;
+    document.getElementById('ea-sel-phone').textContent = phone;
+    document.getElementById('ea-selected').style.display = 'flex';
+    document.getElementById('ea-search').value = '';
+    document.getElementById('ea-search').placeholder = a.client;
+    document.getElementById('ea-client').value = a.client;
+    document.getElementById('ea-list').classList.remove('open');
+    // Date + time + services
+    document.getElementById('ea-time').value = a.time;
+    document.getElementById('ea-date').value = `2026-03-${String(a.day).padStart(2,'0')}`;
+    initSvcFromType('svc-ea', a.type);
+    openModal('m-edit-appt');
+}
+
+// ── Overlap check ─────────────────────────────────────────────────
+function checkOverlap() {
+    const newTime = document.getElementById('ea-time').value;
+    const newDate = document.getElementById('ea-date').value;
+    const newDay  = parseInt(newDate.split('-')[2]);
+    // Simple overlap: same day, within 90 min
+    const conflict = APPOINTMENTS.find(a => {
+        if (a.id === editingApptId) return false;
+        if (a.day !== newDay) return false;
+        const [ah, am] = a.time.split(':').map(Number);
+        const [nh, nm] = newTime.split(':').map(Number);
+        return Math.abs((ah*60+am) - (nh*60+nm)) < 90;
+    });
+    if (conflict) {
+        document.getElementById('overlap-msg').innerHTML =
+            `This time overlaps with <strong style="color:var(--white);">${conflict.client} at ${conflict.time}</strong>. How would you like to resolve this?`;
+        closeModal('m-edit-appt');
+        openModal('m-overlap');
+    } else {
+        // No conflict — save
+        const a = APPOINTMENTS.find(x => x.id === editingApptId);
+        if (a) { a.time = newTime; a.day = newDay; a.client = document.getElementById('ea-client').value; a.type = getSvcLabel('svc-ea') || a.type; }
+        closeModal('m-edit-appt');
+        buildCalendar();
+        showToast('Appointment updated ✓');
+    }
+}
+
+// ── Resolve overlap ───────────────────────────────────────────────
+function resolveOverlap(action) {
+    closeModal('m-overlap');
+    if (action === 'move') {
+        showToast('Conflicting appointment moved to next available slot ✓');
+    } else {
+        showToast('Conflicting appointment cancelled ✓');
+    }
+    buildCalendar();
+}
+
+// ── Toast notification ────────────────────────────────────────────
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a1a;border:1px solid rgba(200,168,75,.4);color:#F5F5F5;font-size:13px;font-weight:700;padding:10px 18px;border-radius:20px;white-space:nowrap;z-index:300;pointer-events:none;';
+    document.getElementById('phone').appendChild(t);
+    setTimeout(() => t.remove(), 2400);
+}
+
+// ── Client photo ──────────────────────────────────────────────────
+const PHOTO_COLORS = ['#8B5E8B','#5E8B5E','#5E6B8B','#8B705E','#8B5E6B','#6B8B5E'];
+function simulatePhoto(action) {
+    if (action === 'remove') {
+        const c = CLIENTS[currentClientIdx];
+        document.getElementById('p-ava').textContent = c.initials;
+        document.getElementById('p-ava').style.backgroundImage = '';
+        document.getElementById('photo-preview').textContent = c.initials;
+        document.getElementById('photo-preview').style.backgroundImage = '';
+        closeModal('m-photo');
+        showToast('Photo removed');
+        return;
+    }
+    // Simulate photo added with a colored placeholder
+    const color = PHOTO_COLORS[currentClientIdx % PHOTO_COLORS.length];
+    const ava = document.getElementById('p-ava');
+    ava.textContent = '👤';
+    ava.style.background = color;
+    document.getElementById('photo-preview').textContent = '👤';
+    document.getElementById('photo-preview').style.background = color;
+    closeModal('m-photo');
+    showToast(action === 'camera' ? 'Photo taken ✓' : 'Photo selected ✓');
+}
+
+// Sync photo-preview initials when profile opens
+const _origRenderProfile = renderProfile;
+// (already defined above — we patch photo preview open)
+document.getElementById('m-photo').addEventListener('transitionend', () => {});
+// Keep photo preview in sync with current client
+function syncPhotoModal() {
+    const c = CLIENTS[currentClientIdx];
+    if (c) {
+        document.getElementById('photo-preview').textContent = c.initials;
+        document.getElementById('photo-preview').style.background = 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+    }
+}
+
+// ── Salon branding ────────────────────────────────────────────────
+let logoUploaded = false;
+function simulateLogo() {
+    logoUploaded = !logoUploaded;
+    const el = document.getElementById('logo-upload-preview');
+    el.textContent = logoUploaded ? '🌸' : '✦';
+    el.style.background = logoUploaded ? '#2a1a2a' : 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+}
+function saveSalon() {
+    const name = document.getElementById('salon-name-input').value.trim();
+    if (name) {
+        document.getElementById('salon-name-display').textContent = name;
+        // Update eyebrow labels across all screens
+        document.querySelectorAll('.eyebrow').forEach(el => el.textContent = name);
+        // Update settings logo
+        const logoEl = document.getElementById('salon-logo-preview');
+        if (logoUploaded) { logoEl.textContent = '🌸'; logoEl.style.background = '#2a1a2a'; }
+    }
+    closeModal('m-salon');
+    showToast('Studio branding saved ✓');
+}
+
+// ── Color theme ───────────────────────────────────────────────────
+function applyTheme(light, dark) {
+    document.documentElement.style.setProperty('--gold', light);
+    document.documentElement.style.setProperty('--gold-dark', dark);
+    document.documentElement.style.setProperty('--border', `rgba(${hexToRgb(light)}, 0.18)`);
+    showToast('Theme applied ✓');
+}
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return `${r}, ${g}, ${b}`;
+}
+
+// ── Edit Client modal ─────────────────────────────────────────────
+function editTab(tab) {
+    document.getElementById('et-info').style.display  = tab === 'info'  ? 'block' : 'none';
+    document.getElementById('et-lash').style.display  = tab === 'lash'  ? 'block' : 'none';
+    document.getElementById('et-info-btn').classList.toggle('active', tab === 'info');
+    document.getElementById('et-lash-btn').classList.toggle('active', tab === 'lash');
+}
+
+function openEditClient() {
+    const c = CLIENTS[currentClientIdx];
+    if (!c) return;
+    const parts = c.name.split(' ');
+    document.getElementById('e-fname').value  = parts[0] || '';
+    document.getElementById('e-lname').value  = parts.slice(1).join(' ') || '';
+    document.getElementById('e-phone').value     = c.phone;
+    document.getElementById('e-instagram').value = c.instagram || '';
+    document.getElementById('e-notes').value     = c.notes;
+    document.getElementById('e-length').value = c.lash.length;
+    // Set selects
+    ['e-shape','e-type','e-curl'].forEach(id => {
+        const el = document.getElementById(id);
+        const key = id === 'e-shape' ? 'shape' : id === 'e-type' ? 'type' : 'curl';
+        for (let opt of el.options) { if (opt.value === c.lash[key] || opt.text === c.lash[key]) { opt.selected = true; break; } }
+    });
+    editTab('info');
+    openModal('m-edit-client');
+}
+
+function saveEditClient() {
+    const c = CLIENTS[currentClientIdx];
+    if (!c) return;
+    const fn = document.getElementById('e-fname').value.trim();
+    const ln = document.getElementById('e-lname').value.trim();
+    c.name   = [fn, ln].filter(Boolean).join(' ');
+    c.phone     = document.getElementById('e-phone').value.trim();
+    c.instagram = document.getElementById('e-instagram').value.trim().replace(/^@/, '');
+    c.notes     = document.getElementById('e-notes').value.trim();
+    c.lash.shape  = document.getElementById('e-shape').value;
+    c.lash.length = document.getElementById('e-length').value.trim();
+    c.lash.type   = document.getElementById('e-type').value;
+    c.lash.curl   = document.getElementById('e-curl').value;
+    c.initials = (fn[0] || '') + (ln[0] || '');
+    closeModal('m-edit-client');
+    renderProfile(c);
+}
+
+// Wire edit button to pre-fill modal
+document.querySelector('#s-profile .btn-ghost').addEventListener('click', openEditClient);
+
+// ── Client list (dynamic, searchable) ────────────────────────────
+const CLIENT_LIST_DATA = [
+    { name:'Ana Jovanović',   initials:'AJ', sub:'Last visit: Mar 8 · Total: 620€',   badge:'b-warn', badgeLbl:'⚠️ New Set', idx:0 },
+    { name:'Maja Petrović',   initials:'MP', sub:'Last visit: Mar 3 · Total: 380€',   badge:'b-grey', badgeLbl:'C1', idx:1 },
+    { name:'Sofija Nikolić',  initials:'SN', sub:'Last visit: Feb 28 · Total: 890€',  badge:'b-grey', badgeLbl:'C2', idx:2 },
+    { name:'Tamara Lukić',    initials:'TL', sub:'Last visit: Mar 12 · Total: 120€',  badge:'b-gold', badgeLbl:'New Set', idx:3 },
+    { name:'Katarina Milić',  initials:'KM', sub:'Last visit: Mar 1 · Total: 1,140€', badge:'b-grey', badgeLbl:'C3', idx:4 },
+    { name:'Ivana Ristić',    initials:'IR', sub:'Last visit: Feb 20 · Total: 560€',  badge:'b-grey', badgeLbl:'C1', idx:null },
+    { name:'Jelena Đorđević', initials:'JD', sub:'Last visit: Mar 6 · Total: 720€',   badge:'b-grey', badgeLbl:'C2', idx:null },
+    { name:'Milica Stanković',initials:'MS', sub:'Last visit: Jan 15 · Total: 430€',  badge:'b-grey', badgeLbl:'C1', idx:null },
+    { name:'Jovana Vasić',    initials:'JV', sub:'Last visit: Feb 10 · Total: 310€',  badge:'b-grey', badgeLbl:'C2', idx:null },
+    { name:'Aleksandra Vukić',initials:'AV', sub:'Last visit: Mar 7 · Total: 780€',   badge:'b-grey', badgeLbl:'C3', idx:null },
+];
+
+function renderClientList(q) {
+    const list = document.getElementById('cl-list');
+    if (!list) return;
+    const query = (q || '').trim().toLowerCase();
+    const matches = query
+        ? CLIENT_LIST_DATA.filter(c => c.name.toLowerCase().includes(query))
+        : CLIENT_LIST_DATA;
+
+    if (matches.length === 0) {
+        list.innerHTML = `<div style="padding:32px 16px;text-align:center;color:var(--muted);font-size:13px;">No clients found for "${q}"</div>`;
+        return;
+    }
+
+    list.innerHTML = matches.map(c => {
+        const clientData = c.idx !== null ? CLIENTS[c.idx] : null;
+        const isBlocked  = clientData?.blocked === true;
+        const cancelCnt  = clientData?.cancellations || 0;
+
+        const tier      = getClientTier(c.name);
+        const tierMedal = !isBlocked && tier ? `<span style="font-size:16px;margin-left:5px;vertical-align:middle;">${tierEmoji(tier)}</span>` : '';
+        const blockedBadge = isBlocked
+            ? `<span style="display:inline-block;font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:2px 7px;margin-left:6px;">Blocked</span>`
+            : '';
+        const cancelBadge = !isBlocked && cancelCnt > 0
+            ? `<span style="font-size:10px;color:var(--red);font-weight:700;margin-left:6px;">❌ ${cancelCnt}</span>`
+            : '';
+        const onclick = c.idx !== null ? `onclick="go('profile',${c.idx})"` : '';
+        const opacity = isBlocked ? 'opacity:.75;' : '';
+        const avaStyle = isBlocked ? 'background:rgba(224,80,80,.25);border:2px solid rgba(224,80,80,.4);' : '';
+
+        return `
+        <div class="cli-row" ${onclick} style="${opacity}cursor:${c.idx !== null ? 'pointer' : 'default'};">
+            <div class="ava" style="${avaStyle}">${c.initials}</div>
+            <div class="cli-info">
+                <div class="cli-name">${c.name}${tierMedal}${blockedBadge}${cancelBadge}</div>
+                <div class="cli-sub">${c.sub}</div>
+            </div>
+            <span class="badge ${c.badge}">${c.badgeLbl}</span>
+        </div>`;
+    }).join('');
+}
+
+function filterClients() {
+    const q = document.getElementById('cl-search')?.value || '';
+    renderClientList(q);
+}
+
+// ── Client earnings data (all-time, for ranking) ─────────────────
+const ALL_CLIENT_EARNINGS = [
+    { name:'Katarina Milić',    amount:1140 },
+    { name:'Sofija Nikolić',    amount:890  },
+    { name:'Jelena Đorđević',   amount:720  },
+    { name:'Ana Jovanović',     amount:620  },
+    { name:'Ivana Ristić',      amount:560  },
+    { name:'Milica Stanković',  amount:430  },
+    { name:'Maja Petrović',     amount:380  },
+    { name:'Aleksandra Vukić',  amount:375  },
+    { name:'Bojana Todorović',  amount:360  },
+    { name:'Dragana Ilić',      amount:340  },
+    // ── silver tier ─────────────────────────────────────────────
+    { name:'Vesna Đukić',       amount:320  },
+    { name:'Jovana Vasić',      amount:310  },
+    { name:'Tijana Marković',   amount:290  },
+    { name:'Nikoleta Savić',    amount:270  },
+    { name:'Ana Popović',       amount:260  },
+    { name:'Zorana Blagojević', amount:245  },
+    { name:'Slađana Lazić',     amount:220  },
+    { name:'Marija Stojanović', amount:200  },
+    { name:'Nataša Petrović',   amount:185  },
+    { name:'Kristina Đurić',    amount:170  },
+    // ── bronze tier ─────────────────────────────────────────────
+    { name:'Milena Jovanović',  amount:160  },
+    { name:'Sandra Ilić',       amount:150  },
+    { name:'Anđela Stanković',  amount:140  },
+    { name:'Maja Stojanović',   amount:130  },
+    { name:'Svetlana Vasić',    amount:122  },
+    { name:'Valentina Marić',   amount:110  },
+    { name:'Teodora Lazić',     amount:100  },
+    { name:'Isidora Petrović',  amount:95   },
+    { name:'Lana Nikolić',      amount:85   },
+    { name:'Petra Đorđević',    amount:75   },
+    // ── blocked (shown separately, no badge) ────────────────────
+    { name:'Tamara Lukić',      amount:120  },
+];
+
+// Returns 'gold' | 'silver' | 'bronze' | null
+function getClientTier(name) {
+    // Check if blocked
+    const clientObj = CLIENTS.find(c => c.name === name);
+    if (clientObj?.blocked) return null;
+    // Rank only among non-blocked clients
+    const nonBlocked = ALL_CLIENT_EARNINGS.filter(e => {
+        const co = CLIENTS.find(c => c.name === e.name);
+        return !co?.blocked;
+    }).sort((a, b) => b.amount - a.amount);
+    const rank = nonBlocked.findIndex(e => e.name === name) + 1;
+    if (rank === 0) return null;
+    if (rank <= 10) return 'gold';
+    if (rank <= 20) return 'silver';
+    if (rank <= 30) return 'bronze';
+    return null;
+}
+
+function tierEmoji(tier) {
+    return tier === 'gold' ? '🥇' : tier === 'silver' ? '🥈' : tier === 'bronze' ? '🥉' : '';
+}
+
+function buildTopClients() {
+    const list = document.getElementById('top-clients-list');
+    if (!list) return;
+    // Split: non-blocked sorted desc, then blocked at bottom
+    const nonBlocked = ALL_CLIENT_EARNINGS.filter(e => {
+        const co = CLIENTS.find(c => c.name === e.name);
+        return !co?.blocked;
+    }).sort((a, b) => b.amount - a.amount);
+    const blocked = ALL_CLIENT_EARNINGS.filter(e => {
+        const co = CLIENTS.find(c => c.name === e.name);
+        return co?.blocked;
+    }).sort((a, b) => b.amount - a.amount);
+
+    const rows = [...nonBlocked, ...blocked].map((e, i) => {
+        const isBlockedClient = i >= nonBlocked.length;
+        const rank   = isBlockedClient ? null : i + 1;
+        const tier   = !isBlockedClient && rank <= 10 ? 'gold' : !isBlockedClient && rank <= 20 ? 'silver' : !isBlockedClient && rank <= 30 ? 'bronze' : null;
+        const emoji  = tierEmoji(tier);
+        const rankCls = tier === 'gold' ? 'gold-rank' : tier === 'silver' ? 'silver-rank' : tier === 'bronze' ? 'bronze-rank' : '';
+        const rankTxt = isBlockedClient ? '—' : rank;
+        const blockedCls = isBlockedClient ? ' tc-blocked-row' : '';
+        const blockedTag = isBlockedClient ? `<span style="font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:5px;padding:1px 6px;margin-left:6px;">Blocked</span>` : '';
+        const amtColor = isBlockedClient ? 'color:var(--muted)' : 'color:var(--gold)';
+        return `
+        <div class="top-client-row${blockedCls}">
+            <div class="tc-rank ${rankCls}">${rankTxt}</div>
+            <div class="tc-info">
+                <div class="tc-name">${e.name}${blockedTag}</div>
+                <div class="tc-sub">All-time earnings</div>
+            </div>
+            <div class="tc-amt" style="${amtColor}">${e.amount}€</div>
+            <div class="tier-badge">${isBlockedClient ? '🚫' : (emoji || '')}</div>
+        </div>`;
+    });
+    list.innerHTML = rows.join('');
+}
+
+// ── Service Picker ────────────────────────────────────────────────
+const SVC_STATE  = {};
+const NADOGRADNJA_KEYS = new Set(['new-set','c2w','c3w','c4w','reklamacija','skidanje']);
+const SVC_LABELS = {
+    'new-set'    : 'New Set',
+    'c2w'        : 'Correction · 2w',
+    'c3w'        : 'Correction · 3w',
+    'c4w'        : 'Correction · 4w',
+    'reklamacija': 'Reklamacija',
+    'skidanje'   : 'Skidanje nadogradnje',
+    'lash-lift'  : 'Lash Lift',
+    'brow-lift'  : 'Brow Lift'
+};
+
+function initSvcPicker(id) {
+    SVC_STATE[id] = { 'new-set':false, 'c2w':false, 'c3w':false, 'c4w':false, 'reklamacija':false, 'skidanje':false, 'lash-lift':false, 'brow-lift':false };
+    renderSvcPicker(id);
+}
+
+function initSvcFromType(id, typeStr) {
+    initSvcPicker(id);
+    if (!typeStr) return;
+    const s = SVC_STATE[id];
+    if (/new set/i.test(typeStr))              s['new-set']     = true;
+    if (/2\s*w|2\s*week|corr.*2/i.test(typeStr)) s['c2w']       = true;
+    if (/3\s*w|3\s*week|corr.*3/i.test(typeStr)) s['c3w']       = true;
+    if (/4\s*w|4\s*week|corr.*4/i.test(typeStr)) s['c4w']       = true;
+    if (/reklamacija/i.test(typeStr))          s['reklamacija'] = true;
+    if (/lash lift/i.test(typeStr))            s['lash-lift']   = true;
+    if (/brow lift/i.test(typeStr))            s['brow-lift']   = true;
+    renderSvcPicker(id);
+}
+
+function toggleSvc(id, key) {
+    if (!SVC_STATE[id]) initSvcPicker(id);
+    const s = SVC_STATE[id];
+    if (key === 'brow-lift') {
+        s['brow-lift'] = !s['brow-lift'];
+    } else if (NADOGRADNJA_KEYS.has(key)) {
+        // radio within nadogradnja + clear lash-lift
+        const wasOn = s[key];
+        NADOGRADNJA_KEYS.forEach(k => { s[k] = false; });
+        s['lash-lift'] = false;
+        s[key] = !wasOn;
+    } else if (key === 'lash-lift') {
+        // clear all nadogradnja
+        const wasOn = s['lash-lift'];
+        NADOGRADNJA_KEYS.forEach(k => { s[k] = false; });
+        s['lash-lift'] = !wasOn;
+    }
+    renderSvcPicker(id);
+}
+
+function renderSvcPicker(id) {
+    const picker = document.getElementById(id);
+    if (!picker || !SVC_STATE[id]) return;
+    const s = SVC_STATE[id];
+    picker.querySelectorAll('.svc-chip').forEach(btn => {
+        btn.classList.toggle('active', !!s[btn.dataset.key]);
+    });
+}
+
+function getSvcLabel(id) {
+    if (!SVC_STATE[id]) return '';
+    return Object.keys(SVC_STATE[id]).filter(k => SVC_STATE[id][k]).map(k => SVC_LABELS[k]).join(' + ');
+}
+
+// Initialise all pickers on load
+['svc-log','svc-book','svc-ea','svc-complete'].forEach(initSvcPicker);
+
+// Initialise client list on load (must be after ALL_CLIENT_EARNINGS is defined)
+renderClientList('');
+
+// ── Theme toggle ─────────────────────────────────────────────────
+let currentTheme = 'dark';
+function setTheme(t) {
+    currentTheme = t;
+    const root = document.documentElement;
+    if (t === 'light') {
+        root.classList.add('light');
+    } else {
+        root.classList.remove('light');
+    }
+    const darkBtn  = document.getElementById('theme-dark-btn');
+    const lightBtn = document.getElementById('theme-light-btn');
+    if (!darkBtn || !lightBtn) return;
+    if (t === 'dark') {
+        darkBtn.style.background  = 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+        darkBtn.style.color       = '#000';
+        lightBtn.style.background = 'transparent';
+        lightBtn.style.color      = 'var(--muted)';
+    } else {
+        lightBtn.style.background = 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+        lightBtn.style.color      = '#fff';
+        darkBtn.style.background  = 'transparent';
+        darkBtn.style.color       = 'var(--muted)';
+    }
+}
+
+// ── Auto Backup toggle ────────────────────────────────────────────
+let backupOn = true;
+function toggleBackup() {
+    backupOn = !backupOn;
+    const toggle = document.getElementById('backup-toggle');
+    const knob   = document.getElementById('backup-knob');
+    const status = document.getElementById('backup-status');
+    if (backupOn) {
+        toggle.style.background = 'linear-gradient(135deg, var(--gold-dark), var(--gold))';
+        knob.style.right = '3px';
+        knob.style.left  = 'auto';
+        status.style.display = 'block';
+        status.textContent = '✓ Last backup: Today, 14:32';
+        status.style.color = '#5CB87A';
+    } else {
+        toggle.style.background = '#333';
+        knob.style.right = 'auto';
+        knob.style.left  = '3px';
+        status.style.display = 'block';
+        status.textContent = '⚠️ Backup is disabled';
+        status.style.color = 'var(--orange)';
+    }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// SERVICE PRICES
+// ══════════════════════════════════════════════════════════════════
+const SERVICE_PRICES = {
+    'new-set'    : 120,
+    'c2w'        : 90,
+    'c3w'        : 80,
+    'c4w'        : 70,
+    'reklamacija': 0,
+    'skidanje'   : 40,
+    'lash-lift'  : 60,
+    'brow-lift'  : 50
+};
+
+function calcPriceFromSvcState(id) {
+    if (!SVC_STATE[id]) return 0;
+    const s = SVC_STATE[id];
+    return Object.keys(s).reduce((sum, k) => sum + (s[k] ? (SERVICE_PRICES[k] || 0) : 0), 0);
+}
+
+// ── Pricing modal ─────────────────────────────────────────────────
+function openPricingModal() {
+    document.getElementById('pr-new-set').value    = SERVICE_PRICES['new-set'];
+    document.getElementById('pr-c2w').value        = SERVICE_PRICES['c2w'];
+    document.getElementById('pr-c3w').value        = SERVICE_PRICES['c3w'];
+    document.getElementById('pr-c4w').value        = SERVICE_PRICES['c4w'];
+    document.getElementById('pr-skidanje').value   = SERVICE_PRICES['skidanje'];
+    document.getElementById('pr-lash-lift').value  = SERVICE_PRICES['lash-lift'];
+    document.getElementById('pr-brow-lift').value  = SERVICE_PRICES['brow-lift'];
+    openModal('m-pricing');
+}
+
+function savePricing() {
+    const read = (id, key) => {
+        const v = parseInt(document.getElementById(id).value, 10);
+        if (!isNaN(v) && v >= 0) SERVICE_PRICES[key] = v;
+    };
+    read('pr-new-set',   'new-set');
+    read('pr-c2w',       'c2w');
+    read('pr-c3w',       'c3w');
+    read('pr-c4w',       'c4w');
+    read('pr-skidanje',  'skidanje');
+    read('pr-lash-lift', 'lash-lift');
+    read('pr-brow-lift', 'brow-lift');
+    closeModal('m-pricing');
+    renderPricesTab();
+}
+
+// ── Bank account ─────────────────────────────────────────────────
+let BANK_ACCOUNT = '115-0343043400-23';
+
+function openEditBankAccount() {
+    const current = BANK_ACCOUNT;
+    const el = document.getElementById('bank-account-display');
+    if (!el) return;
+    // Replace display with inline input
+    el.outerHTML = `<div style="display:flex;align-items:center;gap:8px;flex:1;">
+        <input id="bank-edit-input" class="field" value="${current}"
+            style="font-size:14px;font-weight:700;padding:6px 10px;flex:1;"
+            onkeydown="if(event.key==='Enter')saveBankAccount()">
+        <button onclick="saveBankAccount()" style="background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:5px 10px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Save</button>
+        <button onclick="cancelBankEdit('${current}')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;">✕</button>
+    </div>`;
+    document.getElementById('bank-edit-input').focus();
+}
+
+function saveBankAccount() {
+    const input = document.getElementById('bank-edit-input');
+    if (!input) return;
+    BANK_ACCOUNT = input.value.trim() || BANK_ACCOUNT;
+    cancelBankEdit(BANK_ACCOUNT);
+}
+
+function cancelBankEdit(val) {
+    const input = document.getElementById('bank-edit-input');
+    if (!input) return;
+    const wrapper = input.parentElement;
+    if (wrapper) wrapper.outerHTML = `<div id="bank-account-display" style="font-size:16px;font-weight:800;color:var(--white);letter-spacing:.5px;">${val}</div>`;
+}
+
+const PRICE_ROWS = [
+    { key:'new-set',     label:'New Set',           sub:'Nadogradnja' },
+    { key:'c2w',         label:'Correction · 2w',   sub:'Korekcija posle 2 nedelje' },
+    { key:'c3w',         label:'Correction · 3w',   sub:'Korekcija posle 3 nedelje' },
+    { key:'c4w',         label:'Correction · 4w',   sub:'Korekcija posle 4 nedelje' },
+    { key:'reklamacija', label:'Reklamacija',        sub:'Besplatno — prva nedelja' },
+    { key:'skidanje',    label:'Skidanje nadogradnje', sub:'Uklanjanje trepavica' },
+    { key:'lash-lift',   label:'Lash Lift',          sub:'Podizanje trepavica' },
+    { key:'brow-lift',   label:'Brow Lift',          sub:'Podizanje obrva' },
+];
+
+function renderPricesTab() {
+    const el = document.getElementById('prices-display');
+    if (!el) return;
+    el.innerHTML = PRICE_ROWS.map((r, i) => {
+        const isFree  = r.key === 'reklamacija';
+        const priceStr = isFree ? 'Free' : SERVICE_PRICES[r.key] + '€';
+        const priceColor = isFree ? 'var(--green,#5CB87A)' : 'var(--gold)';
+        const border = i < PRICE_ROWS.length - 1 ? 'border-bottom:1px solid var(--border);' : '';
+        return `
+        <div onclick="openPriceQR('${r.key}')"
+             style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:background .15s;${border}"
+             onmouseenter="this.style.background='rgba(200,168,75,.06)'" onmouseleave="this.style.background='transparent'">
+            <div>
+                <div style="font-size:14px;font-weight:700;color:var(--white);">${r.label}</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">${r.sub}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div style="font-size:18px;font-weight:800;color:${priceColor};">${priceStr}</div>
+                <span style="font-size:16px;color:var(--muted);">›</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function openPriceQR(key) {
+    const row   = PRICE_ROWS.find(r => r.key === key);
+    if (!row) return;
+    const isFree   = key === 'reklamacija';
+    const price    = isFree ? 0 : (SERVICE_PRICES[key] || 0);
+    const priceStr = isFree ? 'Free' : price + '€';
+    const el = document.getElementById('pqr-content');
+    if (!el) return;
+    el.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+            <div>
+                <div style="font-size:17px;font-weight:800;color:var(--white);">${row.label}</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">${row.sub}</div>
+            </div>
+            <div style="font-size:22px;font-weight:800;color:${isFree ? 'var(--green,#5CB87A)' : 'var(--gold)'};">${priceStr}</div>
+        </div>
+        ${isFree
+            ? `<div style="background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.25);border-radius:12px;padding:16px;text-align:center;margin-bottom:16px;">
+                   <div style="font-size:28px;margin-bottom:8px;">🆓</div>
+                   <div style="font-size:14px;font-weight:700;color:var(--green,#5CB87A);">Reklamacija — Besplatno</div>
+                   <div style="font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5;">Nema naplate u toku prve nedelje od poslednje nadogradnje.</div>
+               </div>`
+            : `<div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:16px;">
+                   <div>${buildFakeQR(price)}</div>
+                   <div style="font-size:11px;color:var(--muted);letter-spacing:.4px;">Scan to Pay · ${priceStr}</div>
+                   <div style="background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:7px 16px;display:flex;align-items:center;gap:8px;">
+                       <span style="font-size:11px;color:var(--muted);">🏦 Račun banke:</span>
+                       <span style="font-size:12px;font-weight:700;color:var(--white);letter-spacing:.5px;">${BANK_ACCOUNT}</span>
+                   </div>
+               </div>`
+        }
+        <button class="btn-outline" style="width:100%;margin-top:8px;" onclick="closePriceQR()">← Back</button>
+    `;
+    document.getElementById('m-price-qr').style.display = 'flex';
+}
+function closePriceQR() {
+    document.getElementById('m-price-qr').style.display = 'none';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TODAY'S APPOINTMENTS — dashboard list
+// ══════════════════════════════════════════════════════════════════
+function renderTodayAppts() {
+    const todayAppts = APPOINTMENTS.filter(a => a.day === 15);
+    const el = document.getElementById('today-appt-list');
+    if (!el) return;
+
+    // update count badge
+    const activeCnt = todayAppts.filter(a => !a.cancelled).length;
+    const countEl = document.getElementById('today-appt-count');
+    if (countEl) countEl.textContent = activeCnt + ' appointment' + (activeCnt !== 1 ? 's' : '');
+
+    if (todayAppts.length === 0) {
+        el.innerHTML = `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">No appointments today.</div>`;
+        return;
+    }
+
+    el.innerHTML = todayAppts.map(a => {
+        if (a.cancelled) {
+            return `
+            <div class="appt-row cancelled-row" onclick="openTodayAppt(${a.id})" style="cursor:pointer;">
+                <div class="appt-time" style="color:var(--red);">${a.time}</div>
+                <div class="appt-info" style="flex:1;">
+                    <div class="appt-name">${a.client}</div>
+                    <div class="appt-type" style="color:var(--red);">🚫 Cancelled</div>
+                </div>
+                <span style="font-size:18px;color:var(--muted);">›</span>
+            </div>`;
+        }
+        if (a.completed) {
+            return `
+            <div class="appt-row completed-row" onclick="openTodayAppt(${a.id})" style="cursor:pointer;">
+                <div class="appt-time" style="color:#5CB87A;">${a.time}</div>
+                <div class="appt-info" style="flex:1;">
+                    <div class="appt-name">${a.client}</div>
+                    <div class="appt-type">${a.completedServices || a.type}</div>
+                </div>
+                <span style="font-size:11px;font-weight:800;color:#5CB87A;background:rgba(92,184,122,.15);border:1px solid rgba(92,184,122,.35);border-radius:8px;padding:4px 9px;flex-shrink:0;">✓ Completed</span>
+            </div>`;
+        }
+        return `
+        <div class="appt-row" onclick="openTodayAppt(${a.id})" style="cursor:pointer;">
+            <div class="appt-time">${a.time}</div>
+            <div class="appt-info" style="flex:1;">
+                <div class="appt-name">${a.client}</div>
+                <div class="appt-type">${a.type}</div>
+            </div>
+            <span style="font-size:18px;color:var(--muted);">›</span>
+        </div>`;
+    }).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TODAY APPOINTMENT DETAIL MODAL
+// ══════════════════════════════════════════════════════════════════
+let currentTodayApptId = null;
+
+function openTodayAppt(id) {
+    const a = APPOINTMENTS.find(x => x.id === id);
+    if (!a) return;
+    currentTodayApptId = id;
+    renderTodayApptModal(a);
+    openModal('m-today-appt');
+}
+
+function buildFakeQR(amount) {
+    // Generates a decorative placeholder SVG that looks like a QR code
+    const size = 120;
+    const cell = 6;
+    const grid = Math.floor(size / cell);
+    let rects = '';
+    // deterministic pattern based on amount
+    let seed = amount * 7 + 13;
+    function nextBit() { seed = (seed * 1664525 + 1013904223) & 0xffffffff; return (seed >>> 31) & 1; }
+    for (let r = 0; r < grid; r++) {
+        for (let c = 0; c < grid; c++) {
+            // keep quiet zone
+            if (r === 0 || r === grid-1 || c === 0 || c === grid-1) continue;
+            // finder patterns corners
+            const inCorner = (r < 3 && c < 3) || (r < 3 && c >= grid-3) || (r >= grid-3 && c < 3);
+            const fill = inCorner ? 1 : nextBit();
+            if (fill) {
+                rects += `<rect x="${c*cell}" y="${r*cell}" width="${cell}" height="${cell}" fill="var(--white)"/>`;
+            }
+        }
+    }
+    return `
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" style="border-radius:8px;background:#111;">
+        ${rects}
+        <rect x="0" y="0" width="18" height="18" rx="2" fill="none" stroke="var(--white)" stroke-width="2"/>
+        <rect x="3" y="3" width="12" height="12" rx="1" fill="var(--white)"/>
+        <rect x="${size-18}" y="0" width="18" height="18" rx="2" fill="none" stroke="var(--white)" stroke-width="2"/>
+        <rect x="${size-15}" y="3" width="12" height="12" rx="1" fill="var(--white)"/>
+        <rect x="0" y="${size-18}" width="18" height="18" rx="2" fill="none" stroke="var(--white)" stroke-width="2"/>
+        <rect x="3" y="${size-15}" width="12" height="12" rx="1" fill="var(--white)"/>
+    </svg>`;
+}
+
+function buildInvoiceHTML(a, price, servicesLabel) {
+    const now = new Date();
+    const invoiceNum = 'INV-' + String(a.id).padStart(4,'0') + '-' + now.getFullYear();
+    return `
+    <div class="invoice-box">
+        <div class="invoice-hdr">
+            <div>
+                <div style="font-size:13px;font-weight:800;color:var(--gold);">LashPro Studio</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:2px;">${invoiceNum}</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:11px;color:var(--muted);">Mar 15, 2026</div>
+                <div style="font-size:11px;color:var(--muted);">${a.time}</div>
+            </div>
+        </div>
+        <div class="invoice-row" style="border-top:1px solid var(--border);padding-top:10px;">
+            <span class="inv-lbl">Client</span>
+            <span class="inv-val">${a.client}</span>
+        </div>
+        <div class="invoice-row">
+            <span class="inv-lbl">Service</span>
+            <span class="inv-val">${servicesLabel}</span>
+        </div>
+        <div class="invoice-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:6px;">
+            <span class="inv-lbl" style="font-weight:800;color:var(--white);">Total</span>
+            <span class="inv-val" style="font-size:16px;font-weight:800;color:var(--gold);">${price}€</span>
+        </div>
+    </div>`;
+}
+
+// State for live price editing inside the modal
+let taEditMode = false;
+
+function renderTodayApptModal(a) {
+    const isCompleted = !!a.completed;
+    const isCancelled = !!a.cancelled;
+    const el = document.getElementById('ta-content');
+    if (!el) return;
+
+    // ── CANCELLED view ────────────────────────────────────────────
+    if (isCancelled) {
+        const whoMap = { client:'Client', artist:'Artist / Studio' };
+        const whoLabel = whoMap[a.cancelledBy] || a.cancelledBy || 'Unknown';
+        // default reschedule date: Mar 22 2026 (one week ahead)
+        el.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div class="modal-ttl" style="margin-bottom:0;color:var(--red);">🚫 Cancelled</div>
+            <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
+        </div>
+
+        <!-- Client + original time -->
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--red);flex-shrink:0;">
+                ${a.client.split(' ').map(w=>w[0]).join('').slice(0,2)}
+            </div>
+            <div>
+                <div style="font-size:15px;font-weight:800;color:var(--white);">${a.client}</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Originally at ${a.time} · Mar 15, 2026</div>
+            </div>
+        </div>
+
+        <!-- Cancellation details -->
+        <div style="background:rgba(224,80,80,.05);border:1px solid rgba(224,80,80,.2);border-radius:14px;overflow:hidden;margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(224,80,80,.12);">
+                <div style="font-size:12px;color:var(--muted);">Cancelled by</div>
+                <div style="font-size:13px;font-weight:700;color:var(--red);">${whoLabel}</div>
+            </div>
+            <div style="padding:12px 14px;">
+                <div style="font-size:12px;color:var(--muted);margin-bottom:5px;">Reason</div>
+                <div style="font-size:13px;font-weight:600;color:var(--white);line-height:1.5;">${a.cancelReason || '—'}</div>
+            </div>
+        </div>
+
+        <!-- Schedule new appointment -->
+        <button class="btn-primary" style="width:100%;"
+            onclick="closeModal('m-today-appt');openModal('m-book')">
+            📅 Schedule New Appointment
+        </button>
+        `;
+        return;
+    }
+
+    if (isCompleted) {
+        // ── READ-ONLY completed view ──────────────────────────────
+        const price = a.completedPrice || 0;
+        const svcs  = a.completedServices || a.type;
+        el.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div class="modal-ttl" style="margin-bottom:0;color:#5CB87A;">✓ Session Complete</div>
+            <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
+        </div>
+        <div style="background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px;">
+            <div style="font-size:12px;color:rgba(92,184,122,.9);line-height:1.5;">This session has been completed and recorded as income.</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;color:var(--muted);">Client</div>
+                <div style="font-size:13px;font-weight:700;color:var(--white);">${a.client}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;color:var(--muted);">Time</div>
+                <div style="font-size:13px;font-weight:700;color:var(--gold);">${a.time}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
+                <div style="font-size:12px;color:var(--muted);">Services</div>
+                <div style="font-size:13px;font-weight:700;color:var(--white);text-align:right;max-width:55%;">${svcs}</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:12px 14px;">
+                <div style="font-size:12px;color:var(--muted);">Charged</div>
+                <div style="font-size:16px;font-weight:800;color:var(--gold);">${price}€</div>
+            </div>
+        </div>
+        <div style="margin-top:12px;text-align:center;">
+            <button onclick="closeModal('m-today-appt')" class="btn-outline" style="width:100%;">Close</button>
+        </div>`;
+        return;
+    }
+
+    // ── ACTIVE view (edit + complete) ─────────────────────────────
+    // Initialise svc-ta picker from appointment type
+    initSvcFromType('svc-ta', a.type);
+    const autoPrice = calcPriceFromSvcState('svc-ta');
+    const initials  = a.client.split(' ').map(w=>w[0]).join('').slice(0,2);
+
+    el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="modal-ttl" style="margin-bottom:0;">Appointment</div>
+        <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
+    </div>
+
+    <!-- Client + time strip with Reschedule -->
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#000;flex-shrink:0;">${initials}</div>
+        <div style="flex:1;">
+            <div style="font-size:15px;font-weight:800;color:var(--white);">${a.client}</div>
+            <div id="ta-time-display" style="font-size:12px;color:var(--gold);margin-top:2px;">⏰ <span id="ta-time-val">${a.time}</span> · Mar 15, 2026</div>
+            <!-- inline reschedule editor (hidden by default) -->
+            <div id="ta-time-edit" style="display:none;margin-top:8px;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <input id="ta-date-input" type="date" value="2026-03-15"
+                        style="background:var(--bg2);border:1px solid var(--gold);border-radius:8px;padding:5px 8px;color:var(--gold);font-size:12px;font-weight:700;font-family:inherit;flex:1;">
+                    <input id="ta-time-input" type="time" value="${a.time}"
+                        style="background:var(--bg2);border:1px solid var(--gold);border-radius:8px;padding:5px 8px;color:var(--gold);font-size:12px;font-weight:700;font-family:inherit;width:90px;">
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button onclick="saveTaReschedule()" style="flex:1;background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:6px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Save</button>
+                    <button onclick="cancelTaTime()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;padding:6px 4px;">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <button onclick="openTaTimeEdit()" id="ta-edit-time-btn"
+            style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.25);border-radius:9px;padding:6px 11px;color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">
+            📅 Reschedule
+        </button>
+    </div>
+
+    <!-- Service picker for THIS modal (svc-ta) -->
+    <div class="form-r">
+        <label class="lbl-s">Services</label>
+        <div class="svc-picker" id="svc-ta">
+            <div>
+                <div class="svc-group-label">Nadogradnja Trepavica</div>
+                <div class="svc-chips">
+                    <button class="svc-chip" data-key="new-set" onclick="toggleSvcTa('new-set')">New Set</button>
+                    <button class="svc-chip" data-key="c2w" onclick="toggleSvcTa('c2w')">Corr. · 2w</button>
+                    <button class="svc-chip" data-key="c3w" onclick="toggleSvcTa('c3w')">Corr. · 3w</button>
+                    <button class="svc-chip" data-key="c4w" onclick="toggleSvcTa('c4w')">Corr. · 4w</button>
+                    <button class="svc-chip" data-key="reklamacija" onclick="toggleSvcTa('reklamacija')">Reklamacija 🆓</button>
+                    <button class="svc-chip" data-key="skidanje" onclick="toggleSvcTa('skidanje')">Skidanje</button>
+                </div>
+            </div>
+            <div>
+                <div class="svc-group-label">Additional Services</div>
+                <div class="svc-chips">
+                    <button class="svc-chip" data-key="lash-lift" onclick="toggleSvcTa('lash-lift')">Lash Lift</button>
+                    <button class="svc-chip" data-key="brow-lift" onclick="toggleSvcTa('brow-lift')">Brow Lift</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price display (informative, auto-calculated) -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;margin-top:10px;">
+        <div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:3px;">Total Price</div>
+            <div style="font-size:11px;color:var(--muted);">Based on selected services</div>
+        </div>
+        <div id="ta-price-display" style="font-size:26px;font-weight:800;color:var(--gold);">${autoPrice}€</div>
+    </div>
+
+    <!-- QR code + bank account -->
+    <div style="display:flex;flex-direction:column;align-items:center;margin:16px 0 12px;">
+        <div id="ta-qr">${buildFakeQR(autoPrice)}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.5px;">Scan to Pay</div>
+        <div style="margin-top:6px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:7px 16px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:11px;color:var(--muted);">🏦 Bank account:</span>
+            <span style="font-size:12px;font-weight:700;color:var(--white);letter-spacing:.5px;">${BANK_ACCOUNT}</span>
+        </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div style="display:flex;gap:10px;margin-top:4px;">
+        <button style="flex:1;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:12px;padding:13px 8px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;"
+            onclick="cancelTodayAppt()">🚫 Cancel</button>
+        <button class="btn-primary" style="flex:2;background:linear-gradient(135deg,#3a8a52,#5CB87A);font-size:14px;"
+            onclick="completeTodayAppt()">✓ Complete Session</button>
+    </div>
+    `;
+
+    // Re-render svc-ta chips now that DOM is ready
+    renderSvcPicker('svc-ta');
+    updateTaPrice();
+}
+
+function openTaTimeEdit() {
+    const display = document.getElementById('ta-time-display');
+    const editor  = document.getElementById('ta-time-edit');
+    const btn     = document.getElementById('ta-edit-time-btn');
+    if (!display || !editor) return;
+    display.style.display = 'none';
+    editor.style.display  = 'flex';
+    editor.style.alignItems = 'center';
+    if (btn) btn.style.display = 'none';
+}
+
+function saveTaReschedule() {
+    const timeInput = document.getElementById('ta-time-input');
+    const dateInput = document.getElementById('ta-date-input');
+    const timeVal   = timeInput ? timeInput.value : null;
+    const dateVal   = dateInput ? dateInput.value : null;
+    if (!timeVal) return;
+    const a = APPOINTMENTS.find(x => x.id === currentTodayApptId);
+    if (a) {
+        a.time = timeVal;
+        if (dateVal) a.day = parseInt(dateVal.split('-')[2], 10);
+    }
+    const timeDisplay = document.getElementById('ta-time-val');
+    if (timeDisplay) timeDisplay.textContent = timeVal;
+    cancelTaTime();
+    renderTodayAppts();
+    buildCalendar();
+}
+
+function cancelTodayAppt() {
+    closeModal('m-today-appt');
+    openCancelAppt(currentTodayApptId);
+}
+
+function cancelTaTime() {
+    const display = document.getElementById('ta-time-display');
+    const editor  = document.getElementById('ta-time-edit');
+    const btn     = document.getElementById('ta-edit-time-btn');
+    if (display) display.style.display = 'block';
+    if (editor)  editor.style.display  = 'none';
+    if (btn)     btn.style.display     = 'block';
+}
+
+function toggleSvcTa(key) {
+    toggleSvc('svc-ta', key);
+    updateTaPrice();
+}
+
+function updateTaPrice() {
+    const price = calcPriceFromSvcState('svc-ta');
+    // update price display
+    const priceDisplay = document.getElementById('ta-price-display');
+    if (priceDisplay) priceDisplay.textContent = price + '€';
+    // refresh QR
+    const qrEl = document.getElementById('ta-qr');
+    if (qrEl) qrEl.innerHTML = buildFakeQR(price);
+}
+
+function completeTodayAppt() {
+    const a = APPOINTMENTS.find(x => x.id === currentTodayApptId);
+    if (!a) return;
+    const price = calcPriceFromSvcState('svc-ta');
+    const svcsLabel = getSvcLabel('svc-ta') || a.type;
+    a.completed        = true;
+    a.completedPrice   = price;
+    a.completedServices = svcsLabel;
+    closeModal('m-today-appt');
+    renderTodayAppts();
+}
+
+// ── Initialise on load ────────────────────────────────────────────
+initSvcPicker('svc-ta');
+renderTodayAppts();
+renderPricesTab();
+
+// ── Sign In — simulate new-device restore ─────────────────────────
+const originalSignIn = document.querySelector('#s-login .btn-primary');
+originalSignIn.onclick = function() {
+    // Show restore notice briefly before navigating
+    const notice = document.getElementById('restore-notice');
+    notice.style.display = 'flex';
+    setTimeout(() => {
+        go('dashboard');
+        notice.style.display = 'none';
+    }, 1800);
+};
+</script>
+</body>
+</html>
