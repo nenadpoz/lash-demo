@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LashPro — Interactive Prototype</title>
+    <title>BeautyPro · Interaktivni Prototip</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -440,33 +440,166 @@
 
     <!-- ════════════════════════ LOGIN ════════════════════════ -->
     <div class="screen active" id="s-login">
-        <div class="login-wrap">
-            <div class="login-logo">
+        <div class="login-wrap" style="justify-content:flex-start;padding-top:60px;overflow-y:auto;">
+            <div class="login-logo" style="margin-bottom:36px;">
                 <span class="star">✦</span>
-                <h1>LashPro</h1>
-                <p>Studio Management</p>
+                <h1>BeautyPro</h1>
+                <p>Upravljanje studijom</p>
             </div>
-            <div class="login-form">
+            <!-- Toggle: Prijava / Registracija -->
+            <div style="display:flex;background:var(--bg2);border-radius:12px;padding:3px;margin-bottom:24px;width:100%;border:1px solid var(--border);">
+                <button id="tab-login-btn" onclick="showAuthTab('login')" style="flex:1;padding:9px;border-radius:9px;border:none;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#000;transition:all .2s;">Prijava</button>
+                <button id="tab-signup-btn" onclick="showAuthTab('signup')" style="flex:1;padding:9px;border-radius:9px;border:none;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;">Registracija</button>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <div id="auth-login-form" style="width:100%;display:flex;flex-direction:column;gap:14px;">
                 <div class="form-r">
                     <label class="lbl-s">Email</label>
-                    <input class="field" type="email" value="artist@lashpro.com">
+                    <input class="field" type="email" placeholder="vas@email.com" value="artist@beautypro.com">
                 </div>
                 <div class="form-r">
-                    <label class="lbl-s">Password</label>
+                    <label class="lbl-s">Lozinka</label>
                     <input class="field" type="password" value="••••••••">
                 </div>
-                <div style="margin-top:6px;">
-                    <button class="btn-primary" onclick="go('dashboard')">Sign In</button>
+                <div>
+                    <button class="btn-primary" onclick="go('profession')">Prijavi se</button>
                 </div>
-                <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:14px;cursor:pointer;">Forgot password?</p>
+                <p style="text-align:center;font-size:12px;color:var(--muted);cursor:pointer;margin-top:-4px;">Zaboravili ste lozinku?</p>
+                <div style="display:flex;align-items:center;gap:10px;margin:2px 0;">
+                    <div style="flex:1;height:1px;background:var(--border);"></div>
+                    <span style="font-size:11px;color:var(--muted);font-weight:700;">ILI</span>
+                    <div style="flex:1;height:1px;background:var(--border);"></div>
+                </div>
+                <button onclick="go('profession')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
+                    <span style="font-size:18px;">🌐</span> Nastavi sa Google
+                </button>
             </div>
+
+            <!-- SIGNUP FORM -->
+            <div id="auth-signup-form" style="width:100%;display:none;flex-direction:column;gap:14px;">
+                <div class="form-r">
+                    <label class="lbl-s">Email</label>
+                    <input class="field" type="email" placeholder="vas@email.com">
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Lozinka</label>
+                    <input class="field" type="password" placeholder="Minimalno 8 karaktera">
+                </div>
+                <div class="form-r">
+                    <label class="lbl-s">Ponovite lozinku</label>
+                    <input class="field" type="password" placeholder="Ponovite lozinku">
+                </div>
+                <div>
+                    <button class="btn-primary" onclick="go('profession')">Napravi nalog</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;margin:2px 0;">
+                    <div style="flex:1;height:1px;background:var(--border);"></div>
+                    <span style="font-size:11px;color:var(--muted);font-weight:700;">ILI</span>
+                    <div style="flex:1;height:1px;background:var(--border);"></div>
+                </div>
+                <button onclick="go('profession')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
+                    <span style="font-size:18px;">🌐</span> Registruj se sa Google
+                </button>
+                <p style="text-align:center;font-size:11px;color:var(--muted);line-height:1.5;">Registracijom prihvatate naše <span style="color:var(--gold);cursor:pointer;">Uslove korišćenja</span> i <span style="color:var(--gold);cursor:pointer;">Politiku privatnosti</span>.</p>
+            </div>
+
             <!-- Sync restore notice -->
-            <div id="restore-notice" style="display:none;margin-top:28px;width:100%;background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.3);border-radius:13px;padding:14px 16px;display:none;align-items:center;gap:12px;">
+            <div id="restore-notice" style="display:none;margin-top:24px;width:100%;background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.3);border-radius:13px;padding:14px 16px;align-items:center;gap:12px;">
                 <span style="font-size:22px;">☁️</span>
                 <div>
-                    <div style="font-size:12px;font-weight:800;color:#5CB87A;margin-bottom:3px;">Backup Restored</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.5;">All your data has been synced from the cloud.</div>
+                    <div style="font-size:12px;font-weight:800;color:#5CB87A;margin-bottom:3px;">Backup obnovljen</div>
+                    <div style="font-size:12px;color:var(--muted);line-height:1.5;">Svi podaci su sinhronizovani iz oblaka.</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ PROFESSION SELECTION ════════════════════════ -->
+    <div class="screen" id="s-profession">
+        <div style="display:flex;flex-direction:column;height:100%;overflow-y:auto;">
+            <div style="padding:52px 24px 20px;">
+                <p class="eyebrow">BeautyPro</p>
+                <h1 style="font-size:22px;font-weight:800;color:var(--white);margin-top:4px;">Izaberite profesiju</h1>
+                <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;">Aplikacija će biti prilagođena vašoj oblasti. Možete promeniti u Podešavanjima.</p>
+            </div>
+            <div style="padding:0 16px 32px;display:flex;flex-direction:column;gap:10px;">
+                <div onclick="selectProfession('lash')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-lash">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">✦</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Lash Artist</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Nadogradnja trepavica, korekcije, lash lift</div>
+                    </div>
+                    <span id="pc-check-lash" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('nails')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-nails">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">💅</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Nail Artist</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Manikir, gel, akrilne, nail art</div>
+                    </div>
+                    <span id="pc-check-nails" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('depilacija')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-depilacija">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">🌸</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Depilacija</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Voskom, sugar paste, laserska depilacija</div>
+                    </div>
+                    <span id="pc-check-depilacija" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('pedikir')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-pedikir">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">🦶</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Pedikir</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Pedikir, gel stopala, medicinski pedikir</div>
+                    </div>
+                    <span id="pc-check-pedikir" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('makeup')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-makeup">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">💄</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Šminkanje</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Svakodnevno, vjenčanje, editorijal</div>
+                    </div>
+                    <span id="pc-check-makeup" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('masaza')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-masaza">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">🤲</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Masaža</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Relaksacijska, sportska, medicinska masaža</div>
+                    </div>
+                    <span id="pc-check-masaza" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('obrve')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-obrve">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">🌟</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Obrve & Mikroblading</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Laminiraj, nano brows, microblading</div>
+                    </div>
+                    <span id="pc-check-obrve" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('kozmetika')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-kozmetika">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">🧴</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Kozmetičar</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Tretmani lica, kemijski piling, hidratacija</div>
+                    </div>
+                    <span id="pc-check-kozmetika" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+                <div onclick="selectProfession('frizura')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-frizura">
+                    <span style="font-size:30px;width:44px;text-align:center;flex-shrink:0;">✂️</span>
+                    <div style="flex:1;">
+                        <div style="font-size:15px;font-weight:800;color:var(--white);">Frizer</div>
+                        <div style="font-size:12px;color:var(--muted);margin-top:3px;">Šišanje, farbanje, tretmani kose</div>
+                    </div>
+                    <span id="pc-check-frizura" style="display:none;font-size:18px;color:var(--gold);">✓</span>
+                </div>
+            </div>
+            <div style="padding:0 16px 32px;">
+                <button class="btn-primary" id="btn-start-app" onclick="startApp()" style="opacity:.4;pointer-events:none;">Počni →</button>
+                <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">Možete dodati više profesija kasnije</p>
             </div>
         </div>
     </div>
@@ -476,16 +609,16 @@
         <div class="hdr">
             <div class="hdr-row">
                 <div>
-                    <p class="eyebrow">LashPro</p>
-                    <h1>Calendar</h1>
+                    <p class="eyebrow">BeautyPro</p>
+                    <h1>Kalendar</h1>
                 </div>
-                <button class="btn-outline" onclick="openModal('m-book')">+ Book</button>
+                <button class="btn-outline" onclick="openModal('m-book')">+ Zakaži</button>
             </div>
         </div>
         <div class="scroll">
             <!-- Month nav -->
             <div class="cal-hdr">
-                <span class="cal-month">March 2026</span>
+                <span class="cal-month">Mart 2026</span>
                 <div style="display:flex;gap:6px;">
                     <div class="cal-nav-btn">‹</div>
                     <div class="cal-nav-btn">›</div>
@@ -504,32 +637,32 @@
                 <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:10px;">
                     <span style="font-size:20px;">💰</span>
                     <div>
-                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Today's Income</div>
-                        <div style="font-size:22px;font-weight:800;color:var(--gold);">360€</div>
+                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Prihod danas</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--gold);">42.000 din</div>
                     </div>
                 </div>
                 <div style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:10px;">
                     <span style="font-size:20px;">📅</span>
                     <div>
-                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Sessions</div>
-                        <div style="font-size:22px;font-weight:800;color:var(--white);">4 <span style="font-size:13px;color:var(--muted);font-weight:500;">today</span></div>
+                        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:3px;">Sesija</div>
+                        <div style="font-size:22px;font-weight:800;color:var(--white);">4 <span style="font-size:13px;color:var(--muted);font-weight:500;">danas</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Today's appointments -->
             <div class="sec-hdr">
-                <span class="sec-ttl">Today · Mar 15</span>
-                <span class="sec-act" id="today-appt-count">4 appointments</span>
+                <span class="sec-ttl">Danas · 15. Mart</span>
+                <span class="sec-act" id="today-appt-count">4 termina</span>
             </div>
             <div id="today-appt-list"><!-- rendered by JS --></div>
             <div style="height:16px;"></div>
         </div>
         <div class="nav">
-            <button class="nav-btn active" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
-            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
-            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
-            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+            <button class="nav-btn active" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
@@ -537,11 +670,11 @@
     <div class="screen" id="s-clients">
         <div class="hdr">
             <div class="hdr-row">
-                <div><p class="eyebrow">LashPro</p><h1>Clients</h1></div>
-                <button class="btn-outline" onclick="openModal('m-new-client')">+ Add</button>
+                <div><p class="eyebrow">BeautyPro</p><h1>Klijenti</h1></div>
+                <button class="btn-outline" onclick="openModal('m-new-client')">+ Dodaj</button>
             </div>
             <div style="margin-top:12px;">
-                <input class="field" id="cl-search" style="height:40px;font-size:13px;" placeholder="🔍  Search clients…" oninput="filterClients()" autocomplete="off">
+                <input class="field" id="cl-search" style="height:40px;font-size:13px;" placeholder="🔍  Pretraži klijente…" oninput="filterClients()" autocomplete="off">
             </div>
         </div>
         <div class="scroll">
@@ -550,10 +683,10 @@
             </div>
         </div>
         <div class="nav">
-            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
-            <button class="nav-btn active" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
-            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
-            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn active" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
@@ -571,9 +704,9 @@
         <div class="notif" id="p-notif">
             <span class="notif-ico">⚠️</span>
             <div class="notif-body">
-                <strong>New Set Required</strong>
-                This client has completed 3 corrections. The next appointment should be a full new set (remove old, apply from scratch).
-                <span class="notif-reset" onclick="resetCycle()">↺ Reset cycle manually</span>
+                <strong>Potreban novi set</strong>
+                Ovaj klijent je završio 3 korekcije. Sledeći termin treba da bude potpuno novi set (ukloniti stari, aplikovati iz početka).
+                <span class="notif-reset" onclick="resetCycle()">↺ Ručno resetuj ciklus</span>
             </div>
         </div>
 
@@ -583,7 +716,7 @@
             <div class="bb-body">
                 <strong>Client is Blocked</strong>
                 <span id="p-block-reason"></span>
-                <span class="bb-unblock" onclick="unblockClient()">↩ Unblock client</span>
+                <span class="bb-unblock" onclick="unblockClient()">↩ Odblokiraj klijenta</span>
             </div>
         </div>
 
@@ -602,7 +735,7 @@
                     <div class="prof-phone" id="p-phone">📞 +381 63 123 456</div>
                     <div class="prof-insta" id="p-insta"></div>
                     <div class="cancel-count" id="p-cancel-count" style="display:none;"></div>
-                    <div class="prof-total" id="p-total">Total earned: 620€</div>
+                    <div class="prof-total" id="p-total">Ukupno zarađeno: 72.600 din</div>
                     <div style="margin-top:8px;" id="p-badge-wrap">
                         <span class="badge b-warn">⚠️ New Set Required</span>
                     </div>
@@ -634,19 +767,19 @@
 
             <!-- Action buttons (hidden for blocked clients) -->
             <div id="p-action-btns" style="margin:14px 16px 0;display:flex;gap:10px;">
-                <button class="btn-outline" style="flex:1;padding:12px 8px;font-size:13px;" onclick="openModal('m-log')">+ Log Appointment</button>
-                <button id="p-block-btn" onclick="openBlockClient()" style="flex:1;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:12px;padding:12px 8px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">🚫 Block Client</button>
+                <button class="btn-outline" style="flex:1;padding:12px 8px;font-size:13px;" onclick="openModal('m-log')">+ Unesi termin</button>
+                <button id="p-block-btn" onclick="openBlockClient()" style="flex:1;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:12px;padding:12px 8px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;">🚫 Blokiraj klijenta</button>
             </div>
             <div id="p-action-hint" style="margin:8px 16px 0;background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.15);border-radius:10px;padding:10px 12px;">
                 <div style="font-size:11px;color:var(--muted);line-height:1.5;">
-                    <span style="color:var(--gold);font-weight:700;">Log Appointment</span> — dodaje novi termin u istoriju klijenta (bez veze sa kalendarom).
+                    <span style="color:var(--gold);font-weight:700;">Unesi termin</span> — dodaje novi termin u istoriju klijenta (bez veze sa kalendarom).
                 </div>
             </div>
 
             <!-- History -->
             <div class="sec-hdr">
-                <span class="sec-ttl">Appointment History</span>
-                <span class="sec-act" id="p-hist-total">Total: 620€</span>
+                <span class="sec-ttl">Istorija termina</span>
+                <span class="sec-act" id="p-hist-total">Ukupno: 72.600 din</span>
             </div>
             <div class="hist-filter">
                 <button class="hf-btn active" id="hf-all" onclick="filterHistory('all')">All</button>
@@ -659,10 +792,10 @@
         </div>
 
         <div class="nav">
-            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
-            <button class="nav-btn active"><span class="ico">👤</span><span class="lbl">Clients</span></button>
-            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
-            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn active"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
@@ -670,7 +803,7 @@
     <div class="screen" id="s-finance">
         <div class="hdr">
             <div class="hdr-row">
-                <div><p class="eyebrow">LashPro</p><h1>Finance</h1></div>
+                <div><p class="eyebrow">BeautyPro</p><h1>Finansije</h1></div>
                 <div style="display:flex;gap:6px;align-items:center;">
                     <div class="cal-nav-btn">‹</div>
                     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--gold);font-weight:800;">Mar 2026</div>
@@ -681,17 +814,17 @@
         <div class="scroll">
             <!-- Summary -->
             <div class="fin-card">
-                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:14px;">Net Profit · March 2026</div>
-                <div class="fin-big">1,240€</div>
-                <div class="fin-lbl">Running Balance</div>
+                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:700;margin-bottom:14px;">Neto prihod · Mart 2026</div>
+                <div class="fin-big">145.000 din</div>
+                <div class="fin-lbl">Tekući saldo</div>
                 <div class="fin-row">
                     <div class="fin-mini">
-                        <div class="fin-mini-num pos">1,840€</div>
-                        <div class="fin-lbl" style="margin-top:4px;">Income</div>
+                        <div class="fin-mini-num pos">215.000 din</div>
+                        <div class="fin-lbl" style="margin-top:4px;">Prihodi</div>
                     </div>
                     <div class="fin-mini">
-                        <div class="fin-mini-num neg">−600€</div>
-                        <div class="fin-lbl" style="margin-top:4px;">Expenses</div>
+                        <div class="fin-mini-num neg">−70.000 din</div>
+                        <div class="fin-lbl" style="margin-top:4px;">Troškovi</div>
                     </div>
                 </div>
             </div>
@@ -700,89 +833,89 @@
             <div class="stat-grid">
                 <div class="stat-card">
                     <div class="stat-num">23</div>
-                    <div class="stat-lbl">Sessions this month</div>
+                    <div class="stat-lbl">Termina ovog meseca</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-num" style="color:var(--gold);">80€</div>
-                    <div class="stat-lbl">Avg. per session</div>
+                    <div class="stat-num" style="color:var(--gold);">4.700 din</div>
+                    <div class="stat-lbl">Prosek po terminu</div>
                 </div>
             </div>
 
             <!-- Segment -->
             <div class="seg">
-                <button class="seg-btn" id="seg-inc" onclick="finTab('income')" style="font-size:11px;">Income</button>
-                <button class="seg-btn active" id="seg-exp" onclick="finTab('expenses')" style="font-size:11px;">Expenses</button>
-                <button class="seg-btn" id="seg-top" onclick="finTab('top')" style="font-size:11px;">🏆 Rankings</button>
-                <button class="seg-btn" id="seg-prices" onclick="finTab('prices')" style="font-size:11px;">💰 Prices</button>
+                <button class="seg-btn" id="seg-inc" onclick="finTab('income')" style="font-size:11px;">Prihodi</button>
+                <button class="seg-btn active" id="seg-exp" onclick="finTab('expenses')" style="font-size:11px;">Troškovi</button>
+                <button class="seg-btn" id="seg-top" onclick="finTab('top')" style="font-size:11px;">🏆 Rang lista</button>
+                <button class="seg-btn" id="seg-prices" onclick="finTab('prices')" style="font-size:11px;">💰 Cenovnik</button>
             </div>
 
             <!-- EXPENSES -->
             <div id="tab-exp">
                 <div class="sec-hdr">
-                    <span class="sec-ttl">Expenses · March</span>
-                    <span class="sec-act" onclick="openModal('m-expense')">+ Add</span>
+                    <span class="sec-ttl">Troškovi · Mart</span>
+                    <span class="sec-act" onclick="openModal('m-expense')">+ Dodaj</span>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(232,112,64,.1);">🏠</div>
-                    <div class="exp-name">Studio Rent<small>Mar 1, 2026</small></div>
-                    <div class="exp-amt neg">−350€</div>
+                    <div class="exp-name">Zakup studija<small>1. mar 2026</small></div>
+                    <div class="exp-amt neg">−41.000 din</div>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(200,168,75,.1);">✨</div>
-                    <div class="exp-name">Lash Supplies<small>Mar 5, 2026</small></div>
-                    <div class="exp-amt neg">−180€</div>
+                    <div class="exp-name">Materijal za trepavice<small>5. mar 2026</small></div>
+                    <div class="exp-amt neg">−21.000 din</div>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(200,168,75,.1);">🧴</div>
-                    <div class="exp-name">Glue & Primers<small>Mar 10, 2026</small></div>
-                    <div class="exp-amt neg">−70€</div>
+                    <div class="exp-name">Lepak i prajmeri<small>10. mar 2026</small></div>
+                    <div class="exp-amt neg">−8.200 din</div>
                 </div>
             </div>
 
             <!-- INCOME -->
             <div id="tab-inc" style="display:none;">
                 <div class="sec-hdr">
-                    <span class="sec-ttl">Income · March</span>
-                    <span class="sec-act">23 sessions</span>
+                    <span class="sec-ttl">Prihodi · Mart</span>
+                    <span class="sec-act">23 termina</span>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Ana Jovanović<small>Mar 8 · Correction 3</small></div>
-                    <div class="exp-amt pos">+80€</div>
+                    <div class="exp-name">Ana Jovanović<small>8. mar · Korekcija 3</small></div>
+                    <div class="exp-amt pos">+4.700 din</div>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Maja Petrović<small>Mar 3 · Correction 1</small></div>
-                    <div class="exp-amt pos">+80€</div>
+                    <div class="exp-name">Maja Petrović<small>3. mar · Korekcija 1</small></div>
+                    <div class="exp-amt pos">+4.700 din</div>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Tamara Lukić<small>Mar 12 · New Set</small></div>
-                    <div class="exp-amt pos">+120€</div>
+                    <div class="exp-name">Tamara Lukić<small>12. mar · Novi set</small></div>
+                    <div class="exp-amt pos">+7.000 din</div>
                 </div>
                 <div class="exp-row">
                     <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Sofija Nikolić<small>Mar 2 · Correction 2</small></div>
-                    <div class="exp-amt pos">+80€</div>
+                    <div class="exp-name">Sofija Nikolić<small>2. mar · Korekcija 2</small></div>
+                    <div class="exp-amt pos">+4.700 din</div>
                 </div>
                 <div class="exp-row" style="border:none;">
                     <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Katarina Milić<small>Mar 1 · Correction 3</small></div>
-                    <div class="exp-amt pos">+80€</div>
+                    <div class="exp-name">Katarina Milić<small>1. mar · Korekcija 3</small></div>
+                    <div class="exp-amt pos">+4.700 din</div>
                 </div>
             </div>
 
             <!-- TOP CLIENTS -->
             <div id="tab-top" style="display:none;">
                 <div class="sec-hdr">
-                    <span class="sec-ttl">🏆 Rankings by Earnings</span>
-                    <span class="sec-act" style="font-size:11px;">All time</span>
+                    <span class="sec-ttl">🏆 Rang lista po zaradama</span>
+                    <span class="sec-act" style="font-size:11px;">Svo vreme</span>
                 </div>
                 <div style="display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;">
                     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥇</span> Top 10</div>
                     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥈</span> 11–20</div>
                     <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);"><span style="font-size:14px;">🥉</span> 21–30</div>
-                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(224,80,80,.7);"><span style="font-size:14px;">🚫</span> Blocked</div>
+                    <div style="display:flex;align-items:center;gap:5px;font-size:11px;color:rgba(224,80,80,.7);"><span style="font-size:14px;">🚫</span> Blokirani</div>
                 </div>
                 <div style="background:var(--bg2);border-radius:16px;margin:0 16px;border:1px solid var(--border);">
                     <div id="top-clients-list"><!-- filled by JS --></div>
@@ -792,43 +925,43 @@
             <!-- PRICES TAB -->
             <div id="tab-prices" style="display:none;">
                 <!-- Bank account card -->
-                <div class="sec-hdr"><span class="sec-ttl">Bank Account</span></div>
+                <div class="sec-hdr"><span class="sec-ttl">Račun banke</span></div>
                 <div style="margin:0 16px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px;">
                     <span style="font-size:22px;">🏦</span>
                     <div style="flex:1;">
                         <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:4px;">Račun banke</div>
                         <div id="bank-account-display" style="font-size:16px;font-weight:800;color:var(--white);letter-spacing:.5px;">115-0343043400-23</div>
                     </div>
-                    <button onclick="openEditBankAccount()" style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.25);border-radius:9px;padding:6px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">✏️ Edit</button>
+                    <button onclick="openEditBankAccount()" style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.25);border-radius:9px;padding:6px 12px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">✏️ Uredi</button>
                 </div>
 
                 <div class="sec-hdr">
-                    <span class="sec-ttl">Service Rates</span>
-                    <span class="sec-act" onclick="openPricingModal()" style="color:var(--gold);">Edit</span>
+                    <span class="sec-ttl">Cenovnik usluga</span>
+                    <span class="sec-act" onclick="openPricingModal()" style="color:var(--gold);">Uredi</span>
                 </div>
                 <div id="prices-display" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;margin:0 16px;overflow:hidden;">
                     <!-- filled by JS renderPricesTab() -->
                 </div>
                 <div style="padding:12px 16px 0;">
-                    <button class="btn-primary" style="width:100%;" onclick="openPricingModal()">✏️ Edit Prices</button>
+                    <button class="btn-primary" style="width:100%;" onclick="openPricingModal()">✏️ Uredi cene</button>
                 </div>
             </div>
 
             <div style="height:20px;"></div>
         </div>
         <div class="nav">
-            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
-            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
-            <button class="nav-btn active" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
-            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn active" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
     <!-- ════════════════════════ SETTINGS ════════════════════════ -->
     <div class="screen" id="s-settings">
         <div class="hdr">
-            <p class="eyebrow">LashPro</p>
-            <h1>Settings</h1>
+            <p class="eyebrow">BeautyPro</p>
+            <h1>Podešavanja</h1>
         </div>
         <div class="scroll">
             <!-- Salon card -->
@@ -838,26 +971,26 @@
                     <div style="flex:1;">
                         <div id="salon-name-display" style="font-size:16px;font-weight:800;color:var(--white);">Lash Artist Studio</div>
                         <div style="font-size:12px;color:var(--muted);margin-top:3px;">artist@lashpro.com</div>
-                        <div style="font-size:11px;color:var(--gold);margin-top:5px;font-weight:700;">Pro Plan · Active</div>
+                        <div style="font-size:11px;color:var(--gold);margin-top:5px;font-weight:700;">Pro plan · Aktivan</div>
                     </div>
                     <button onclick="openModal('m-salon')" style="background:none;border:none;color:var(--gold);font-size:18px;cursor:pointer;padding:4px;">✏️</button>
                 </div>
             </div>
 
-            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Studio Branding</span></div>
+            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Brendiranje studija</span></div>
             <div class="set-row" onclick="openModal('m-salon')">
                 <span class="set-ico">🎨</span>
                 <div style="flex:1;">
-                    <div class="set-lbl">Salon Name & Logo</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Edit studio name and upload logo</div>
+                    <div class="set-lbl">Naziv i logo salona</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Uredi naziv studija i postavi logo</div>
                 </div>
                 <span class="set-arr">›</span>
             </div>
             <div class="set-row" onclick="openModal('m-colors')">
                 <span class="set-ico">🌈</span>
                 <div style="flex:1;">
-                    <div class="set-lbl">App Color Theme</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Choose accent color for the whole app</div>
+                    <div class="set-lbl">Boja teme aplikacije</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Izaberi akcentnu boju za celu aplikaciju</div>
                 </div>
                 <div style="display:flex;gap:5px;margin-right:8px;">
                     <div style="width:14px;height:14px;border-radius:50%;background:#C8A84B;border:2px solid #fff;"></div>
@@ -865,61 +998,66 @@
                 <span class="set-arr">›</span>
             </div>
 
-            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Preferences</span></div>
+            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Podešavanja</span></div>
+            <div class="set-row" onclick="go('profession')">
+                <span class="set-ico">✦</span>
+                <span class="set-lbl">Profesija</span>
+                <span class="set-val" id="settings-profession">Lash Artist</span><span class="set-arr">›</span>
+            </div>
             <div class="set-row">
                 <span class="set-ico">🌐</span>
-                <span class="set-lbl">Language</span>
-                <span class="set-val">English</span><span class="set-arr">›</span>
+                <span class="set-lbl">Jezik</span>
+                <span class="set-val">Srpski</span><span class="set-arr">›</span>
             </div>
             <div class="set-row" style="cursor:default;">
                 <span class="set-ico">🌓</span>
-                <span class="set-lbl" style="flex:1;">Theme</span>
+                <span class="set-lbl" style="flex:1;">Tema</span>
                 <div style="display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:10px;overflow:hidden;gap:0;">
                     <button id="theme-dark-btn" onclick="setTheme('dark')"
                         style="padding:6px 14px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;border:none;border-radius:9px 0 0 9px;transition:all .2s;background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#000;">
-                        🌙 Dark
+                        🌙 Tamna
                     </button>
                     <button id="theme-light-btn" onclick="setTheme('light')"
                         style="padding:6px 14px;font-size:11px;font-weight:700;font-family:inherit;cursor:pointer;border:none;border-radius:0 9px 9px 0;transition:all .2s;background:transparent;color:var(--muted);">
-                        ☀️ Light
+                        ☀️ Svetla
                     </button>
                 </div>
             </div>
             <div class="set-row">
                 <span class="set-ico">💱</span>
-                <span class="set-lbl">Currency</span>
-                <span class="set-val">EUR (€)</span><span class="set-arr">›</span>
+                <span class="set-lbl">Valuta</span>
+                <span class="set-val">RSD (din)</span><span class="set-arr">›</span>
             </div>
             <div class="set-row">
                 <span class="set-ico">🔔</span>
-                <span class="set-lbl">Notifications</span>
+                <span class="set-lbl">Obaveštenja</span>
                 <span class="set-arr">›</span>
             </div>
 
-            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Account</span></div>
+            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Nalog</span></div>
             <div class="set-row">
                 <span class="set-ico">🔒</span>
-                <span class="set-lbl">Change Password</span>
+                <span class="set-lbl">Promeni lozinku</span>
                 <span class="set-arr">›</span>
             </div>
             <div class="set-row">
                 <span class="set-ico">📊</span>
-                <span class="set-lbl">Export Data</span>
+                <span class="set-lbl">Izvezi podatke</span>
                 <span class="set-arr">›</span>
             </div>
             <div class="set-row">
                 <span class="set-ico">👥</span>
-                <span class="set-lbl">Manage Subscription</span>
+                <span class="set-lbl">Upravljaj pretplatom</span>
                 <span class="set-val" style="color:var(--gold);">Pro</span><span class="set-arr">›</span>
             </div>
 
-            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Data & Backup</span></div>
+            <div class="sec-hdr" style="padding-top:8px;"><span class="sec-ttl">Podaci i backup</span></div>
             <div class="set-row" style="align-items:flex-start;padding-top:16px;padding-bottom:16px;" onclick="toggleBackup()">
                 <span class="set-ico" style="margin-top:1px;">☁️</span>
                 <div style="flex:1;">
-                    <div class="set-lbl" style="margin-bottom:3px;">Auto Cloud Backup</div>
-                    <div style="font-size:11px;color:var(--muted);line-height:1.5;">Data is synced to the cloud after every change. Sign into any device to restore instantly.</div>
-                    <div id="backup-status" style="font-size:11px;color:#5CB87A;font-weight:700;margin-top:6px;">✓ Last backup: Today, 14:32</div>
+                    <div class="set-lbl" style="margin-bottom:3px;">Automatski cloud backup</div>
+                    <div style="font-size:11px;color:var(--muted);line-height:1.5;">Podaci se sinhronizuju u cloud posle svake promene. Prijavi se na bilo koji uređaj za instant obnovu.</div>
+                    <div id="backup-status" style="font-size:11px;color:#5CB87A;font-weight:700;margin-top:6px;">✓ Poslednji backup: Danas, 14:32</div>
                 </div>
                 <div id="backup-toggle" onclick="toggleBackup()" style="margin-left:10px;margin-top:2px;width:44px;height:26px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));border-radius:13px;position:relative;cursor:pointer;flex-shrink:0;transition:background .2s;">
                     <div id="backup-knob" style="position:absolute;top:3px;right:3px;width:20px;height:20px;background:#0D0D0D;border-radius:50%;transition:right .2s;"></div>
@@ -928,22 +1066,22 @@
             <div class="set-row">
                 <span class="set-ico">🔄</span>
                 <div style="flex:1;">
-                    <div class="set-lbl">Restore from Backup</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Manually restore data from a previous backup point.</div>
+                    <div class="set-lbl">Vrati iz backupa</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Ručno vrati podatke iz prethodne tačke.</div>
                 </div>
                 <span class="set-arr">›</span>
             </div>
 
             <div style="margin:24px 16px 0;">
-                <button class="btn-outline" style="width:100%;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="go('login')">Sign Out</button>
+                <button class="btn-outline" style="width:100%;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="go('login')">Odjavi se</button>
             </div>
             <div style="height:20px;"></div>
         </div>
         <div class="nav">
-            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Calendar</span></button>
-            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Clients</span></button>
-            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finance</span></button>
-            <button class="nav-btn active" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Settings</span></button>
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn active" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
@@ -954,37 +1092,37 @@
     <div class="modal-overlay" id="m-log">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
-            <div class="modal-ttl">Log Appointment</div>
-            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
+            <div class="modal-ttl">Unesi termin</div>
+            <div class="form-r"><label class="lbl-s">Datum</label><input class="field" type="date" value="2026-03-15"></div>
             <div class="form-r">
-                <label class="lbl-s">Services</label>
+                <label class="lbl-s">Usluge</label>
                 <div class="svc-picker" id="svc-log">
                     <div>
                         <div class="svc-group-label">Nadogradnja Trepavica</div>
                         <div class="svc-chips">
-                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-log','new-set')">New Set</button>
-                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-log','c2w')">Corr. · 2w</button>
-                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-log','c3w')">Corr. · 3w</button>
-                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-log','c4w')">Corr. · 4w</button>
+                            <button class="svc-chip" data-key="new-set" onclick="toggleSvc('svc-log','new-set')">Novi set</button>
+                            <button class="svc-chip" data-key="c2w" onclick="toggleSvc('svc-log','c2w')">Kor. · 2 ned</button>
+                            <button class="svc-chip" data-key="c3w" onclick="toggleSvc('svc-log','c3w')">Kor. · 3 ned</button>
+                            <button class="svc-chip" data-key="c4w" onclick="toggleSvc('svc-log','c4w')">Kor. · 4 ned</button>
                             <button class="svc-chip" data-key="reklamacija" onclick="toggleSvc('svc-log','reklamacija')">Reklamacija 🆓</button>
                             <button class="svc-chip" data-key="skidanje" onclick="toggleSvc('svc-log','skidanje')">Skidanje</button>
                         </div>
                     </div>
                     <div>
-                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-group-label">Dodatne usluge</div>
                         <div class="svc-chips">
-                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-log','lash-lift')">Lash Lift</button>
-                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-log','brow-lift')">Brow Lift</button>
+                            <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-log','lash-lift')">Lash lift</button>
+                            <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-log','brow-lift')">Brow lift</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="form-r"><label class="lbl-s">What was done</label><input class="field" placeholder="e.g. Classic, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm"></div>
-            <div class="form-r"><label class="lbl-s">Amount Charged (€)</label><input class="field" type="number" placeholder="0" value="80"></div>
-            <div class="form-r"><label class="lbl-s">Notes (optional)</label><input class="field" placeholder="Any notes for this session…"></div>
+            <div class="form-r"><label class="lbl-s">Šta je urađeno</label><input class="field" placeholder="npr. Klasik, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm"></div>
+            <div class="form-r"><label class="lbl-s">Iznos (din)</label><input class="field" type="number" placeholder="0" value="80"></div>
+            <div class="form-r"><label class="lbl-s">Napomene (opciono)</label><input class="field" placeholder="Napomene za ovu sesiju…"></div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-log')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-log')">Save Appointment</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-log')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-log')">Sačuvaj termin</button>
             </div>
         </div>
     </div>
@@ -993,11 +1131,11 @@
     <div class="modal-overlay" id="m-book">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
-            <div class="modal-ttl">Book Appointment</div>
+            <div class="modal-ttl">Zakaži termin</div>
             <div class="form-r">
-                <label class="lbl-s">Client</label>
+                <label class="lbl-s">Klijent</label>
                 <div class="cpicker">
-                    <input class="field" id="book-search" placeholder="🔍  Search by name or phone…" autocomplete="off"
+                    <input class="field" id="book-search" placeholder="🔍  Pretraži po imenu ili telefonu…" autocomplete="off"
                         oninput="filterPicker('book-search','book-list')"
                         onfocus="filterPicker('book-search','book-list')">
                     <div class="cpicker-list" id="book-list"></div>
@@ -1010,10 +1148,10 @@
                     <button onclick="clearPicker('book-search','book-selected')" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">×</button>
                 </div>
             </div>
-            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
-            <div class="form-r"><label class="lbl-s">Time</label><input class="field" type="time" value="10:00"></div>
+            <div class="form-r"><label class="lbl-s">Datum</label><input class="field" type="date" value="2026-03-15"></div>
+            <div class="form-r"><label class="lbl-s">Vreme</label><input class="field" type="time" value="10:00"></div>
             <div class="form-r">
-                <label class="lbl-s">Services</label>
+                <label class="lbl-s">Usluge</label>
                 <div class="svc-picker" id="svc-book">
                     <div>
                         <div class="svc-group-label">Nadogradnja Trepavica</div>
@@ -1027,7 +1165,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-group-label">Dodatne usluge</div>
                         <div class="svc-chips">
                             <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-book','lash-lift')">Lash Lift</button>
                             <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-book','brow-lift')">Brow Lift</button>
@@ -1036,8 +1174,8 @@
                 </div>
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-book')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-book')">Book</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-book')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-book')">Zakaži</button>
             </div>
         </div>
     </div>
@@ -1046,24 +1184,24 @@
     <div class="modal-overlay" id="m-expense">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
-            <div class="modal-ttl">Add Expense</div>
+            <div class="modal-ttl">Dodaj trošak</div>
             <div class="form-r">
-                <label class="lbl-s">Category</label>
+                <label class="lbl-s">Kategorija</label>
                 <select class="field">
-                    <option>Studio Rent</option>
-                    <option>Lash Supplies</option>
-                    <option>Glue & Adhesives</option>
-                    <option>Equipment</option>
+                    <option>Zakup studija</option>
+                    <option>Materijal</option>
+                    <option>Lepak i adhesivi</option>
+                    <option>Oprema</option>
                     <option>Marketing</option>
-                    <option>Other</option>
+                    <option>Ostalo</option>
                 </select>
             </div>
-            <div class="form-r"><label class="lbl-s">Description</label><input class="field" placeholder="e.g. Monthly studio rent"></div>
-            <div class="form-r"><label class="lbl-s">Amount (€)</label><input class="field" type="number" placeholder="0"></div>
-            <div class="form-r"><label class="lbl-s">Date</label><input class="field" type="date" value="2026-03-15"></div>
+            <div class="form-r"><label class="lbl-s">Opis</label><input class="field" placeholder="npr. Mesečni zakup studija"></div>
+            <div class="form-r"><label class="lbl-s">Iznos (din)</label><input class="field" type="number" placeholder="0"></div>
+            <div class="form-r"><label class="lbl-s">Datum</label><input class="field" type="date" value="2026-03-15"></div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-expense')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-expense')">Add Expense</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-expense')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-expense')">Dodaj trošak</button>
             </div>
         </div>
     </div>
@@ -1072,14 +1210,14 @@
     <div class="modal-overlay" id="m-new-client">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
-            <div class="modal-ttl">New Client</div>
-            <div class="form-r"><label class="lbl-s">Full Name</label><input class="field" placeholder="e.g. Marija Stojanović"></div>
-            <div class="form-r"><label class="lbl-s">Phone</label><input class="field" type="tel" placeholder="+381 …"></div>
-            <div class="form-r"><label class="lbl-s">Email (optional)</label><input class="field" type="email" placeholder="client@email.com"></div>
-            <div class="form-r"><label class="lbl-s">Notes / Allergies</label><input class="field" placeholder="Any important notes…"></div>
+            <div class="modal-ttl">Novi klijent</div>
+            <div class="form-r"><label class="lbl-s">Ime i prezime</label><input class="field" placeholder="npr. Marija Stojanović"></div>
+            <div class="form-r"><label class="lbl-s">Telefon</label><input class="field" type="tel" placeholder="+381 …"></div>
+            <div class="form-r"><label class="lbl-s">Email (opciono)</label><input class="field" type="email" placeholder="client@email.com"></div>
+            <div class="form-r"><label class="lbl-s">Napomene / Alergije</label><input class="field" placeholder="Bitne napomene…"></div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-new-client')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-new-client')">Add Client</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-new-client')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-new-client')">Dodaj klijenta</button>
             </div>
         </div>
     </div>
@@ -1089,12 +1227,12 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;" id="day-detail-title">March 15</div>
+                <div class="modal-ttl" style="margin-bottom:0;" id="day-detail-title">15. mart</div>
                 <button onclick="closeModal('m-day-detail')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <div id="day-detail-list"><!-- filled by JS --></div>
             <div style="margin-top:16px;">
-                <button class="btn-primary" onclick="closeModal('m-day-detail');openModal('m-book')">+ Book New Appointment</button>
+                <button class="btn-primary" onclick="closeModal('m-day-detail');openModal('m-book')">+ Zakaži novi termin</button>
             </div>
         </div>
     </div>
@@ -1104,13 +1242,13 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;">Edit Appointment</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Uredi termin</div>
                 <button onclick="closeModal('m-edit-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Client</label>
+                <label class="lbl-s">Klijent</label>
                 <div class="cpicker">
-                    <input class="field" id="ea-search" placeholder="🔍  Search by name or phone…" autocomplete="off"
+                    <input class="field" id="ea-search" placeholder="🔍  Pretraži po imenu ili telefonu…" autocomplete="off"
                         oninput="filterPicker('ea-search','ea-list')"
                         onfocus="filterPicker('ea-search','ea-list')">
                     <div class="cpicker-list" id="ea-list"></div>
@@ -1126,11 +1264,11 @@
                 <input type="hidden" id="ea-client" value="">
             </div>
             <div style="display:flex;gap:10px;">
-                <div class="form-r" style="flex:1;"><label class="lbl-s">Date</label><input class="field" id="ea-date" type="date" value="2026-03-15"></div>
-                <div class="form-r" style="flex:1;"><label class="lbl-s">Time</label><input class="field" id="ea-time" type="time" value="10:00"></div>
+                <div class="form-r" style="flex:1;"><label class="lbl-s">Datum</label><input class="field" id="ea-date" type="date" value="2026-03-15"></div>
+                <div class="form-r" style="flex:1;"><label class="lbl-s">Vreme</label><input class="field" id="ea-time" type="time" value="10:00"></div>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Services</label>
+                <label class="lbl-s">Usluge</label>
                 <div class="svc-picker" id="svc-ea">
                     <div>
                         <div class="svc-group-label">Nadogradnja Trepavica</div>
@@ -1144,7 +1282,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-group-label">Dodatne usluge</div>
                         <div class="svc-chips">
                             <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-ea','lash-lift')">Lash Lift</button>
                             <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-ea','brow-lift')">Brow Lift</button>
@@ -1153,12 +1291,12 @@
                 </div>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Reason for change (optional)</label>
-                <input class="field" id="ea-reason" placeholder="e.g. Client requested different time…">
+                <label class="lbl-s">Razlog izmene (opciono)</label>
+                <input class="field" id="ea-reason" placeholder="npr. Klijent tražio drugi termin…">
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="closeModal('m-edit-appt');openCancelAppt(currentApptId)">Cancel Appt.</button>
-                <button class="btn-primary" style="flex:1.5;" onclick="checkOverlap()">Save Changes</button>
+                <button class="btn-outline" style="flex:1;border-color:rgba(224,112,96,.4);color:var(--red);" onclick="closeModal('m-edit-appt');openCancelAppt(currentApptId)">Otkaži termin</button>
+                <button class="btn-primary" style="flex:1.5;" onclick="checkOverlap()">Sačuvaj izmene</button>
             </div>
         </div>
     </div>
@@ -1169,21 +1307,21 @@
             <div class="modal-handle"></div>
             <div style="margin-bottom:16px;">
                 <div style="font-size:22px;margin-bottom:10px;">⚠️</div>
-                <div class="modal-ttl" style="margin-bottom:6px;">Time Conflict Detected</div>
+                <div class="modal-ttl" style="margin-bottom:6px;">Detektovan konflikt termina</div>
                 <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="overlap-msg">
-                    This time overlaps with <strong style="color:var(--white);">Maja Petrović at 12:00</strong>. Choose how to resolve it.
+                    Ovo vreme se preklapa sa <strong style="color:var(--white);">Maja Petrović u 12:00</strong>. Izaberite kako da rešite.
                 </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;">
                 <button class="btn-primary" onclick="resolveOverlap('move')" style="text-align:left;padding:14px 16px;">
-                    <div style="font-size:14px;font-weight:800;">↔ Move conflicting appointment</div>
-                    <div style="font-size:11px;font-weight:500;opacity:.8;margin-top:3px;">Reschedule the other appointment to a free slot</div>
+                    <div style="font-size:14px;font-weight:800;">↔ Pomeri konfliktni termin</div>
+                    <div style="font-size:11px;font-weight:500;opacity:.8;margin-top:3px;">Prebaci drugi termin na slobodan slot</div>
                 </button>
                 <button onclick="resolveOverlap('cancel')" style="background:rgba(224,112,96,.1);border:1px solid rgba(224,112,96,.35);border-radius:12px;padding:14px 16px;cursor:pointer;text-align:left;">
-                    <div style="font-size:14px;font-weight:800;color:var(--red);">✕ Cancel conflicting appointment</div>
-                    <div style="font-size:11px;color:var(--muted);margin-top:3px;">Remove the other appointment from the calendar</div>
+                    <div style="font-size:14px;font-weight:800;color:var(--red);">✕ Otkaži konfliktni termin</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:3px;">Ukloni drugi termin iz kalendara</div>
                 </button>
-                <button class="btn-outline" onclick="closeModal('m-overlap')" style="width:100%;">Go back and change time</button>
+                <button class="btn-outline" onclick="closeModal('m-overlap')" style="width:100%;">Nazad — promeni vreme</button>
             </div>
         </div>
     </div>
@@ -1192,22 +1330,22 @@
     <div class="modal-overlay" id="m-photo">
         <div class="modal-sheet">
             <div class="modal-handle"></div>
-            <div class="modal-ttl">Client Photo</div>
+            <div class="modal-ttl">Foto klijenta</div>
             <div style="display:flex;justify-content:center;margin-bottom:20px;">
                 <div id="photo-preview" style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;color:#0D0D0D;border:2px solid var(--gold);">AJ</div>
             </div>
             <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
                 <button onclick="simulatePhoto('camera')" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
-                    <span style="font-size:20px;">📷</span> Take Photo
+                    <span style="font-size:20px;">📷</span> Napravi fotografiju
                 </button>
                 <button onclick="simulatePhoto('gallery')" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--white);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
-                    <span style="font-size:20px;">🖼</span> Choose from Gallery
+                    <span style="font-size:20px;">🖼</span> Izaberi iz galerije
                 </button>
                 <button onclick="simulatePhoto('remove')" style="background:rgba(224,112,96,.08);border:1px solid rgba(224,112,96,.3);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:12px;">
-                    <span style="font-size:20px;">🗑</span> Remove Photo
+                    <span style="font-size:20px;">🗑</span> Ukloni fotografiju
                 </button>
             </div>
-            <button class="btn-outline" style="width:100%;" onclick="closeModal('m-photo')">Cancel</button>
+            <button class="btn-outline" style="width:100%;" onclick="closeModal('m-photo')">Otkaži</button>
         </div>
     </div>
 
@@ -1216,29 +1354,29 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;">Studio Branding</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Brendiranje studija</div>
                 <button onclick="closeModal('m-salon')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <!-- Logo upload area -->
             <div style="margin-bottom:18px;">
-                <label class="lbl-s">Studio Logo</label>
+                <label class="lbl-s">Logo studija</label>
                 <div onclick="simulateLogo()" style="border:2px dashed rgba(200,168,75,.4);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;background:rgba(200,168,75,.04);">
                     <div id="logo-upload-preview" style="width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:28px;">✦</div>
-                    <div style="font-size:13px;color:var(--gold);font-weight:700;">Tap to upload logo</div>
+                    <div style="font-size:13px;color:var(--gold);font-weight:700;">Tapni za upload loga</div>
                     <div style="font-size:11px;color:var(--muted);">PNG, JPG · max 5MB</div>
                 </div>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Studio Name</label>
-                <input class="field" id="salon-name-input" placeholder="e.g. Lash Studio by Ana" value="Lash Artist Studio">
+                <label class="lbl-s">Naziv studija</label>
+                <input class="field" id="salon-name-input" placeholder="npr. Lash Studio by Ana" value="Lash Artist Studio">
             </div>
             <div class="form-r">
-                <label class="lbl-s">Tagline (optional)</label>
-                <input class="field" placeholder="e.g. Premium Lash Extensions">
+                <label class="lbl-s">Slogan (opciono)</label>
+                <input class="field" placeholder="npr. Premium produžavanje trepavica">
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-salon')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="saveSalon()">Save</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-salon')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="saveSalon()">Sačuvaj</button>
             </div>
         </div>
     </div>
@@ -1248,22 +1386,22 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;">App Color Theme</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Boja teme aplikacije</div>
                 <button onclick="closeModal('m-colors')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
-            <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Choose an accent color that will be applied throughout the app.</div>
+            <div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;">Izaberite akcentnu boju koja će biti primenjena u celoj aplikaciji.</div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
                 <div onclick="applyTheme('#C8A84B','#9A7B2E')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#9A7B2E,#C8A84B);margin:0 auto 6px;border:2px solid rgba(200,168,75,.6);"></div>
-                    <div style="font-size:10px;color:var(--white);font-weight:700;">Gold ✓</div>
+                    <div style="font-size:10px;color:var(--white);font-weight:700;">Zlatna ✓</div>
                 </div>
                 <div onclick="applyTheme('#E8B4CB','#C4749A')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C4749A,#E8B4CB);margin:0 auto 6px;border:2px solid rgba(232,180,203,.3);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Rose</div>
+                    <div style="font-size:10px;color:var(--muted);">Roze</div>
                 </div>
                 <div onclick="applyTheme('#A8C8E8','#5A8AB4')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#5A8AB4,#A8C8E8);margin:0 auto 6px;border:2px solid rgba(168,200,232,.3);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Sky</div>
+                    <div style="font-size:10px;color:var(--muted);">Nebo</div>
                 </div>
                 <div onclick="applyTheme('#B8E8C8','#5AB490')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#5AB490,#B8E8C8);margin:0 auto 6px;border:2px solid rgba(184,232,200,.3);"></div>
@@ -1271,22 +1409,22 @@
                 </div>
                 <div onclick="applyTheme('#E8D0A8','#C4A060')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C4A060,#E8D0A8);margin:0 auto 6px;border:2px solid rgba(232,208,168,.3);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Champagne</div>
+                    <div style="font-size:10px;color:var(--muted);">Šampanj</div>
                 </div>
                 <div onclick="applyTheme('#D4A8E8','#9A60C4')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#9A60C4,#D4A8E8);margin:0 auto 6px;border:2px solid rgba(212,168,232,.3);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Lavender</div>
+                    <div style="font-size:10px;color:var(--muted);">Lavanda</div>
                 </div>
                 <div onclick="applyTheme('#E8C0A8','#C47850')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#C47850,#E8C0A8);margin:0 auto 6px;border:2px solid rgba(232,192,168,.3);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Peach</div>
+                    <div style="font-size:10px;color:var(--muted);">Breskva</div>
                 </div>
                 <div onclick="applyTheme('#F0F0F0','#AAAAAA')" style="cursor:pointer;text-align:center;">
                     <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#888,#eee);margin:0 auto 6px;border:2px solid rgba(255,255,255,.2);"></div>
-                    <div style="font-size:10px;color:var(--muted);">Silver</div>
+                    <div style="font-size:10px;color:var(--muted);">Srebrna</div>
                 </div>
             </div>
-            <button class="btn-primary" onclick="closeModal('m-colors')">Apply Theme</button>
+            <button class="btn-primary" onclick="closeModal('m-colors')">Primeni temu</button>
         </div>
     </div>
 
@@ -1295,53 +1433,53 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-                <div class="modal-ttl" style="margin-bottom:0;">Edit Client</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Uredi klijenta</div>
                 <button onclick="closeModal('m-edit-client')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
             </div>
 
             <!-- Sub-tabs: Info / Lash Profile -->
             <div class="seg" style="margin:0 0 18px;">
-                <button class="seg-btn active" id="et-info-btn" onclick="editTab('info')">Client Info</button>
-                <button class="seg-btn" id="et-lash-btn" onclick="editTab('lash')">Lash Profile</button>
+                <button class="seg-btn active" id="et-info-btn" onclick="editTab('info')">Podaci klijenta</button>
+                <button class="seg-btn" id="et-lash-btn" onclick="editTab('lash')">Profil trepavica</button>
             </div>
 
             <!-- Info tab -->
             <div id="et-info">
-                <div class="form-r"><label class="lbl-s">First Name</label><input class="field" id="e-fname" placeholder="e.g. Ana"></div>
-                <div class="form-r"><label class="lbl-s">Last Name</label><input class="field" id="e-lname" placeholder="e.g. Jovanović"></div>
-                <div class="form-r"><label class="lbl-s">Phone</label><input class="field" id="e-phone" type="tel" placeholder="+381 …"></div>
+                <div class="form-r"><label class="lbl-s">Ime</label><input class="field" id="e-fname" placeholder="npr. Ana"></div>
+                <div class="form-r"><label class="lbl-s">Prezime</label><input class="field" id="e-lname" placeholder="npr. Jovanović"></div>
+                <div class="form-r"><label class="lbl-s">Telefon</label><input class="field" id="e-phone" type="tel" placeholder="+381 …"></div>
                 <div class="form-r">
-                    <label class="lbl-s">Instagram (optional)</label>
+                    <label class="lbl-s">Instagram (opciono)</label>
                     <div style="position:relative;">
                         <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none;">@</span>
                         <input class="field" id="e-instagram" placeholder="username" style="padding-left:26px;">
                     </div>
                 </div>
-                <div class="form-r"><label class="lbl-s">Notes / Allergies</label><textarea class="field" id="e-notes" rows="3" style="resize:none;line-height:1.5;" placeholder="Allergies, preferences…"></textarea></div>
+                <div class="form-r"><label class="lbl-s">Napomene / Alergije</label><textarea class="field" id="e-notes" rows="3" style="resize:none;line-height:1.5;" placeholder="Alergije, preferencije…"></textarea></div>
             </div>
 
             <!-- Lash profile tab -->
             <div id="et-lash" style="display:none;">
                 <div class="form-r">
-                    <label class="lbl-s">Shape</label>
+                    <label class="lbl-s">Oblik</label>
                     <select class="field" id="e-shape">
                         <option>Cat Eye</option><option>Doll Eye</option><option>Natural</option>
                         <option>Squirrel</option><option>Open Eye</option><option>Fox Eye</option>
                     </select>
                 </div>
                 <div class="form-r">
-                    <label class="lbl-s">Length</label>
-                    <input class="field" id="e-length" placeholder="e.g. 11 / 13 mm">
+                    <label class="lbl-s">Dužina</label>
+                    <input class="field" id="e-length" placeholder="npr. 11 / 13 mm">
                 </div>
                 <div class="form-r">
-                    <label class="lbl-s">Type</label>
+                    <label class="lbl-s">Tip</label>
                     <select class="field" id="e-type">
                         <option>Classic</option><option>Volume</option><option>Hybrid</option>
                         <option>Mega Volume</option><option>Wet Look</option>
                     </select>
                 </div>
                 <div class="form-r">
-                    <label class="lbl-s">Curl</label>
+                    <label class="lbl-s">Kovrdža</label>
                     <select class="field" id="e-curl">
                         <option>B Curl</option><option>C Curl</option><option>D Curl</option>
                         <option>L Curl</option><option>M Curl</option><option>CC Curl</option>
@@ -1350,8 +1488,8 @@
             </div>
 
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-edit-client')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="saveEditClient()">Save Changes</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-edit-client')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="saveEditClient()">Sačuvaj izmene</button>
             </div>
         </div>
     </div>
@@ -1361,7 +1499,7 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-                <div class="modal-ttl" style="margin-bottom:0;">Complete Session</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Završi sesiju</div>
                 <button onclick="closeModal('m-complete')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
             </div>
             <!-- Info note -->
@@ -1371,14 +1509,14 @@
 
             <!-- Scheduled appointment picker -->
             <div class="form-r">
-                <label class="lbl-s">Zakazani termin (today)</label>
+                <label class="lbl-s">Zakazani termin (danas)</label>
                 <select class="field">
                     <option>Today, 10:00 — Ana Jovanović (booked)</option>
                     <option>Today, 12:00 — Maja Petrović (booked)</option>
                 </select>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Services</label>
+                <label class="lbl-s">Usluge</label>
                 <div class="svc-picker" id="svc-complete">
                     <div>
                         <div class="svc-group-label">Nadogradnja Trepavica</div>
@@ -1392,7 +1530,7 @@
                         </div>
                     </div>
                     <div>
-                        <div class="svc-group-label">Additional Services</div>
+                        <div class="svc-group-label">Dodatne usluge</div>
                         <div class="svc-chips">
                             <button class="svc-chip" data-key="lash-lift" onclick="toggleSvc('svc-complete','lash-lift')">Lash Lift</button>
                             <button class="svc-chip" data-key="brow-lift" onclick="toggleSvc('svc-complete','brow-lift')">Brow Lift</button>
@@ -1401,20 +1539,20 @@
                 </div>
             </div>
             <div class="form-r">
-                <label class="lbl-s">What was done</label>
-                <input class="field" placeholder="e.g. Classic, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm">
+                <label class="lbl-s">Šta je urađeno</label>
+                <input class="field" placeholder="npr. Klasik, Cat Eye, C Curl, 11/13mm" value="Classic · Cat Eye · C Curl · 11/13mm">
             </div>
             <div class="form-r">
-                <label class="lbl-s">Amount Charged (€)</label>
+                <label class="lbl-s">Iznos (din)</label>
                 <input class="field" type="number" placeholder="0" value="80">
             </div>
             <div class="form-r">
-                <label class="lbl-s">Notes (optional)</label>
-                <input class="field" placeholder="Anything worth noting…">
+                <label class="lbl-s">Napomene (opciono)</label>
+                <input class="field" placeholder="Nešto vredno pomena…">
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-complete')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-complete')">✓ Confirm & Save Income</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-complete')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="closeModal('m-complete')">✓ Potvrdi i sačuvaj prihod</button>
             </div>
         </div>
     </div>
@@ -1432,57 +1570,57 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;">💰 Service Prices</div>
+                <div class="modal-ttl" style="margin-bottom:0;">💰 Cenovnik usluga</div>
                 <button onclick="closeModal('m-pricing')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <div style="background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.15);border-radius:10px;padding:10px 12px;margin-bottom:16px;font-size:12px;color:var(--muted);line-height:1.5;">
-                Set your default prices per service. These are used when opening appointment details.
+                Podesite podrazumevane cene po usluzi. Koriste se pri otvaranju detalja termina.
             </div>
             <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;">
                 <div class="price-row">
                     <div class="price-svc">New Set<small>Nadogradnja — od pocetka</small></div>
                     <input class="price-input" id="pr-new-set" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
                     <div class="price-svc">Correction · 2 weeks<small>Korekcija posle 2 nedelje</small></div>
                     <input class="price-input" id="pr-c2w" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
                     <div class="price-svc">Correction · 3 weeks<small>Korekcija posle 3 nedelje</small></div>
                     <input class="price-input" id="pr-c3w" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
                     <div class="price-svc">Correction · 4 weeks<small>Korekcija posle 4 nedelje</small></div>
                     <input class="price-input" id="pr-c4w" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
                     <div class="price-svc">Reklamacija<small>Besplatno — u toku prve nedelje</small></div>
                     <input class="price-input" id="pr-reklamacija" type="number" min="0" disabled style="opacity:.4;cursor:not-allowed;">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
                     <div class="price-svc">Skidanje nadogradnje<small>Uklanjanje trepavica</small></div>
                     <input class="price-input" id="pr-skidanje" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row">
-                    <div class="price-svc">Lash Lift<small>Podizanje trepavica</small></div>
+                    <div class="price-svc">Lash lift<small>Podizanje trepavica</small></div>
                     <input class="price-input" id="pr-lash-lift" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
                 <div class="price-row" style="border-bottom:none;">
-                    <div class="price-svc">Brow Lift<small>Podizanje obrva</small></div>
+                    <div class="price-svc">Brow lift<small>Podizanje obrva</small></div>
                     <input class="price-input" id="pr-brow-lift" type="number" min="0">
-                    <span style="font-size:13px;color:var(--muted);">€</span>
+                    <span style="font-size:13px;color:var(--muted);">din</span>
                 </div>
             </div>
             <div style="display:flex;gap:10px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-pricing')">Cancel</button>
-                <button class="btn-primary" style="flex:2;" onclick="savePricing()">Save Prices</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-pricing')">Otkaži</button>
+                <button class="btn-primary" style="flex:2;" onclick="savePricing()">Sačuvaj cene</button>
             </div>
         </div>
     </div>
@@ -1499,7 +1637,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
                 <div style="display:flex;align-items:center;gap:10px;">
                     <span style="font-size:22px;">❌</span>
-                    <div class="modal-ttl" style="margin-bottom:0;">Cancellation Details</div>
+                    <div class="modal-ttl" style="margin-bottom:0;">Detalji otkazivanja</div>
                 </div>
                 <button onclick="closeModal('m-cancel-detail')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
@@ -1507,17 +1645,17 @@
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
                     <div>
                         <div style="font-size:11px;color:var(--red);font-weight:700;text-transform:uppercase;letter-spacing:1px;" id="cd-date">Mar 8, 2026</div>
-                        <div style="font-size:16px;font-weight:800;color:var(--white);margin-top:4px;" id="cd-type">New Set</div>
+                        <div style="font-size:16px;font-weight:800;color:var(--white);margin-top:4px;" id="cd-type">Novi set</div>
                     </div>
                     <span style="font-size:12px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:8px;padding:5px 10px;" id="cd-who">Client</span>
                 </div>
                 <div style="border-top:1px solid rgba(224,80,80,.2);padding-top:12px;">
-                    <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Reason</div>
+                    <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Razlog</div>
                     <div style="font-size:14px;color:var(--white);line-height:1.6;font-style:italic;" id="cd-reason">"No-show"</div>
                 </div>
             </div>
             <div style="margin-top:18px;">
-                <button class="btn-outline" style="width:100%;" onclick="closeModal('m-cancel-detail')">Close</button>
+                <button class="btn-outline" style="width:100%;" onclick="closeModal('m-cancel-detail')">Zatvori</button>
             </div>
         </div>
     </div>
@@ -1527,7 +1665,7 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-                <div class="modal-ttl" style="margin-bottom:0;" id="ao-title">Appointment Details</div>
+                <div class="modal-ttl" style="margin-bottom:0;" id="ao-title">Detalji termina</div>
                 <button onclick="closeModal('m-appt-options')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <!-- Appointment summary card -->
@@ -1541,19 +1679,19 @@
                     <span id="ao-status-badge"></span>
                 </div>
                 <div id="ao-cancel-info" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(224,80,80,.2);">
-                    <div style="font-size:11px;color:var(--red);font-weight:700;">Cancelled by: <span id="ao-cancelled-by"></span></div>
+                    <div style="font-size:11px;color:var(--red);font-weight:700;">Otkazao: <span id="ao-cancelled-by"></span></div>
                     <div style="font-size:12px;color:var(--muted);margin-top:3px;" id="ao-cancel-reason-text"></div>
                 </div>
             </div>
             <!-- Action buttons -->
             <div id="ao-actions" style="display:flex;flex-direction:column;gap:10px;">
                 <button id="ao-edit-btn" onclick="closeModal('m-appt-options');openEditAppt(currentApptId)" style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.3);border-radius:14px;padding:16px;color:var(--gold);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;text-align:left;">
-                    <div>✏️ Edit / Reschedule</div>
-                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Change date, time, or services</div>
+                    <div>✏️ Uredi / Prekaži</div>
+                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Promeni datum, vreme ili usluge</div>
                 </button>
                 <button id="ao-cancel-btn" onclick="closeModal('m-appt-options');openCancelAppt(currentApptId)" style="background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:14px;padding:16px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;text-align:left;">
-                    <div>❌ Cancel Appointment</div>
-                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Mark as cancelled and log who cancelled</div>
+                    <div>❌ Otkaži termin</div>
+                    <div style="font-size:11px;font-weight:500;color:var(--muted);margin-top:3px;">Označi kao otkazano i evidentuj ko je otkazao</div>
                 </button>
             </div>
         </div>
@@ -1564,28 +1702,28 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;">Cancel Appointment</div>
+                <div class="modal-ttl" style="margin-bottom:0;">Otkaži termin</div>
                 <button onclick="closeModal('m-cancel-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <div style="background:rgba(224,80,80,.07);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:10px 12px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.5;">
-                This appointment will be marked as <strong style="color:var(--red);">cancelled</strong> and logged in the client's history. The slot will be freed in the calendar.
+                Ovaj termin će biti označen kao <strong style="color:var(--red);">otkazan</strong> i evidentovan u istoriji klijenta. Slot u kalendaru će biti oslobođen.
             </div>
             <div class="form-r">
-                <label class="lbl-s">Who cancelled?</label>
+                <label class="lbl-s">Ko je otkazao?</label>
                 <select class="field" id="ca-who">
-                    <option value="client">Client cancelled</option>
-                    <option value="no-show">No-show (client didn't appear)</option>
-                    <option value="artist">Artist cancelled</option>
-                    <option value="emergency">Emergency / Force majeure</option>
+                    <option value="client">Klijent otkazao</option>
+                    <option value="no-show">No-show (klijent se nije pojavio)</option>
+                    <option value="artist">Umetnik otkazao</option>
+                    <option value="emergency">Hitno / Viša sila</option>
                 </select>
             </div>
             <div class="form-r">
-                <label class="lbl-s">Reason (optional)</label>
-                <input class="field" id="ca-reason" placeholder="e.g. Sick, work conflict, no response…">
+                <label class="lbl-s">Razlog (opciono)</label>
+                <input class="field" id="ca-reason" placeholder="npr. Bolestan, posao, bez odgovora…">
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-cancel-appt')">Go Back</button>
-                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="confirmCancelAppt()">✕ Confirm Cancellation</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-cancel-appt')">Nazad</button>
+                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="confirmCancelAppt()">✕ Potvrdi otkazivanje</button>
             </div>
         </div>
     </div>
@@ -1595,26 +1733,26 @@
         <div class="modal-sheet">
             <div class="modal-handle"></div>
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
-                <div class="modal-ttl" style="margin-bottom:0;" id="block-modal-title">Block Client</div>
+                <div class="modal-ttl" style="margin-bottom:0;" id="block-modal-title">Blokiraj klijenta</div>
                 <button onclick="closeModal('m-block-client')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;">×</button>
             </div>
             <div style="background:rgba(224,80,80,.07);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:10px 12px;margin-bottom:18px;font-size:12px;color:var(--muted);line-height:1.5;">
-                Blocked clients are <strong style="color:var(--red);">disabled in the booking picker</strong> and their profile will show a blocked notice. All appointment history is preserved.
+                Blokirani klijenti su onemogućeni u birkeru za zakazivanje i njihov profil će prikazati obaveštenje o blokiranju. Sva istorija termina je sačuvana.
             </div>
             <div class="form-r">
-                <label class="lbl-s">Reason for blocking</label>
-                <textarea class="field" id="bl-reason" rows="3" style="resize:none;line-height:1.5;" placeholder="e.g. No-show 3× in a row, disrespectful behaviour…"></textarea>
+                <label class="lbl-s">Razlog blokiranja</label>
+                <textarea class="field" id="bl-reason" rows="3" style="resize:none;line-height:1.5;" placeholder="npr. No-show 3× zaredom, nepoštovanje…"></textarea>
             </div>
             <div style="display:flex;gap:10px;margin-top:4px;">
-                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-block-client')">Cancel</button>
-                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="saveBlockClient()">🚫 Block Client</button>
+                <button class="btn-outline" style="flex:1;" onclick="closeModal('m-block-client')">Otkaži</button>
+                <button style="flex:2;background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.4);border-radius:12px;padding:14px;color:var(--red);font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;" onclick="saveBlockClient()">🚫 Blokiraj klijenta</button>
             </div>
         </div>
     </div>
 
 </div><!-- /phone -->
 
-<p class="proto-label">LashPro · Interactive Prototype</p>
+<p class="proto-label">LashPro · Interaktivni Prototip</p>
 
 <script>
 // ── Client data ──────────────────────────────────────────────────
@@ -1622,78 +1760,78 @@ const CLIENTS = [
     {
         name: 'Ana Jovanović', initials: 'AJ', phone: '+381 63 123 456',
         instagram: 'ana.jovanovic',
-        total: '620€', cycleStep: 'done-all',
+        total: '72.600 din', cycleStep: 'done-all',
         cancellations: 2, blocked: false, blockReason: '',
         lash: { shape:'Cat Eye', length:'11 / 13 mm', type:'Classic', curl:'C Curl' },
         notes: 'Sensitive to glue. Use sensitive adhesive. Prefers natural look. No allergies.',
         cycleDates: [{step:'new-set',date:'Jan 27, 2026',daysFromPrev:null},{step:'c1',date:'Feb 10, 2026',daysFromPrev:14},{step:'c2',date:'Feb 24, 2026',daysFromPrev:14},{step:'c3',date:'Mar 8, 2026',daysFromPrev:12}],
         history: [
-            { date:'Mar 8, 2026',  type:'Correction 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Mar 8, 2026',  type:'Korekcija 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'4.700 din' },
             { date:'Mar 1, 2026',  type:'Correction 3', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Sick — called 2h before' },
-            { date:'Feb 24, 2026', type:'Correction 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
-            { date:'Feb 17, 2026', type:'Correction 2', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
-            { date:'Feb 10, 2026', type:'Correction 1', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
-            { date:'Jan 27, 2026', type:'New Set',      desc:'Classic · Cat Eye · Applied from scratch', price:'120€' },
-            { date:'Dec 30, 2025', type:'Correction 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
-            { date:'Dec 16, 2025', type:'Correction 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'80€' },
+            { date:'Feb 24, 2026', type:'Korekcija 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'4.700 din' },
+            { date:'Feb 17, 2026', type:'Korekcija 2', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
+            { date:'Feb 10, 2026', type:'Korekcija 1', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'4.700 din' },
+            { date:'Jan 27, 2026', type:'Novi set',      desc:'Classic · Cat Eye · Applied from scratch', price:'7.000 din' },
+            { date:'Dec 30, 2025', type:'Correction 3', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'4.700 din' },
+            { date:'Dec 16, 2025', type:'Korekcija 2', desc:'Classic · Cat Eye · C Curl · 11/13mm', price:'4.700 din' },
         ]
     },
     {
         name: 'Maja Petrović', initials: 'MP', phone: '+381 64 234 567',
         instagram: 'maja.petrovic_lashes',
-        total: '380€', cycleStep: 'c1',
+        total: '44.500 din', cycleStep: 'c1',
         cancellations: 0, blocked: false, blockReason: '',
         lash: { shape:'Doll Eye', length:'12 mm', type:'Volume', curl:'D Curl' },
         notes: 'Prefers full volume look. No sensitivities.',
         cycleDates: [{step:'new-set',date:'Feb 17, 2026',daysFromPrev:null},{step:'c1',date:'Mar 3, 2026',daysFromPrev:14}],
         history: [
-            { date:'Mar 3, 2026',  type:'Correction 1', desc:'Volume · Doll Eye · D Curl · 12mm', price:'80€' },
-            { date:'Feb 17, 2026', type:'New Set',      desc:'Volume · Doll Eye · Applied from scratch', price:'130€' },
-            { date:'Jan 20, 2026', type:'Correction 3', desc:'Volume · Doll Eye · D Curl · 12mm', price:'80€' },
+            { date:'Mar 3, 2026',  type:'Korekcija 1', desc:'Volume · Doll Eye · D Curl · 12mm', price:'4.700 din' },
+            { date:'Feb 17, 2026', type:'Novi set',      desc:'Volume · Doll Eye · Applied from scratch', price:'7.600 din' },
+            { date:'Jan 20, 2026', type:'Correction 3', desc:'Volume · Doll Eye · D Curl · 12mm', price:'4.700 din' },
         ]
     },
     {
         name: 'Sofija Nikolić', initials: 'SN', phone: '+381 65 345 678',
         instagram: '',
-        total: '890€', cycleStep: 'c2',
+        total: '104.000 din', cycleStep: 'c2',
         cancellations: 0, blocked: false, blockReason: '',
         lash: { shape:'Natural', length:'10 / 12 mm', type:'Hybrid', curl:'B Curl' },
         notes: 'Sparse natural lashes. Use extra bond. Very gentle with removal.',
         cycleDates: [{step:'new-set',date:'Jan 31, 2026',daysFromPrev:null},{step:'c1',date:'Feb 14, 2026',daysFromPrev:14},{step:'c2',date:'Feb 28, 2026',daysFromPrev:14}],
         history: [
-            { date:'Feb 28, 2026', type:'Correction 2', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'90€' },
-            { date:'Feb 14, 2026', type:'Correction 1', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'90€' },
-            { date:'Jan 31, 2026', type:'New Set',      desc:'Hybrid · Natural · Applied from scratch', price:'150€' },
+            { date:'Feb 28, 2026', type:'Korekcija 2', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'5.300 din' },
+            { date:'Feb 14, 2026', type:'Korekcija 1', desc:'Hybrid · Natural · B Curl · 10/12mm', price:'5.300 din' },
+            { date:'Jan 31, 2026', type:'Novi set',      desc:'Hybrid · Natural · Applied from scratch', price:'17.600 din' },
         ]
     },
     {
         name: 'Tamara Lukić', initials: 'TL', phone: '+381 66 456 789',
         instagram: 'tamara_lukic',
-        total: '120€', cycleStep: 'new-set',
+        total: '14.000 din', cycleStep: 'new-set',
         cancellations: 3, blocked: true, blockReason: 'No-show 3× in a row, not responding to calls or messages after appointments.',
         lash: { shape:'Cat Eye', length:'13 mm', type:'Classic', curl:'C Curl' },
         notes: 'First time client as of March 2026. Wants long dramatic look.',
         cycleDates: [{step:'new-set',date:'Mar 12, 2026',daysFromPrev:null}],
         history: [
-            { date:'Mar 12, 2026', type:'New Set', desc:'Classic · Cat Eye · Applied from scratch', price:'120€' },
-            { date:'Mar 5, 2026',  type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client (no-show)', cancelReason:'Did not show up, did not respond to calls. Third no-show in a row. Decision made to block.' },
-            { date:'Feb 19, 2026', type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Texted 30 min before: "can\'t make it today". Rescheduled to Mar 5.' },
-            { date:'Feb 5, 2026',  type:'New Set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Called 2 hours before: "something came up at work". First cancellation — gave benefit of the doubt.' },
+            { date:'Mar 12, 2026', type:'Novi set', desc:'Classic · Cat Eye · Applied from scratch', price:'7.000 din' },
+            { date:'Mar 5, 2026',  type:'Novi set', desc:'', price:'—', cancelled:true, cancelledBy:'client (no-show)', cancelReason:'Did not show up, did not respond to calls. Third no-show in a row. Decision made to block.' },
+            { date:'Feb 19, 2026', type:'Novi set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Texted 30 min before: "can\'t make it today". Rescheduled to Mar 5.' },
+            { date:'Feb 5, 2026',  type:'Novi set', desc:'', price:'—', cancelled:true, cancelledBy:'client', cancelReason:'Called 2 hours before: "something came up at work". First cancellation — gave benefit of the doubt.' },
         ]
     },
     {
         name: 'Katarina Milić', initials: 'KM', phone: '+381 67 567 890',
         instagram: 'katarina.milic_beauty',
-        total: '1,140€', cycleStep: 'c3',
+        total: '133.400 din', cycleStep: 'c3',
         cancellations: 1, blocked: false, blockReason: '',
         lash: { shape:'Squirrel', length:'11 / 14 mm', type:'Mega Volume', curl:'L Curl' },
         notes: 'Has hooded eyelids. Apply with slight upward angle. Allergic to latex tape.',
         cycleDates: [{step:'new-set',date:'Jan 18, 2026',daysFromPrev:null},{step:'c1',date:'Feb 1, 2026',daysFromPrev:14},{step:'c2',date:'Feb 15, 2026',daysFromPrev:14},{step:'c3',date:'Mar 1, 2026',daysFromPrev:14}],
         history: [
-            { date:'Mar 1, 2026',  type:'Correction 3', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
-            { date:'Feb 15, 2026', type:'Correction 2', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
-            { date:'Feb 1, 2026',  type:'Correction 1', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'100€' },
-            { date:'Jan 18, 2026', type:'New Set',      desc:'Mega Vol · Squirrel · Applied from scratch', price:'180€' },
+            { date:'Mar 1, 2026',  type:'Correction 3', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'5.900 din' },
+            { date:'Feb 15, 2026', type:'Korekcija 2', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'5.900 din' },
+            { date:'Feb 1, 2026',  type:'Korekcija 1', desc:'Mega Vol · Squirrel · L Curl · 11/14mm', price:'5.900 din' },
+            { date:'Jan 18, 2026', type:'Novi set',      desc:'Mega Vol · Squirrel · Applied from scratch', price:'21.100 din' },
         ]
     },
 ];
@@ -1724,17 +1862,153 @@ const ALL_CLIENTS_PICKER = [
 
 // Cycle step definitions
 const CYCLE_STEPS = [
-    { label: 'New Set', key: 'new-set' },
-    { label: 'Corr. 1',  key: 'c1' },
-    { label: 'Corr. 2',  key: 'c2' },
-    { label: 'Corr. 3',  key: 'c3' },
+    { label: 'Novi set', key: 'new-set' },
+    { label: 'Kor. 1',  key: 'c1' },
+    { label: 'Kor. 2',  key: 'c2' },
+    { label: 'Kor. 3',  key: 'c3' },
 ];
+
+// ── Auth tab toggle ───────────────────────────────────────────────
+function showAuthTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('auth-login-form').style.display  = isLogin ? 'flex' : 'none';
+    document.getElementById('auth-signup-form').style.display = isLogin ? 'none' : 'flex';
+    document.getElementById('tab-login-btn').style.background  = isLogin ? 'linear-gradient(135deg,var(--gold-dark),var(--gold))' : 'transparent';
+    document.getElementById('tab-login-btn').style.color       = isLogin ? '#000' : 'var(--muted)';
+    document.getElementById('tab-signup-btn').style.background = isLogin ? 'transparent' : 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+    document.getElementById('tab-signup-btn').style.color      = isLogin ? 'var(--muted)' : '#000';
+}
+
+// ── Profession selection ──────────────────────────────────────────
+let currentProfession = 'lash';
+
+const PROFESSION_CONFIG = {
+    lash: {
+        name: 'Lash Artist',
+        icon: '✦',
+        showCycleTracker: true,
+        showLashProfile: true,
+        profileSectionTitle: 'Lash Profil',
+        navLabel: 'Kalendar',
+        services: ['new-set','c2w','c3w','c4w','reklamacija','skidanje','lash-lift','brow-lift'],
+    },
+    nails: {
+        name: 'Nail Artist',
+        icon: '💅',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Nail Profil',
+        navLabel: 'Kalendar',
+        services: ['manikir','gel-lak','akrilne','skidanje-gela','nail-art','pedikir'],
+    },
+    depilacija: {
+        name: 'Depilacija',
+        icon: '🌸',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Beleške o koži',
+        navLabel: 'Kalendar',
+        services: ['voskom','sugar-paste','laserska','intim','noge','ruke'],
+    },
+    pedikir: {
+        name: 'Pedikir',
+        icon: '🦶',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Profil stopala',
+        navLabel: 'Kalendar',
+        services: ['pedikir-klasik','gel-stopala','medicinski','skidanje-gela-s'],
+    },
+    makeup: {
+        name: 'Šminkanje',
+        icon: '💄',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Preferencije šminke',
+        navLabel: 'Kalendar',
+        services: ['dnevni','svecani','vjencanje','editorijal'],
+    },
+    masaza: {
+        name: 'Masaža',
+        icon: '🤲',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Zdravstvene napomene',
+        navLabel: 'Kalendar',
+        services: ['relaksacijska','sportska','medicinska','hot-stone','aromaterapija'],
+    },
+    obrve: {
+        name: 'Obrve & Mikroblading',
+        icon: '🌟',
+        showCycleTracker: true,
+        showLashProfile: false,
+        profileSectionTitle: 'Profil obrva',
+        navLabel: 'Kalendar',
+        services: ['laminacija','nano-brows','microblading','henna','korekcija'],
+    },
+    kozmetika: {
+        name: 'Kozmetičar',
+        icon: '🧴',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Tip kože',
+        navLabel: 'Kalendar',
+        services: ['tretman-lica','kemijski-piling','hidratacija','akne-tretman','anti-age'],
+    },
+    frizura: {
+        name: 'Frizer',
+        icon: '✂️',
+        showCycleTracker: false,
+        showLashProfile: false,
+        profileSectionTitle: 'Profil kose',
+        navLabel: 'Kalendar',
+        services: ['sisanje','farbanje','pranje-fen','tretman','keratin','pletenice'],
+    },
+};
+
+function selectProfession(key) {
+    // Deselect all
+    document.querySelectorAll('.prof-card').forEach(c => {
+        c.style.borderColor = 'var(--border)';
+        c.style.background  = 'var(--bg2)';
+    });
+    document.querySelectorAll('[id^="pc-check-"]').forEach(c => c.style.display = 'none');
+    // Select this one
+    const card  = document.getElementById('pc-' + key);
+    const check = document.getElementById('pc-check-' + key);
+    if (card)  { card.style.borderColor = 'var(--gold)'; card.style.background = 'rgba(200,168,75,.08)'; }
+    if (check) check.style.display = 'inline';
+    currentProfession = key;
+    // Enable button
+    const btn = document.getElementById('btn-start-app');
+    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+}
+
+function startApp() {
+    applyProfessionConfig(currentProfession);
+    go('dashboard');
+}
+
+function applyProfessionConfig(key) {
+    const cfg = PROFESSION_CONFIG[key] || PROFESSION_CONFIG['lash'];
+    // Show/hide cycle tracker section
+    const cycleSection = document.getElementById('p-cycle-section');
+    if (cycleSection) cycleSection.style.display = cfg.showCycleTracker ? 'block' : 'none';
+    // Show/hide lash profile card (hide it for non-lash)
+    // Update settings profession display
+    const profDisplay = document.getElementById('settings-profession');
+    if (profDisplay) profDisplay.textContent = cfg.name;
+    // Update header eyebrow everywhere
+    document.querySelectorAll('.eyebrow').forEach(el => {
+        if (el.textContent === 'BeautyPro' || el.textContent === 'LashPro') el.textContent = 'BeautyPro';
+    });
+}
 
 // ── Navigation ───────────────────────────────────────────────────
 let navStack = ['login'];
 let currentClientIdx = 0;
 const screenIds = {
-    login: 's-login', dashboard: 's-dashboard', clients: 's-clients',
+    login: 's-login', profession: 's-profession', dashboard: 's-dashboard', clients: 's-clients',
     profile: 's-profile', finance: 's-finance', settings: 's-settings'
 };
 
@@ -1776,13 +2050,13 @@ function renderProfile(c) {
     const cancelCountEl = document.getElementById('p-cancel-count');
     const cancelCount = c.cancellations || 0;
     if (cancelCount > 0) {
-        cancelCountEl.textContent = `❌ ${cancelCount} cancellation${cancelCount > 1 ? 's' : ''}`;
+        cancelCountEl.textContent = `❌ ${cancelCount} otkazivanj${cancelCount > 1 ? 'a' : 'e'}`;
         cancelCountEl.style.display = 'block';
     } else {
         cancelCountEl.style.display = 'none';
     }
-    document.getElementById('p-total').textContent = 'Total earned: ' + c.total;
-    document.getElementById('p-hist-total').textContent = 'Total: ' + c.total;
+    document.getElementById('p-total').textContent = 'Ukupno zarađeno: ' + c.total;
+    document.getElementById('p-hist-total').textContent = 'Ukupno: ' + c.total;
     document.getElementById('p-notes').textContent = c.notes;
 
     // Lash profile
@@ -1813,7 +2087,7 @@ function renderProfile(c) {
             const logBtn = actionBtns.querySelector('.btn-outline');
             if (logBtn) logBtn.style.display = 'none';
         }
-        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '↩ Unblock Client'; blockBtn.style.background = 'rgba(200,168,75,.08)'; blockBtn.style.borderColor = 'rgba(200,168,75,.3)'; blockBtn.style.color = 'var(--gold)'; blockBtn.onclick = unblockClient; }
+        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '↩ Odblokiraj'; blockBtn.style.background = 'rgba(200,168,75,.08)'; blockBtn.style.borderColor = 'rgba(200,168,75,.3)'; blockBtn.style.color = 'var(--gold)'; blockBtn.onclick = unblockClient; }
         if (actionHint) actionHint.style.display = 'none';
         if (cycleSection) cycleSection.style.display = 'none';
     } else {
@@ -1823,7 +2097,7 @@ function renderProfile(c) {
             const logBtn = actionBtns.querySelector('.btn-outline');
             if (logBtn) logBtn.style.display = '';
         }
-        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '🚫 Block Client'; blockBtn.style.background = 'rgba(224,80,80,.08)'; blockBtn.style.borderColor = 'rgba(224,80,80,.3)'; blockBtn.style.color = 'var(--red)'; blockBtn.onclick = openBlockClient; }
+        if (blockBtn)   { blockBtn.style.flex = '1'; blockBtn.innerHTML = '🚫 Blokiraj klijenta'; blockBtn.style.background = 'rgba(224,80,80,.08)'; blockBtn.style.borderColor = 'rgba(224,80,80,.3)'; blockBtn.style.color = 'var(--red)'; blockBtn.onclick = openBlockClient; }
         if (actionHint)  actionHint.style.display = 'block';
         if (cycleSection) cycleSection.style.display = 'block';
     }
@@ -1834,7 +2108,7 @@ function renderProfile(c) {
 
     // Badge
     const badge = document.getElementById('p-badge-wrap');
-    const cycleLabels  = { 'new-set':'New Set', c1:'Correction 1', c2:'Correction 2', c3:'Correction 3', 'done-all':'✓ Cycle Done' };
+    const cycleLabels  = { 'new-set':'Novi set', c1:'Korekcija 1', c2:'Korekcija 2', c3:'Korekcija 3', 'done-all':'✓ Ciklus završen' };
     const cycleClasses = { 'new-set':'b-gold', c1:'b-grey', c2:'b-grey', c3:'b-grey', 'done-all':'b-grey' };
     badge.innerHTML = `<span class="badge ${cycleClasses[c.cycleStep]}">${cycleLabels[c.cycleStep]}</span>`;
 
@@ -1849,7 +2123,7 @@ function renderProfile(c) {
     if (lastCycleDate) {
         const last = new Date(lastCycleDate);
         const diffDays = Math.round((today - last) / 86400000);
-        daysAgoStr = diffDays === 0 ? 'today' : diffDays + 'd ago';
+        daysAgoStr = diffDays === 0 ? 'danas' : diffDays + 'd pre';
     }
 
     let cycleHtml = '';
@@ -1868,7 +2142,7 @@ function renderProfile(c) {
         const tooltipHtml = dateInfo
             ? `<div id="cycle-tip-${i}" style="display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:7px 10px;white-space:nowrap;z-index:99;font-size:11px;color:var(--white);text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.5);">
             <div style="font-weight:700;color:var(--gold);">${dateInfo.date}</div>
-            ${dateInfo.daysFromPrev ? `<div style="color:var(--muted);margin-top:2px;">${dateInfo.daysFromPrev}d since prev.</div>` : ''}
+            ${dateInfo.daysFromPrev ? `<div style="color:var(--muted);margin-top:2px;">${dateInfo.daysFromPrev}d od preth.</div>` : ''}
           </div>`
             : '';
         const clickable = dateInfo ? `onclick="toggleCycleTip(${i})" style="cursor:pointer;"` : '';
@@ -1885,7 +2159,7 @@ function renderProfile(c) {
     // Update cycle header to show days since last
     const cycleLabelEl = document.querySelector('#p-cycle-section .cycle-label');
     if (cycleLabelEl) {
-        cycleLabelEl.innerHTML = `CURRENT CYCLE${daysAgoStr ? ` <span style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:0;text-transform:none;margin-left:6px;">${daysAgoStr}</span>` : ''}`;
+        cycleLabelEl.innerHTML = `TRENUTNI CIKLUS${daysAgoStr ? ` <span style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:0;text-transform:none;margin-left:6px;">${daysAgoStr}</span>` : ''}`;
     }
 
     // History — with cancel styling and delete button
@@ -1915,8 +2189,8 @@ function renderHistoryList(c, filter) {
 
     if (items.length === 0) {
         document.getElementById('p-history').innerHTML = filter === 'cancelled'
-            ? '<div style="padding:20px 16px;color:var(--muted);font-size:13px;text-align:center;">No cancellations recorded for this client. 🎉</div>'
-            : '<div style="padding:16px;color:var(--muted);font-size:13px;text-align:center;">No appointments yet.</div>';
+            ? '<div style="padding:20px 16px;color:var(--muted);font-size:13px;text-align:center;">Nema evidentiranih otkazivanja za ovog klijenta. 🎉</div>'
+            : '<div style="padding:16px;color:var(--muted);font-size:13px;text-align:center;">Još nema termina.</div>';
         return;
     }
 
@@ -1933,7 +2207,7 @@ function renderHistoryList(c, filter) {
             ? `onclick="openCancelDetail('${safeDate}','${safeType}','${safeWho}','${safeReason}')" style="cursor:pointer;"`
             : '';
         const cancelTag = isCancelled
-            ? `<div style="margin-top:5px;"><span class="hist-cancelled-tag" ${cancelClickable}>❌ Cancelled by ${h.cancelledBy || 'unknown'} · tap for details</span></div>`
+            ? `<div style="margin-top:5px;"><span class="hist-cancelled-tag" ${cancelClickable}>❌ Otkazao ${h.cancelledBy || 'nepoznato'} · tapni za detalje</span></div>`
             : '';
         return `
         <div class="hist-item${cancelledCls}" id="hist-row-${realIdx}">
@@ -1972,7 +2246,7 @@ function openApptOptions(id) {
     // Status badge
     const badge = document.getElementById('ao-status-badge');
     if (a.cancelled) {
-        badge.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 8px;">Cancelled</span>`;
+        badge.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 8px;">Otkazano</span>`;
     } else {
         badge.innerHTML = `<span style="font-size:11px;font-weight:700;color:var(--green);background:rgba(92,184,122,.12);border:1px solid rgba(92,184,122,.3);border-radius:6px;padding:3px 8px;">Booked</span>`;
     }
@@ -2019,7 +2293,7 @@ function confirmCancelAppt() {
     }
     closeModal('m-cancel-appt');
     buildCalendar();
-    showToast('Appointment cancelled ✓');
+    showToast('Termin otkazan ✓');
 }
 
 // ── Block / Unblock Client ────────────────────────────────────────
@@ -2038,7 +2312,7 @@ function saveBlockClient() {
     closeModal('m-block-client');
     renderProfile(c);
     renderClientList(document.getElementById('cl-search')?.value || '');
-    showToast('Client blocked 🚫');
+    showToast('Klijent blokiran 🚫');
 }
 
 function unblockClient() {
@@ -2048,7 +2322,7 @@ function unblockClient() {
     c.blockReason = '';
     renderProfile(c);
     renderClientList(document.getElementById('cl-search')?.value || '');
-    showToast('Client unblocked ✓');
+    showToast('Klijent odblokiran ✓');
 }
 
 // ── Cancellation detail modal ─────────────────────────────────────
@@ -2056,7 +2330,7 @@ function openCancelDetail(date, type, who, reason) {
     document.getElementById('cd-date').textContent   = date;
     document.getElementById('cd-type').textContent   = type;
     document.getElementById('cd-who').textContent    = who;
-    const whoMap = { 'client':'Client cancelled', 'client (no-show)':'No-show', 'no-show':'No-show', 'artist':'Artist cancelled', 'emergency':'Emergency' };
+    const whoMap = { 'client':'Klijent otkazao', 'client (no-show)':'No-show', 'no-show':'No-show', 'artist':'Umetnik otkazao', 'emergency':'Hitno' };
     document.getElementById('cd-who').textContent = whoMap[who] || who;
     document.getElementById('cd-reason').textContent = reason ? `"${reason}"` : 'No reason provided.';
     openModal('m-cancel-detail');
@@ -2070,10 +2344,10 @@ function deleteHistItem(idx) {
     row.style.background = 'rgba(224,112,96,.06)';
     row.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
-            <span style="font-size:13px;color:var(--muted);">Delete this entry?</span>
+            <span style="font-size:13px;color:var(--muted);">Obrisati ovaj unos?</span>
             <div style="display:flex;gap:8px;">
-                <button onclick="renderHistoryList(CLIENTS[currentClientIdx],currentHistFilter)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;">Cancel</button>
-                <button onclick="confirmDeleteHist(${idx})" style="background:rgba(224,112,96,.15);border:1px solid rgba(224,112,96,.4);border-radius:8px;padding:6px 12px;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;">Delete</button>
+                <button onclick="renderHistoryList(CLIENTS[currentClientIdx],currentHistFilter)" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;">Otkaži</button>
+                <button onclick="confirmDeleteHist(${idx})" style="background:rgba(224,112,96,.15);border:1px solid rgba(224,112,96,.4);border-radius:8px;padding:6px 12px;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;">Obriši</button>
             </div>
         </div>`;
 }
@@ -2157,7 +2431,7 @@ function filterPicker(searchId, listId) {
                 <div class="ci-phone">${c.phone}</div>
             </div>`;
           }).join('')
-        : '<div class="cpicker-empty">No clients found</div>';
+        : '<div class="cpicker-empty">Nema pronađenih klijenata</div>';
 
     list.classList.add('open');
 }
@@ -2234,18 +2508,18 @@ function buildCalendar() {
 
 // ── Appointments data (for calendar + overlap detection) ──────────
 const APPOINTMENTS = [
-    { id:1, day:3,  time:'10:00', client:'Sofija Nikolić',  type:'Correction 2' },
+    { id:1, day:3,  time:'10:00', client:'Sofija Nikolić',  type:'Korekcija 2' },
     { id:2, day:8,  time:'11:00', client:'Ana Jovanović',   type:'Correction 3' },
-    { id:3, day:10, time:'14:00', client:'Maja Petrović',   type:'Correction 1' },
-    { id:4, day:12, time:'16:00', client:'Tamara Lukić',    type:'New Set', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
+    { id:3, day:10, time:'14:00', client:'Maja Petrović',   type:'Korekcija 1' },
+    { id:4, day:12, time:'16:00', client:'Tamara Lukić',    type:'Novi set', cancelled:true, cancelledBy:'client', cancelReason:'No-show' },
     { id:5, day:15, time:'10:00', client:'Ana Jovanović',   type:'New Set Required', cancelled:true, cancelledBy:'client', cancelReason:'Sick — texted morning of' },
-    { id:6, day:15, time:'12:00', client:'Maja Petrović',   type:'Correction 1' },
-    { id:7, day:15, time:'14:30', client:'Sofija Nikolić',  type:'Correction 2' },
-    { id:8, day:15, time:'16:00', client:'Tamara Lukić',    type:'New Set' },
+    { id:6, day:15, time:'12:00', client:'Maja Petrović',   type:'Korekcija 1' },
+    { id:7, day:15, time:'14:30', client:'Sofija Nikolić',  type:'Korekcija 2' },
+    { id:8, day:15, time:'16:00', client:'Tamara Lukić',    type:'Novi set' },
     { id:9, day:17, time:'10:00', client:'Katarina Milić',  type:'Correction 3' },
-    { id:10,day:19, time:'13:00', client:'Ivana Ristić',    type:'Correction 1' },
-    { id:11,day:22, time:'11:00', client:'Ana Jovanović',   type:'New Set' },
-    { id:12,day:24, time:'10:00', client:'Maja Petrović',   type:'Correction 2' },
+    { id:10,day:19, time:'13:00', client:'Ivana Ristić',    type:'Korekcija 1' },
+    { id:11,day:22, time:'11:00', client:'Ana Jovanović',   type:'Novi set' },
+    { id:12,day:24, time:'10:00', client:'Maja Petrović',   type:'Korekcija 2' },
     { id:13,day:26, time:'15:00', client:'Jelena Đorđević', type:'Correction 3' },
     { id:14,day:29, time:'12:00', client:'Sofija Nikolić',  type:'Correction 3' },
 ];
@@ -2262,7 +2536,7 @@ function dayClick(day) {
     document.getElementById('day-detail-title').textContent = title;
     if (appts.length === 0) {
         document.getElementById('day-detail-list').innerHTML =
-            `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">No appointments on this day.</div>`;
+            `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">Nema termina ovaj dan.</div>`;
     } else {
         document.getElementById('day-detail-list').innerHTML = appts.map(a => {
             const isCancelled = !!a.cancelled;
@@ -2355,7 +2629,7 @@ function checkOverlap() {
         if (a) { a.time = newTime; a.day = newDay; a.client = document.getElementById('ea-client').value; a.type = getSvcLabel('svc-ea') || a.type; }
         closeModal('m-edit-appt');
         buildCalendar();
-        showToast('Appointment updated ✓');
+        showToast('Termin ažuriran ✓');
     }
 }
 
@@ -2363,9 +2637,9 @@ function checkOverlap() {
 function resolveOverlap(action) {
     closeModal('m-overlap');
     if (action === 'move') {
-        showToast('Conflicting appointment moved to next available slot ✓');
+        showToast('Konfliktni termin premešten ✓');
     } else {
-        showToast('Conflicting appointment cancelled ✓');
+        showToast('Konfliktni termin otkazan ✓');
     }
     buildCalendar();
 }
@@ -2503,16 +2777,16 @@ document.querySelector('#s-profile .btn-ghost').addEventListener('click', openEd
 
 // ── Client list (dynamic, searchable) ────────────────────────────
 const CLIENT_LIST_DATA = [
-    { name:'Ana Jovanović',   initials:'AJ', sub:'Last visit: Mar 8 · Total: 620€',   badge:'b-warn', badgeLbl:'⚠️ New Set', idx:0 },
-    { name:'Maja Petrović',   initials:'MP', sub:'Last visit: Mar 3 · Total: 380€',   badge:'b-grey', badgeLbl:'C1', idx:1 },
-    { name:'Sofija Nikolić',  initials:'SN', sub:'Last visit: Feb 28 · Total: 890€',  badge:'b-grey', badgeLbl:'C2', idx:2 },
-    { name:'Tamara Lukić',    initials:'TL', sub:'Last visit: Mar 12 · Total: 120€',  badge:'b-gold', badgeLbl:'New Set', idx:3 },
-    { name:'Katarina Milić',  initials:'KM', sub:'Last visit: Mar 1 · Total: 1,140€', badge:'b-grey', badgeLbl:'C3', idx:4 },
-    { name:'Ivana Ristić',    initials:'IR', sub:'Last visit: Feb 20 · Total: 560€',  badge:'b-grey', badgeLbl:'C1', idx:null },
-    { name:'Jelena Đorđević', initials:'JD', sub:'Last visit: Mar 6 · Total: 720€',   badge:'b-grey', badgeLbl:'C2', idx:null },
-    { name:'Milica Stanković',initials:'MS', sub:'Last visit: Jan 15 · Total: 430€',  badge:'b-grey', badgeLbl:'C1', idx:null },
-    { name:'Jovana Vasić',    initials:'JV', sub:'Last visit: Feb 10 · Total: 310€',  badge:'b-grey', badgeLbl:'C2', idx:null },
-    { name:'Aleksandra Vukić',initials:'AV', sub:'Last visit: Mar 7 · Total: 780€',   badge:'b-grey', badgeLbl:'C3', idx:null },
+    { name:'Ana Jovanović',   initials:'AJ', sub:'Poslednja poseta: 8. mar · Ukupno: 72.600 din',   badge:'b-warn', badgeLbl:'⚠️ Novi set', idx:0 },
+    { name:'Maja Petrović',   initials:'MP', sub:'Poslednja poseta: 3. mar · Ukupno: 44.500 din',   badge:'b-grey', badgeLbl:'C1', idx:1 },
+    { name:'Sofija Nikolić',  initials:'SN', sub:'Poslednja poseta: 28. feb · Ukupno: 104.000 din',  badge:'b-grey', badgeLbl:'Kor. 2', idx:2 },
+    { name:'Tamara Lukić',    initials:'TL', sub:'Poslednja poseta: 12. mar · Ukupno: 14.000 din',  badge:'b-gold', badgeLbl:'Novi set', idx:3 },
+    { name:'Katarina Milić',  initials:'KM', sub:'Poslednja poseta: 1. mar · Ukupno: 133.500 din', badge:'b-grey', badgeLbl:'Kor. 3', idx:4 },
+    { name:'Ivana Ristić',    initials:'IR', sub:'Poslednja poseta: 20. feb · Ukupno: 65.500 din',  badge:'b-grey', badgeLbl:'Kor. 1', idx:null },
+    { name:'Jelena Đorđević', initials:'JD', sub:'Poslednja poseta: 6. mar · Ukupno: 84.000 din',   badge:'b-grey', badgeLbl:'Kor. 2', idx:null },
+    { name:'Milica Stanković',initials:'MS', sub:'Poslednja poseta: 15. jan · Ukupno: 50.000 din',  badge:'b-grey', badgeLbl:'Kor. 1', idx:null },
+    { name:'Jovana Vasić',    initials:'JV', sub:'Poslednja poseta: 10. feb · Ukupno: 36.000 din',  badge:'b-grey', badgeLbl:'Kor. 2', idx:null },
+    { name:'Aleksandra Vukić',initials:'AV', sub:'Poslednja poseta: 7. mar · Ukupno: 91.000 din',   badge:'b-grey', badgeLbl:'Kor. 3', idx:null },
 ];
 
 function renderClientList(q) {
@@ -2524,7 +2798,7 @@ function renderClientList(q) {
         : CLIENT_LIST_DATA;
 
     if (matches.length === 0) {
-        list.innerHTML = `<div style="padding:32px 16px;text-align:center;color:var(--muted);font-size:13px;">No clients found for "${q}"</div>`;
+        list.innerHTML = `<div style="padding:32px 16px;text-align:center;color:var(--muted);font-size:13px;">Nema pronađenih klijenata za "${q}"</div>`;
         return;
     }
 
@@ -2650,9 +2924,9 @@ function buildTopClients() {
             <div class="tc-rank ${rankCls}">${rankTxt}</div>
             <div class="tc-info">
                 <div class="tc-name">${e.name}${blockedTag}</div>
-                <div class="tc-sub">All-time earnings</div>
+                <div class="tc-sub">Zarada sveukupno</div>
             </div>
-            <div class="tc-amt" style="${amtColor}">${e.amount}€</div>
+            <div class="tc-amt" style="${amtColor}">${e.amount} din</div>
             <div class="tier-badge">${isBlockedClient ? '🚫' : (emoji || '')}</div>
         </div>`;
     });
@@ -2663,14 +2937,14 @@ function buildTopClients() {
 const SVC_STATE  = {};
 const NADOGRADNJA_KEYS = new Set(['new-set','c2w','c3w','c4w','reklamacija','skidanje']);
 const SVC_LABELS = {
-    'new-set'    : 'New Set',
-    'c2w'        : 'Correction · 2w',
-    'c3w'        : 'Correction · 3w',
-    'c4w'        : 'Correction · 4w',
+    'new-set'    : 'Novi set',
+    'c2w'        : 'Korekcija · 2 ned',
+    'c3w'        : 'Korekcija · 3 ned',
+    'c4w'        : 'Korekcija · 4 ned',
     'reklamacija': 'Reklamacija',
     'skidanje'   : 'Skidanje nadogradnje',
-    'lash-lift'  : 'Lash Lift',
-    'brow-lift'  : 'Brow Lift'
+    'lash-lift'  : 'Lash lift',
+    'brow-lift'  : 'Brow lift'
 };
 
 function initSvcPicker(id) {
@@ -2758,6 +3032,28 @@ function setTheme(t) {
     }
 }
 
+function switchAuthTab(tab) {
+    const loginForm  = document.getElementById('auth-login-form');
+    const signupForm = document.getElementById('auth-signup-form');
+    const loginBtn   = document.getElementById('login-tab-btn');
+    const signupBtn  = document.getElementById('signup-tab-btn');
+    if (tab === 'login') {
+        loginForm.style.display  = 'flex';
+        signupForm.style.display = 'none';
+        loginBtn.style.background  = 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+        loginBtn.style.color       = '#0D0D0D';
+        signupBtn.style.background = 'transparent';
+        signupBtn.style.color      = 'var(--muted)';
+    } else {
+        loginForm.style.display  = 'none';
+        signupForm.style.display = 'flex';
+        signupBtn.style.background = 'linear-gradient(135deg,var(--gold-dark),var(--gold))';
+        signupBtn.style.color      = '#0D0D0D';
+        loginBtn.style.background  = 'transparent';
+        loginBtn.style.color       = 'var(--muted)';
+    }
+}
+
 // ── Auto Backup toggle ────────────────────────────────────────────
 let backupOn = true;
 function toggleBackup() {
@@ -2770,7 +3066,7 @@ function toggleBackup() {
         knob.style.right = '3px';
         knob.style.left  = 'auto';
         status.style.display = 'block';
-        status.textContent = '✓ Last backup: Today, 14:32';
+        status.textContent = '✓ Poslednji backup: Danas, 14:32';
         status.style.color = '#5CB87A';
     } else {
         toggle.style.background = '#333';
@@ -2786,14 +3082,14 @@ function toggleBackup() {
 // SERVICE PRICES
 // ══════════════════════════════════════════════════════════════════
 const SERVICE_PRICES = {
-    'new-set'    : 120,
-    'c2w'        : 90,
-    'c3w'        : 80,
-    'c4w'        : 70,
+    'new-set'    : 6000,
+    'c2w'        : 4500,
+    'c3w'        : 4000,
+    'c4w'        : 3500,
     'reklamacija': 0,
-    'skidanje'   : 40,
-    'lash-lift'  : 60,
-    'brow-lift'  : 50
+    'skidanje'   : 2000,
+    'lash-lift'  : 3000,
+    'brow-lift'  : 2500
 };
 
 function calcPriceFromSvcState(id) {
@@ -2842,7 +3138,7 @@ function openEditBankAccount() {
         <input id="bank-edit-input" class="field" value="${current}"
             style="font-size:14px;font-weight:700;padding:6px 10px;flex:1;"
             onkeydown="if(event.key==='Enter')saveBankAccount()">
-        <button onclick="saveBankAccount()" style="background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:5px 10px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Save</button>
+        <button onclick="saveBankAccount()" style="background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:5px 10px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Sačuvaj</button>
         <button onclick="cancelBankEdit('${current}')" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;">✕</button>
     </div>`;
     document.getElementById('bank-edit-input').focus();
@@ -2863,14 +3159,14 @@ function cancelBankEdit(val) {
 }
 
 const PRICE_ROWS = [
-    { key:'new-set',     label:'New Set',           sub:'Nadogradnja' },
-    { key:'c2w',         label:'Correction · 2w',   sub:'Korekcija posle 2 nedelje' },
-    { key:'c3w',         label:'Correction · 3w',   sub:'Korekcija posle 3 nedelje' },
-    { key:'c4w',         label:'Correction · 4w',   sub:'Korekcija posle 4 nedelje' },
+    { key:'new-set',     label:'Novi set',           sub:'Nadogradnja' },
+    { key:'c2w',         label:'Korekcija · 2 ned',   sub:'Korekcija posle 2 nedelje' },
+    { key:'c3w',         label:'Korekcija · 3 ned',   sub:'Korekcija posle 3 nedelje' },
+    { key:'c4w',         label:'Korekcija · 4 ned',   sub:'Korekcija posle 4 nedelje' },
     { key:'reklamacija', label:'Reklamacija',        sub:'Besplatno — prva nedelja' },
     { key:'skidanje',    label:'Skidanje nadogradnje', sub:'Uklanjanje trepavica' },
-    { key:'lash-lift',   label:'Lash Lift',          sub:'Podizanje trepavica' },
-    { key:'brow-lift',   label:'Brow Lift',          sub:'Podizanje obrva' },
+    { key:'lash-lift',   label:'Lash lift',          sub:'Podizanje trepavica' },
+    { key:'brow-lift',   label:'Brow lift',          sub:'Podizanje obrva' },
 ];
 
 function renderPricesTab() {
@@ -2878,7 +3174,7 @@ function renderPricesTab() {
     if (!el) return;
     el.innerHTML = PRICE_ROWS.map((r, i) => {
         const isFree  = r.key === 'reklamacija';
-        const priceStr = isFree ? 'Free' : SERVICE_PRICES[r.key] + '€';
+        const priceStr = isFree ? 'Besplatno' : SERVICE_PRICES[r.key] + ' din';
         const priceColor = isFree ? 'var(--green,#5CB87A)' : 'var(--gold)';
         const border = i < PRICE_ROWS.length - 1 ? 'border-bottom:1px solid var(--border);' : '';
         return `
@@ -2902,7 +3198,7 @@ function openPriceQR(key) {
     if (!row) return;
     const isFree   = key === 'reklamacija';
     const price    = isFree ? 0 : (SERVICE_PRICES[key] || 0);
-    const priceStr = isFree ? 'Free' : price + '€';
+    const priceStr = isFree ? 'Besplatno' : price + ' din';
     const el = document.getElementById('pqr-content');
     if (!el) return;
     el.innerHTML = `
@@ -2947,10 +3243,10 @@ function renderTodayAppts() {
     // update count badge
     const activeCnt = todayAppts.filter(a => !a.cancelled).length;
     const countEl = document.getElementById('today-appt-count');
-    if (countEl) countEl.textContent = activeCnt + ' appointment' + (activeCnt !== 1 ? 's' : '');
+    if (countEl) countEl.textContent = activeCnt + ' termin' + (activeCnt > 1 ? 'a' : '');
 
     if (todayAppts.length === 0) {
-        el.innerHTML = `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">No appointments today.</div>`;
+        el.innerHTML = `<div style="text-align:center;padding:24px 0;color:var(--muted);font-size:13px;">Nema termina ovog dana.</div>`;
         return;
     }
 
@@ -3051,16 +3347,16 @@ function buildInvoiceHTML(a, price, servicesLabel) {
             </div>
         </div>
         <div class="invoice-row" style="border-top:1px solid var(--border);padding-top:10px;">
-            <span class="inv-lbl">Client</span>
+            <span class="inv-lbl">Klijent</span>
             <span class="inv-val">${a.client}</span>
         </div>
         <div class="invoice-row">
-            <span class="inv-lbl">Service</span>
+            <span class="inv-lbl">Usluga</span>
             <span class="inv-val">${servicesLabel}</span>
         </div>
         <div class="invoice-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:6px;">
-            <span class="inv-lbl" style="font-weight:800;color:var(--white);">Total</span>
-            <span class="inv-val" style="font-size:16px;font-weight:800;color:var(--gold);">${price}€</span>
+            <span class="inv-lbl" style="font-weight:800;color:var(--white);">Ukupno</span>
+            <span class="inv-val" style="font-size:16px;font-weight:800;color:var(--gold);">${price} din</span>
         </div>
     </div>`;
 }
@@ -3076,12 +3372,12 @@ function renderTodayApptModal(a) {
 
     // ── CANCELLED view ────────────────────────────────────────────
     if (isCancelled) {
-        const whoMap = { client:'Client', artist:'Artist / Studio' };
-        const whoLabel = whoMap[a.cancelledBy] || a.cancelledBy || 'Unknown';
+        const whoMap = { client:'Klijent otkazao', artist:'Umetnik / Studio otkazao' };
+        const whoLabel = whoMap[a.cancelledBy] || a.cancelledBy || 'Nepoznato';
         // default reschedule date: Mar 22 2026 (one week ahead)
         el.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-            <div class="modal-ttl" style="margin-bottom:0;color:var(--red);">🚫 Cancelled</div>
+            <div class="modal-ttl" style="margin-bottom:0;color:var(--red);">🚫 Otkazan</div>
             <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
         </div>
 
@@ -3092,18 +3388,18 @@ function renderTodayApptModal(a) {
             </div>
             <div>
                 <div style="font-size:15px;font-weight:800;color:var(--white);">${a.client}</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Originally at ${a.time} · Mar 15, 2026</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;">Izvorno: ${a.time} · 15. mart 2026</div>
             </div>
         </div>
 
         <!-- Cancellation details -->
         <div style="background:rgba(224,80,80,.05);border:1px solid rgba(224,80,80,.2);border-radius:14px;overflow:hidden;margin-bottom:16px;">
             <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid rgba(224,80,80,.12);">
-                <div style="font-size:12px;color:var(--muted);">Cancelled by</div>
+                <div style="font-size:12px;color:var(--muted);">Otkazao</div>
                 <div style="font-size:13px;font-weight:700;color:var(--red);">${whoLabel}</div>
             </div>
             <div style="padding:12px 14px;">
-                <div style="font-size:12px;color:var(--muted);margin-bottom:5px;">Reason</div>
+                <div style="font-size:12px;color:var(--muted);margin-bottom:5px;">Razlog</div>
                 <div style="font-size:13px;font-weight:600;color:var(--white);line-height:1.5;">${a.cancelReason || '—'}</div>
             </div>
         </div>
@@ -3111,7 +3407,7 @@ function renderTodayApptModal(a) {
         <!-- Schedule new appointment -->
         <button class="btn-primary" style="width:100%;"
             onclick="closeModal('m-today-appt');openModal('m-book')">
-            📅 Schedule New Appointment
+            📅 Zakaži novi termin
         </button>
         `;
         return;
@@ -3123,32 +3419,32 @@ function renderTodayApptModal(a) {
         const svcs  = a.completedServices || a.type;
         el.innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-            <div class="modal-ttl" style="margin-bottom:0;color:#5CB87A;">✓ Session Complete</div>
+            <div class="modal-ttl" style="margin-bottom:0;color:#5CB87A;">✓ Sesija završena</div>
             <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
         </div>
         <div style="background:rgba(92,184,122,.08);border:1px solid rgba(92,184,122,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px;">
-            <div style="font-size:12px;color:rgba(92,184,122,.9);line-height:1.5;">This session has been completed and recorded as income.</div>
+            <div style="font-size:12px;color:rgba(92,184,122,.9);line-height:1.5;">Ova sesija je završena i upisana kao prihod.</div>
         </div>
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px;">
             <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
-                <div style="font-size:12px;color:var(--muted);">Client</div>
+                <div style="font-size:12px;color:var(--muted);">Klijent</div>
                 <div style="font-size:13px;font-weight:700;color:var(--white);">${a.client}</div>
             </div>
             <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
-                <div style="font-size:12px;color:var(--muted);">Time</div>
+                <div style="font-size:12px;color:var(--muted);">Vreme</div>
                 <div style="font-size:13px;font-weight:700;color:var(--gold);">${a.time}</div>
             </div>
             <div style="display:flex;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);">
-                <div style="font-size:12px;color:var(--muted);">Services</div>
+                <div style="font-size:12px;color:var(--muted);">Usluge</div>
                 <div style="font-size:13px;font-weight:700;color:var(--white);text-align:right;max-width:55%;">${svcs}</div>
             </div>
             <div style="display:flex;justify-content:space-between;padding:12px 14px;">
-                <div style="font-size:12px;color:var(--muted);">Charged</div>
-                <div style="font-size:16px;font-weight:800;color:var(--gold);">${price}€</div>
+                <div style="font-size:12px;color:var(--muted);">Naplaćeno</div>
+                <div style="font-size:16px;font-weight:800;color:var(--gold);">${price} din</div>
             </div>
         </div>
         <div style="margin-top:12px;text-align:center;">
-            <button onclick="closeModal('m-today-appt')" class="btn-outline" style="width:100%;">Close</button>
+            <button onclick="closeModal('m-today-appt')" class="btn-outline" style="width:100%;">Zatvori</button>
         </div>`;
         return;
     }
@@ -3161,7 +3457,7 @@ function renderTodayApptModal(a) {
 
     el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="modal-ttl" style="margin-bottom:0;">Appointment</div>
+        <div class="modal-ttl" style="margin-bottom:0;">Termin</div>
         <button onclick="closeModal('m-today-appt')" style="background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;line-height:1;">×</button>
     </div>
 
@@ -3180,37 +3476,37 @@ function renderTodayApptModal(a) {
                         style="background:var(--bg2);border:1px solid var(--gold);border-radius:8px;padding:5px 8px;color:var(--gold);font-size:12px;font-weight:700;font-family:inherit;width:90px;">
                 </div>
                 <div style="display:flex;gap:6px;">
-                    <button onclick="saveTaReschedule()" style="flex:1;background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:6px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Save</button>
-                    <button onclick="cancelTaTime()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;padding:6px 4px;">Cancel</button>
+                    <button onclick="saveTaReschedule()" style="flex:1;background:rgba(200,168,75,.15);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:6px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;">Sačuvaj</button>
+                    <button onclick="cancelTaTime()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;padding:6px 4px;">Otkaži</button>
                 </div>
             </div>
         </div>
         <button onclick="openTaTimeEdit()" id="ta-edit-time-btn"
             style="background:rgba(200,168,75,.1);border:1px solid rgba(200,168,75,.25);border-radius:9px;padding:6px 11px;color:var(--gold);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0;">
-            📅 Reschedule
+            📅 Preuredi
         </button>
     </div>
 
     <!-- Service picker for THIS modal (svc-ta) -->
     <div class="form-r">
-        <label class="lbl-s">Services</label>
+        <label class="lbl-s">Usluge</label>
         <div class="svc-picker" id="svc-ta">
             <div>
                 <div class="svc-group-label">Nadogradnja Trepavica</div>
                 <div class="svc-chips">
-                    <button class="svc-chip" data-key="new-set" onclick="toggleSvcTa('new-set')">New Set</button>
-                    <button class="svc-chip" data-key="c2w" onclick="toggleSvcTa('c2w')">Corr. · 2w</button>
-                    <button class="svc-chip" data-key="c3w" onclick="toggleSvcTa('c3w')">Corr. · 3w</button>
-                    <button class="svc-chip" data-key="c4w" onclick="toggleSvcTa('c4w')">Corr. · 4w</button>
+                    <button class="svc-chip" data-key="new-set" onclick="toggleSvcTa('new-set')">Novi set</button>
+                    <button class="svc-chip" data-key="c2w" onclick="toggleSvcTa('c2w')">Kor. · 2 ned</button>
+                    <button class="svc-chip" data-key="c3w" onclick="toggleSvcTa('c3w')">Kor. · 3 ned</button>
+                    <button class="svc-chip" data-key="c4w" onclick="toggleSvcTa('c4w')">Kor. · 4 ned</button>
                     <button class="svc-chip" data-key="reklamacija" onclick="toggleSvcTa('reklamacija')">Reklamacija 🆓</button>
                     <button class="svc-chip" data-key="skidanje" onclick="toggleSvcTa('skidanje')">Skidanje</button>
                 </div>
             </div>
             <div>
-                <div class="svc-group-label">Additional Services</div>
+                <div class="svc-group-label">Dodatne usluge</div>
                 <div class="svc-chips">
-                    <button class="svc-chip" data-key="lash-lift" onclick="toggleSvcTa('lash-lift')">Lash Lift</button>
-                    <button class="svc-chip" data-key="brow-lift" onclick="toggleSvcTa('brow-lift')">Brow Lift</button>
+                    <button class="svc-chip" data-key="lash-lift" onclick="toggleSvcTa('lash-lift')">Lash lift</button>
+                    <button class="svc-chip" data-key="brow-lift" onclick="toggleSvcTa('brow-lift')">Brow lift</button>
                 </div>
             </div>
         </div>
@@ -3219,18 +3515,18 @@ function renderTodayApptModal(a) {
     <!-- Price display (informative, auto-calculated) -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg3);border:1px solid var(--border);border-radius:14px;margin-top:10px;">
         <div>
-            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:3px;">Total Price</div>
-            <div style="font-size:11px;color:var(--muted);">Based on selected services</div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:var(--muted);margin-bottom:3px;">Cena</div>
+            <div style="font-size:11px;color:var(--muted);">Na osnovu izabranih usluga</div>
         </div>
-        <div id="ta-price-display" style="font-size:26px;font-weight:800;color:var(--gold);">${autoPrice}€</div>
+        <div id="ta-price-display" style="font-size:26px;font-weight:800;color:var(--gold);">${autoPrice} din</div>
     </div>
 
     <!-- QR code + bank account -->
     <div style="display:flex;flex-direction:column;align-items:center;margin:16px 0 12px;">
         <div id="ta-qr">${buildFakeQR(autoPrice)}</div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.5px;">Scan to Pay</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.5px;">Skeniraj za plaćanje</div>
         <div style="margin-top:6px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:7px 16px;display:flex;align-items:center;gap:8px;">
-            <span style="font-size:11px;color:var(--muted);">🏦 Bank account:</span>
+            <span style="font-size:11px;color:var(--muted);">🏦 Račun:</span>
             <span style="font-size:12px;font-weight:700;color:var(--white);letter-spacing:.5px;">${BANK_ACCOUNT}</span>
         </div>
     </div>
@@ -3238,9 +3534,9 @@ function renderTodayApptModal(a) {
     <!-- Action buttons -->
     <div style="display:flex;gap:10px;margin-top:4px;">
         <button style="flex:1;background:rgba(224,80,80,.08);border:1px solid rgba(224,80,80,.3);border-radius:12px;padding:13px 8px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;"
-            onclick="cancelTodayAppt()">🚫 Cancel</button>
+            onclick="cancelTodayAppt()">🚫 Otkaži</button>
         <button class="btn-primary" style="flex:2;background:linear-gradient(135deg,#3a8a52,#5CB87A);font-size:14px;"
-            onclick="completeTodayAppt()">✓ Complete Session</button>
+            onclick="completeTodayAppt()">✓ Završi sesiju</button>
     </div>
     `;
 
@@ -3301,7 +3597,7 @@ function updateTaPrice() {
     const price = calcPriceFromSvcState('svc-ta');
     // update price display
     const priceDisplay = document.getElementById('ta-price-display');
-    if (priceDisplay) priceDisplay.textContent = price + '€';
+    if (priceDisplay) priceDisplay.textContent = price + ' din';
     // refresh QR
     const qrEl = document.getElementById('ta-qr');
     if (qrEl) qrEl.innerHTML = buildFakeQR(price);
