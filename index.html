@@ -2255,9 +2255,10 @@ buildCalendar();
 
 // ── Calendar: click on day ────────────────────────────────────────
 function dayClick(day) {
-    const appts = APPOINTMENTS.filter(a => a.day === day);
+    const appts  = APPOINTMENTS.filter(a => a.day === day);
     const isPast = day < 15;
-    const title  = `March ${day}, 2026${day === 15 ? ' · Today' : isPast ? ' · Past' : ' · Upcoming'}`;
+    const isToday = day === 15;
+    const title  = `March ${day}, 2026${isToday ? ' · Today' : isPast ? ' · Past' : ' · Upcoming'}`;
     document.getElementById('day-detail-title').textContent = title;
     if (appts.length === 0) {
         document.getElementById('day-detail-list').innerHTML =
@@ -2265,21 +2266,41 @@ function dayClick(day) {
     } else {
         document.getElementById('day-detail-list').innerHTML = appts.map(a => {
             const isCancelled = !!a.cancelled;
-            const rowBg  = isCancelled ? 'background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);' : 'background:var(--bg3);border:1px solid transparent;';
-            const timeColor = isCancelled ? 'color:var(--red);' : 'color:var(--gold);';
-            const typeColor = isCancelled ? 'color:var(--red);' : 'color:var(--muted);';
-            const badge = isCancelled
-                ? `<span style="font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 7px;">Cancelled</span>`
-                : isPast
-                ? `<span class="badge b-grey">Done</span>`
-                : `<button onclick="openApptOptions(${a.id});closeModal('m-day-detail')" style="background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.3);border-radius:8px;padding:6px 10px;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;">Options</button>`;
+            const isCompleted = !!a.completed;
+            const rowBg = isCancelled
+                ? 'background:rgba(224,80,80,.06);border:1px solid rgba(224,80,80,.2);'
+                : isCompleted
+                ? 'background:rgba(92,184,122,.06);border:1px solid rgba(92,184,122,.25);'
+                : 'background:var(--bg3);border:1px solid transparent;';
+            const timeColor = isCancelled ? 'color:var(--red);' : isCompleted ? 'color:#5CB87A;' : 'color:var(--gold);';
+
+            // right-side badge
+            let badge = '';
+            if (isCancelled) {
+                badge = `<span style="font-size:10px;font-weight:700;color:var(--red);background:rgba(224,80,80,.15);border:1px solid rgba(224,80,80,.3);border-radius:6px;padding:3px 7px;">Cancelled</span>`;
+            } else if (isCompleted) {
+                badge = `<span style="font-size:10px;font-weight:700;color:#5CB87A;background:rgba(92,184,122,.15);border:1px solid rgba(92,184,122,.3);border-radius:6px;padding:3px 7px;">✓ Done</span>`;
+            } else {
+                badge = `<span style="font-size:18px;color:var(--muted);">›</span>`;
+            }
+
+            // click behaviour
+            let onclick = '';
+            if (isPast) {
+                // go to client profile
+                const clientIdx = CLIENTS.findIndex(c => c.name === a.client);
+                if (clientIdx >= 0) onclick = `onclick="closeModal('m-day-detail');go('profile',${clientIdx})"`;
+            } else {
+                // today or future — open appointment detail
+                onclick = `onclick="closeModal('m-day-detail');openTodayAppt(${a.id})"`;
+            }
+
             return `
-            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px;${rowBg}">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px;cursor:pointer;${rowBg}" ${onclick}>
                 <div style="font-size:13px;font-weight:800;width:38px;flex-shrink:0;${timeColor}">${a.time}</div>
                 <div style="flex:1;">
                     <div style="font-size:14px;font-weight:700;color:var(--white);">${a.client}</div>
-                    <div style="font-size:11px;margin-top:2px;${typeColor}">${a.type}${isCancelled && a.cancelledBy ? ` · by ${a.cancelledBy}` : ''}</div>
-                    ${isCancelled && a.cancelReason ? `<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic;">"${a.cancelReason}"</div>` : ''}
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">${isCancelled ? `🚫 ${a.cancelReason || 'Cancelled'}` : (a.completedServices || a.type)}</div>
                 </div>
                 ${badge}
             </div>`;
