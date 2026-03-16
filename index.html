@@ -808,6 +808,7 @@
                     <div class="cal-nav-btn">‹</div>
                     <div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--gold);font-weight:800;">Mar 2026</div>
                     <div class="cal-nav-btn">›</div>
+                    <button onclick="openRevenueChart()" style="width:32px;height:32px;background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.3);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;margin-left:4px;">📊</button>
                 </div>
             </div>
         </div>
@@ -874,34 +875,42 @@
 
             <!-- INCOME -->
             <div id="tab-inc" style="display:none;">
+                <!-- Period filter pills -->
+                <div style="display:flex;gap:7px;padding:10px 16px 6px;overflow-x:auto;">
+                    <button class="inc-filter-btn active" id="incf-month" onclick="setIncFilter('month')" style="background:rgba(200,168,75,.15);border:1px solid var(--gold);border-radius:20px;color:var(--gold);font-size:11px;font-weight:700;padding:5px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Mesec</button>
+                    <button class="inc-filter-btn" id="incf-week" onclick="setIncFilter('week')" style="background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:5px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Nedelja</button>
+                    <button class="inc-filter-btn" id="incf-day" onclick="setIncFilter('day')" style="background:var(--bg3);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:5px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Dan</button>
+                </div>
                 <div class="sec-hdr">
-                    <span class="sec-ttl">Prihodi · Mart</span>
-                    <span class="sec-act">23 termina</span>
+                    <span class="sec-ttl" id="inc-period-label">Prihodi · Mart</span>
+                    <span class="sec-act" id="inc-session-count">23 termina</span>
                 </div>
-                <div class="exp-row">
-                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Ana Jovanović<small>8. mar · Korekcija 3</small></div>
-                    <div class="exp-amt pos">+4.700 din</div>
-                </div>
-                <div class="exp-row">
-                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Maja Petrović<small>3. mar · Korekcija 1</small></div>
-                    <div class="exp-amt pos">+4.700 din</div>
-                </div>
-                <div class="exp-row">
-                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Tamara Lukić<small>12. mar · Novi set</small></div>
-                    <div class="exp-amt pos">+7.000 din</div>
-                </div>
-                <div class="exp-row">
-                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Sofija Nikolić<small>2. mar · Korekcija 2</small></div>
-                    <div class="exp-amt pos">+4.700 din</div>
-                </div>
-                <div class="exp-row" style="border:none;">
-                    <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
-                    <div class="exp-name">Katarina Milić<small>1. mar · Korekcija 3</small></div>
-                    <div class="exp-amt pos">+4.700 din</div>
+                <div id="inc-list">
+                    <div class="exp-row">
+                        <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                        <div class="exp-name">Ana Jovanović<small>8. mar · Korekcija 3</small></div>
+                        <div class="exp-amt pos">+2.400 din</div>
+                    </div>
+                    <div class="exp-row">
+                        <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                        <div class="exp-name">Maja Petrović<small>3. mar · Korekcija 1</small></div>
+                        <div class="exp-amt pos">+2.400 din</div>
+                    </div>
+                    <div class="exp-row">
+                        <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                        <div class="exp-name">Tamara Lukić<small>12. mar · Novi set</small></div>
+                        <div class="exp-amt pos">+3.000 din</div>
+                    </div>
+                    <div class="exp-row">
+                        <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                        <div class="exp-name">Sofija Nikolić<small>2. mar · Korekcija 2</small></div>
+                        <div class="exp-amt pos">+2.600 din</div>
+                    </div>
+                    <div class="exp-row" style="border:none;">
+                        <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+                        <div class="exp-name">Katarina Milić<small>1. mar · Korekcija 3</small></div>
+                        <div class="exp-amt pos">+2.400 din</div>
+                    </div>
                 </div>
             </div>
 
@@ -1628,6 +1637,45 @@
     <!-- ════ PRICE QR MODAL (full-screen) ════ -->
     <div id="m-price-qr" style="display:none;position:absolute;inset:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;">
         <div id="pqr-content" style="width:100%;max-width:340px;"><!-- filled by JS --></div>
+    </div>
+
+    <!-- ════ REVENUE CHART MODAL (full-screen) ════ -->
+    <div id="m-revenue-chart" style="display:none;position:absolute;inset:0;background:var(--bg);z-index:300;flex-direction:column;">
+        <!-- Header -->
+        <div style="padding:52px 20px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;">
+            <div>
+                <p style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:2px;">BeautyPro</p>
+                <h2 style="font-size:20px;font-weight:800;color:var(--white);">Grafikon prihoda</h2>
+            </div>
+            <button onclick="closeRevenueChart()" style="width:36px;height:36px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--muted);">×</button>
+        </div>
+        <!-- Summary strip -->
+        <div style="padding:14px 20px;display:flex;gap:16px;border-bottom:1px solid var(--border);flex-shrink:0;">
+            <div>
+                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Ukupno</div>
+                <div id="chart-total" style="font-size:22px;font-weight:800;color:var(--gold);">0 din</div>
+            </div>
+            <div>
+                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;">Prosek/dan</div>
+                <div id="chart-avg" style="font-size:22px;font-weight:800;color:var(--white);">0 din</div>
+            </div>
+        </div>
+        <!-- Time range selector -->
+        <div style="padding:12px 16px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;border-bottom:1px solid var(--border);">
+            <button class="chart-range-btn active" id="cr-alltime" onclick="setChartRange('alltime')" style="background:rgba(200,168,75,.15);border:1px solid var(--gold);border-radius:20px;color:var(--gold);font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Sve vreme</button>
+            <button class="chart-range-btn" id="cr-1y" onclick="setChartRange('1y')" style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">1 godina</button>
+            <button class="chart-range-btn" id="cr-6m" onclick="setChartRange('6m')" style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">6 meseci</button>
+            <button class="chart-range-btn" id="cr-3m" onclick="setChartRange('3m')" style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">3 meseca</button>
+            <button class="chart-range-btn" id="cr-1m" onclick="setChartRange('1m')" style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:11px;font-weight:700;padding:6px 14px;cursor:pointer;font-family:inherit;white-space:nowrap;">1 mesec</button>
+        </div>
+        <!-- Chart area -->
+        <div style="flex:1;overflow:hidden;padding:16px 8px 8px;display:flex;flex-direction:column;">
+            <div id="chart-canvas-wrap" style="flex:1;overflow-x:auto;overflow-y:hidden;">
+                <svg id="revenue-svg" style="height:100%;min-height:200px;" preserveAspectRatio="none"></svg>
+            </div>
+            <!-- X axis labels -->
+            <div id="chart-x-labels" style="display:flex;padding:6px 0 0;overflow-x:auto;"></div>
+        </div>
     </div>
 
     <!-- ════ CANCELLATION DETAIL MODAL ════ -->
@@ -2389,6 +2437,256 @@ document.querySelectorAll('.modal-overlay').forEach(ov => {
     ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('open'); });
 });
 
+// ── Income filter ─────────────────────────────────────────────────
+let currentIncFilter = 'month';
+
+// Fake income data — daily entries for demo
+const INCOME_DATA = (function() {
+    const data = [];
+    // Generate ~14 months of data ending Mar 15, 2026
+    const endDate   = new Date(2026, 2, 15); // Mar 15 2026
+    const startDate = new Date(2025, 0, 1);  // Jan 1 2025
+    const names = ['Ana Jovanović','Maja Petrović','Sofija Nikolić','Katarina Milić','Ivana Ristić','Jelena Đorđević','Marija Stojanović'];
+    const serviceTypes = [
+        {label:'Novi set',        price:3000},
+        {label:'Korekcija 2 ned', price:2400},
+        {label:'Korekcija 3 ned', price:2600},
+        {label:'Korekcija 4 ned', price:2800},
+        {label:'Lash lift',       price:2000},
+        {label:'Brow lift',       price:2000},
+        {label:'Skidanje',        price:1000},
+    ];
+    // Seed a deterministic pseudo-random based on day index
+    let seed = 42;
+    function rng() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+
+    let d = new Date(startDate);
+    while (d <= endDate) {
+        const dow = d.getDay(); // 0=sun
+        // ~4 sessions on weekdays, ~1-2 on sat, 0 on sunday
+        const sessionCount = dow === 0 ? 0
+            : dow === 6 ? (rng() < 0.5 ? 1 : 2)
+            : (rng() < 0.2 ? 2 : rng() < 0.5 ? 3 : 4);
+        for (let i = 0; i < sessionCount; i++) {
+            const svc  = serviceTypes[Math.floor(rng() * serviceTypes.length)];
+            const name = names[Math.floor(rng() * names.length)];
+            data.push({
+                date: new Date(d),
+                client: name,
+                service: svc.label,
+                amount: svc.price,
+            });
+        }
+        d.setDate(d.getDate() + 1);
+    }
+    return data;
+})();
+
+function setIncFilter(period) {
+    currentIncFilter = period;
+    // Update button styles
+    ['month','week','day'].forEach(p => {
+        const btn = document.getElementById('incf-' + p);
+        if (!btn) return;
+        const active = p === period;
+        btn.style.background   = active ? 'rgba(200,168,75,.15)' : 'var(--bg3)';
+        btn.style.borderColor  = active ? 'var(--gold)' : 'var(--border)';
+        btn.style.color        = active ? 'var(--gold)' : 'var(--muted)';
+    });
+
+    const today = new Date(2026, 2, 15);
+    let filtered = [];
+    let periodLabel = '';
+
+    if (period === 'month') {
+        filtered    = INCOME_DATA.filter(e => e.date.getMonth() === 2 && e.date.getFullYear() === 2026);
+        periodLabel = 'Prihodi · Mart';
+    } else if (period === 'week') {
+        // week of Mar 9–15
+        const weekStart = new Date(2026, 2, 9);
+        const weekEnd   = new Date(2026, 2, 15);
+        filtered    = INCOME_DATA.filter(e => e.date >= weekStart && e.date <= weekEnd);
+        periodLabel = 'Prihodi · 9–15. Mar';
+    } else if (period === 'day') {
+        filtered    = INCOME_DATA.filter(e => e.date.getDate() === 15 && e.date.getMonth() === 2);
+        periodLabel = 'Prihodi · 15. Mar';
+    }
+
+    const labelEl = document.getElementById('inc-period-label');
+    const countEl = document.getElementById('inc-session-count');
+    const listEl  = document.getElementById('inc-list');
+    if (labelEl) labelEl.textContent = periodLabel;
+    if (countEl) countEl.textContent = filtered.length + ' termina';
+
+    if (!listEl) return;
+    if (filtered.length === 0) {
+        listEl.innerHTML = '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Nema prihoda za ovaj period.</div>';
+        return;
+    }
+    // Show max 20 entries, most recent first
+    const shown = filtered.slice().reverse().slice(0, 20);
+    listEl.innerHTML = shown.map((e, i) => {
+        const isLast = i === shown.length - 1;
+        const mo = e.date.getMonth() + 1;
+        const dy = e.date.getDate();
+        return `<div class="exp-row" style="${isLast ? 'border:none;' : ''}">
+            <div class="exp-ico" style="background:rgba(92,184,122,.1);">👤</div>
+            <div class="exp-name">${e.client}<small>${dy}. ${mo === 3 ? 'mar' : mo === 2 ? 'feb' : mo === 1 ? 'jan' : 'dec'} · ${e.service}</small></div>
+            <div class="exp-amt pos">+${e.amount.toLocaleString('sr-RS')} din</div>
+        </div>`;
+    }).join('');
+}
+
+// ── Revenue Chart ─────────────────────────────────────────────────
+let currentChartRange = 'alltime';
+
+function openRevenueChart() {
+    const el = document.getElementById('m-revenue-chart');
+    if (el) { el.style.display = 'flex'; }
+    setChartRange('alltime');
+}
+
+function closeRevenueChart() {
+    const el = document.getElementById('m-revenue-chart');
+    if (el) el.style.display = 'none';
+}
+
+function setChartRange(range) {
+    currentChartRange = range;
+    // Update button styles
+    ['alltime','1y','6m','3m','1m'].forEach(r => {
+        const btn = document.getElementById('cr-' + r);
+        if (!btn) return;
+        const active = r === range;
+        btn.style.background  = active ? 'rgba(200,168,75,.15)' : 'var(--bg2)';
+        btn.style.borderColor = active ? 'var(--gold)' : 'var(--border)';
+        btn.style.color       = active ? 'var(--gold)' : 'var(--muted)';
+    });
+    renderRevenueChart(range);
+}
+
+function renderRevenueChart(range) {
+    const today = new Date(2026, 2, 15);
+    let startDate;
+    if      (range === 'alltime') startDate = new Date(2025, 0, 1);
+    else if (range === '1y')      startDate = new Date(2025, 2, 15);
+    else if (range === '6m')      startDate = new Date(2025, 8, 15);
+    else if (range === '3m')      startDate = new Date(2025, 11, 15);
+    else if (range === '1m')      startDate = new Date(2026, 1, 15);
+
+    // Aggregate income by day
+    const dayMap = {};
+    INCOME_DATA.filter(e => e.date >= startDate && e.date <= today).forEach(e => {
+        const key = e.date.toISOString().slice(0,10);
+        dayMap[key] = (dayMap[key] || 0) + e.amount;
+    });
+
+    // Build sorted array of {dateStr, amount}
+    const days = Object.keys(dayMap).sort().map(k => ({ key: k, amount: dayMap[k] }));
+
+    if (days.length === 0) {
+        document.getElementById('revenue-svg').innerHTML = '';
+        document.getElementById('chart-total').textContent = '0 din';
+        document.getElementById('chart-avg').textContent  = '0 din';
+        return;
+    }
+
+    const total    = days.reduce((s, d) => s + d.amount, 0);
+    const avgStr   = Math.round(total / days.length).toLocaleString('sr-RS') + ' din';
+    const totalStr = total.toLocaleString('sr-RS') + ' din';
+    document.getElementById('chart-total').textContent = totalStr;
+    document.getElementById('chart-avg').textContent   = avgStr;
+
+    // SVG bar chart
+    const maxVal  = Math.max(...days.map(d => d.amount));
+    const svgEl   = document.getElementById('revenue-svg');
+    const labelsEl = document.getElementById('chart-x-labels');
+    const barW    = Math.max(4, Math.min(18, Math.floor(340 / days.length)));
+    const gap     = Math.max(1, Math.floor(barW * 0.25));
+    const chartH  = 180;
+    const totalW  = days.length * (barW + gap);
+    const svgW    = Math.max(totalW, 340);
+
+    svgEl.setAttribute('width', svgW);
+    svgEl.setAttribute('height', chartH);
+    svgEl.style.width  = svgW + 'px';
+    svgEl.style.height = chartH + 'px';
+
+    // Draw horizontal grid lines
+    let svgHtml = '';
+    const gridLines = 4;
+    for (let g = 0; g <= gridLines; g++) {
+        const y = Math.round((g / gridLines) * (chartH - 20));
+        svgHtml += `<line x1="0" y1="${y}" x2="${svgW}" y2="${y}" stroke="rgba(200,168,75,0.08)" stroke-width="1"/>`;
+    }
+
+    // Draw bars
+    days.forEach((d, i) => {
+        const barH   = Math.max(2, Math.round(((d.amount / maxVal) * (chartH - 24))));
+        const x      = i * (barW + gap);
+        const y      = chartH - barH - 4;
+        const isToday = d.key === '2026-03-15';
+        const color  = isToday ? '#E8C97A' : 'rgba(200,168,75,0.7)';
+        const hoverColor = '#C8A84B';
+        svgHtml += `<rect x="${x}" y="${y}" width="${barW}" height="${barH}" fill="${color}" rx="2"
+            onmouseover="this.style.fill='${hoverColor}';showBarTip(evt,${d.amount},'${d.key}')"
+            onmouseout="this.style.fill='${color}';hideBarTip()"
+            style="cursor:pointer;"/>`;
+    });
+
+    // Tooltip element (invisible by default)
+    svgHtml += `<g id="bar-tip" style="display:none;">
+        <rect id="bt-bg" rx="6" fill="var(--bg2)" stroke="var(--border)" stroke-width="1"/>
+        <text id="bt-text" font-size="11" fill="var(--white)" font-family="-apple-system,sans-serif" font-weight="700"></text>
+        <text id="bt-date" font-size="10" fill="var(--muted)" font-family="-apple-system,sans-serif" dy="14"></text>
+    </g>`;
+
+    svgEl.innerHTML = svgHtml;
+
+    // X-axis labels — show at intervals to avoid overlap
+    const labelInterval = Math.ceil(days.length / 6);
+    let labelsHtml = '';
+    days.forEach((d, i) => {
+        if (i % labelInterval !== 0) return;
+        const x = i * (barW + gap);
+        const parts = d.key.split('-');
+        const lbl = parseInt(parts[2]) + '/' + parseInt(parts[1]);
+        labelsHtml += `<div style="position:absolute;left:${x}px;font-size:9px;color:var(--muted);white-space:nowrap;">${lbl}</div>`;
+    });
+    labelsEl.style.position = 'relative';
+    labelsEl.style.height   = '16px';
+    labelsEl.style.minWidth = svgW + 'px';
+    labelsEl.innerHTML      = labelsHtml;
+}
+
+function showBarTip(evt, amount, dateKey) {
+    const tip  = document.getElementById('bar-tip');
+    const bg   = document.getElementById('bt-bg');
+    const txt  = document.getElementById('bt-text');
+    const dtxt = document.getElementById('bt-date');
+    if (!tip) return;
+    const parts = dateKey.split('-');
+    const lbl   = parseInt(parts[2]) + '.' + parseInt(parts[1]) + '.' + parts[0];
+    txt.textContent  = amount.toLocaleString('sr-RS') + ' din';
+    dtxt.textContent = lbl;
+    const tw = Math.max(txt.getComputedTextLength ? txt.getComputedTextLength() : 80, 80);
+    const bw = tw + 16;
+    const bh = 36;
+    let bx = evt.offsetX + 6;
+    let by = evt.offsetY - bh - 4;
+    if (by < 0) by = evt.offsetY + 8;
+    bg.setAttribute('x', bx); bg.setAttribute('y', by);
+    bg.setAttribute('width', bw); bg.setAttribute('height', bh);
+    txt.setAttribute('x', bx + 8); txt.setAttribute('y', by + 14);
+    dtxt.setAttribute('x', bx + 8); dtxt.setAttribute('y', by + 14);
+    tip.style.display = 'block';
+}
+
+function hideBarTip() {
+    const tip = document.getElementById('bar-tip');
+    if (tip) tip.style.display = 'none';
+}
+
 // ── Finance tabs ─────────────────────────────────────────────────
 function finTab(tab) {
     document.getElementById('tab-inc').style.display    = tab === 'income'   ? 'block' : 'none';
@@ -3082,14 +3380,14 @@ function toggleBackup() {
 // SERVICE PRICES
 // ══════════════════════════════════════════════════════════════════
 const SERVICE_PRICES = {
-    'new-set'    : 6000,
-    'c2w'        : 4500,
-    'c3w'        : 4000,
-    'c4w'        : 3500,
+    'new-set'    : 3000,
+    'c2w'        : 2400,
+    'c3w'        : 2600,
+    'c4w'        : 2800,
     'reklamacija': 0,
-    'skidanje'   : 2000,
-    'lash-lift'  : 3000,
-    'brow-lift'  : 2500
+    'skidanje'   : 1000,
+    'lash-lift'  : 2000,
+    'brow-lift'  : 2000
 };
 
 function calcPriceFromSvcState(id) {
