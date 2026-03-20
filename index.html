@@ -432,6 +432,96 @@
         .prof-insta { font-size: 13px; color: var(--gold); margin-top: 4px; cursor: pointer; }
         .prof-insta a { color: var(--gold); text-decoration: none; }
         .prof-insta a:hover { text-decoration: underline; }
+
+        /* ── Role selection cards ── */
+        .role-card {
+            background: var(--bg2); border: 2px solid var(--border);
+            border-radius: 20px; padding: 22px 18px; cursor: pointer;
+            transition: all .2s; text-align: center; position: relative;
+        }
+        .role-card.selected { border-color: var(--gold); background: rgba(200,168,75,.08); }
+        .role-card .rc-icon { font-size: 36px; margin-bottom: 10px; display: block; }
+        .role-card .rc-name { font-size: 16px; font-weight: 800; color: var(--white); margin-bottom: 6px; }
+        .role-card .rc-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+        .role-card .rc-check { position: absolute; top: 12px; right: 14px; font-size: 18px; color: var(--gold); display: none; }
+        .role-card.selected .rc-check { display: block; }
+        .role-plan { font-size: 10px; font-weight: 800; padding: 3px 9px; border-radius: 10px;
+            text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; display: inline-block; }
+        .role-plan.free { background: rgba(92,184,122,.12); color: #5CB87A; border: 1px solid rgba(92,184,122,.3); }
+        .role-plan.paid { background: rgba(200,168,75,.12); color: var(--gold); border: 1px solid rgba(200,168,75,.3); }
+
+        /* ── Multi-profession badge ── */
+        .prof-switch-bar {
+            display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px 4px;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .prof-switch-bar::-webkit-scrollbar { display: none; }
+        .prof-pill {
+            background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+            padding: 6px 13px; font-size: 11px; font-weight: 700; color: var(--muted);
+            cursor: pointer; white-space: nowrap; transition: all .2s; font-family: inherit;
+        }
+        .prof-pill.active { background: rgba(200,168,75,.15); border-color: var(--gold); color: var(--gold); }
+
+        /* ── Shop / Product ── */
+        .cat-pill {
+            background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+            padding: 7px 14px; font-size: 12px; font-weight: 700; color: var(--muted);
+            cursor: pointer; white-space: nowrap; transition: all .2s; font-family: inherit; flex-shrink: 0;
+        }
+        .cat-pill.active { background: rgba(200,168,75,.15); border-color: var(--gold); color: var(--gold); }
+
+        .product-card {
+            background: var(--bg2); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden; cursor: pointer; transition: all .15s;
+        }
+        .product-card:active { opacity: .85; }
+        .product-img {
+            width: 100%; height: 130px; object-fit: cover;
+            background: linear-gradient(135deg, var(--bg3), var(--bg2));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 48px;
+        }
+        .product-info { padding: 12px 14px 14px; }
+        .product-name { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+        .product-brand { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+        .product-price { font-size: 16px; font-weight: 800; color: var(--gold); }
+        .product-old-price { font-size: 12px; color: var(--muted); text-decoration: line-through; margin-left: 6px; }
+
+        /* ── Stars ── */
+        .stars { letter-spacing: 2px; font-size: 13px; }
+        .stars.lg { font-size: 20px; }
+        .star-filled { color: #F5C518; }
+        .star-empty  { color: #444; }
+
+        /* ── Review cards ── */
+        .review-card {
+            padding: 14px 16px; border-bottom: 1px solid var(--border);
+        }
+        .review-hdr { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .review-ava { width: 34px; height: 34px; border-radius: 50%; background: var(--bg3);
+            display: flex; align-items: center; justify-content: center; font-size: 13px;
+            font-weight: 800; color: var(--gold); border: 1px solid var(--border); flex-shrink: 0; }
+        .review-name { font-size: 13px; font-weight: 700; color: var(--white); }
+        .review-date { font-size: 10px; color: var(--muted); margin-top: 2px; }
+        .review-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+        .review-reply { margin-top: 10px; background: var(--bg3); border-radius: 10px; padding: 10px 12px;
+            border-left: 2px solid var(--gold); }
+        .review-reply-lbl { font-size: 10px; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .review-reply-txt { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+        /* ── Seller badge ── */
+        .verified-badge { background: rgba(92,184,122,.1); border: 1px solid rgba(92,184,122,.3);
+            color: #5CB87A; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 10px;
+            letter-spacing: 0.5px; text-transform: uppercase; }
+
+        /* ── Stat tiles ── */
+        .stat-tile {
+            background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px 16px; flex: 1;
+        }
+        .stat-tile .st-val { font-size: 22px; font-weight: 800; color: var(--gold); }
+        .stat-tile .st-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-top: 3px; }
     </style>
 </head>
 <body>
@@ -463,7 +553,7 @@
                     <input class="field" type="password" value="••••••••">
                 </div>
                 <div>
-                    <button class="btn-primary" onclick="go('profession')">Prijavi se</button>
+                    <button class="btn-primary" onclick="doLogin()">Prijavi se</button>
                 </div>
                 <p style="text-align:center;font-size:12px;color:var(--muted);cursor:pointer;margin-top:-4px;">Zaboravili ste lozinku?</p>
                 <div style="display:flex;align-items:center;gap:10px;margin:2px 0;">
@@ -471,7 +561,7 @@
                     <span style="font-size:11px;color:var(--muted);font-weight:700;">ILI</span>
                     <div style="flex:1;height:1px;background:var(--border);"></div>
                 </div>
-                <button onclick="go('profession')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
+                <button onclick="go('role')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
                     <span style="font-size:18px;">🌐</span> Nastavi sa Google
                 </button>
             </div>
@@ -491,14 +581,14 @@
                     <input class="field" type="password" placeholder="Ponovite lozinku">
                 </div>
                 <div>
-                    <button class="btn-primary" onclick="go('profession')">Napravi nalog</button>
+                    <button class="btn-primary" onclick="go('role')">Napravi nalog</button>
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;margin:2px 0;">
                     <div style="flex:1;height:1px;background:var(--border);"></div>
                     <span style="font-size:11px;color:var(--muted);font-weight:700;">ILI</span>
                     <div style="flex:1;height:1px;background:var(--border);"></div>
                 </div>
-                <button onclick="go('profession')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
+                <button onclick="go('role')" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:13px 20px;font-size:14px;font-weight:700;color:var(--white);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;">
                     <span style="font-size:18px;">🌐</span> Registruj se sa Google
                 </button>
                 <p style="text-align:center;font-size:11px;color:var(--muted);line-height:1.5;">Registracijom prihvatate naše <span style="color:var(--gold);cursor:pointer;">Uslove korišćenja</span> i <span style="color:var(--gold);cursor:pointer;">Politiku privatnosti</span>.</p>
@@ -515,13 +605,61 @@
         </div>
     </div>
 
+    <!-- ════════════════════════ ROLE SELECTION ════════════════════════ -->
+    <div class="screen" id="s-role">
+        <div style="display:flex;flex-direction:column;height:100%;overflow-y:auto;">
+            <div style="padding:52px 24px 20px;">
+                <p class="eyebrow">BeautyPro</p>
+                <h1 style="font-size:22px;font-weight:800;color:var(--white);margin-top:4px;">Ko si ti?</h1>
+                <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;">Izaberi svoju ulogu. Možeš je promeniti ili proširiti kasnije u Podešavanjima.</p>
+            </div>
+            <div style="padding:0 16px 20px;display:flex;flex-direction:column;gap:12px;">
+
+                <!-- Artist card -->
+                <div class="role-card" id="rc-artist" onclick="selectRole('artist')">
+                    <span class="rc-check">✓</span>
+                    <span class="rc-icon">✦</span>
+                    <div class="rc-name">Artist</div>
+                    <div class="rc-desc">Radim sa klijentima — zakazivanje, finansije, klijent baza, ciklus tracker.</div>
+                    <span class="role-plan paid">Solo plan od 500 din/mes</span>
+                </div>
+
+                <!-- Seller card -->
+                <div class="role-card" id="rc-seller" onclick="selectRole('seller')">
+                    <span class="rc-check">✓</span>
+                    <span class="rc-icon">🛍</span>
+                    <div class="rc-name">Prodavac</div>
+                    <div class="rc-desc">Prodajem beauty proizvode — kreiram listing, primam narudžbine, pratim statistiku.</div>
+                    <span class="role-plan free">Besplatno · BeautyPro uzima % proviziju</span>
+                </div>
+
+                <!-- Both card -->
+                <div class="role-card" id="rc-both" onclick="selectRole('both')">
+                    <span class="rc-check">✓</span>
+                    <span class="rc-icon">💫</span>
+                    <div class="rc-name">Artist + Prodavac</div>
+                    <div class="rc-desc">I radim sa klijentima i prodajem proizvode — sve u jednoj aplikaciji.</div>
+                    <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap;">
+                        <span class="role-plan paid">Artist plan</span>
+                        <span class="role-plan free">Prodavac besplatno</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:0 16px 32px;margin-top:auto;">
+                <button class="btn-primary" id="btn-role-next" onclick="afterRoleSelect()" style="opacity:.4;pointer-events:none;">Dalje →</button>
+                <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">Možeš promeniti ulogu u Podešavanjima</p>
+            </div>
+        </div>
+    </div>
+
     <!-- ════════════════════════ PROFESSION SELECTION ════════════════════════ -->
     <div class="screen" id="s-profession">
         <div style="display:flex;flex-direction:column;height:100%;overflow-y:auto;">
             <div style="padding:52px 24px 20px;">
                 <p class="eyebrow">BeautyPro</p>
                 <h1 style="font-size:22px;font-weight:800;color:var(--white);margin-top:4px;">Izaberite profesiju</h1>
-                <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;">Aplikacija će biti prilagođena vašoj oblasti. Možete promeniti u Podešavanjima.</p>
+                <p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;">Možete odabrati <strong style="color:var(--gold);">više profesija</strong> i lako prelaziti između njih u aplikaciji.</p>
             </div>
             <div style="padding:0 16px 32px;display:flex;flex-direction:column;gap:10px;">
                 <div onclick="selectProfession('lash')" class="prof-card" style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .2s;" id="pc-lash">
@@ -599,7 +737,7 @@
             </div>
             <div style="padding:0 16px 32px;">
                 <button class="btn-primary" id="btn-start-app" onclick="startApp()" style="opacity:.4;pointer-events:none;">Počni →</button>
-                <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">Možete dodati više profesija kasnije</p>
+                <p id="prof-sel-count" style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px;">Odaberite barem jednu profesiju</p>
             </div>
         </div>
     </div>
@@ -658,10 +796,11 @@
             <div id="today-appt-list"><!-- rendered by JS --></div>
             <div style="height:16px;"></div>
         </div>
-        <div class="nav">
+        <div class="nav" id="nav-dashboard">
             <button class="nav-btn active" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
             <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
             <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" id="nav-shop-btn-dashboard" onclick="go('shop')" style="display:none;"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
             <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
@@ -686,6 +825,7 @@
             <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
             <button class="nav-btn active" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
             <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" id="nav-shop-btn-clients" onclick="go('shop')" style="display:none;"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
             <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
@@ -795,6 +935,7 @@
             <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
             <button class="nav-btn active"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
             <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" id="nav-shop-btn-profile" onclick="go('shop')" style="display:none;"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
             <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
@@ -962,6 +1103,7 @@
             <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
             <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
             <button class="nav-btn active" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" id="nav-shop-btn-finance" onclick="go('shop')" style="display:none;"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
             <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
@@ -1007,10 +1149,27 @@
                 <span class="set-arr">›</span>
             </div>
 
-            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Podešavanja</span></div>
+            <div class="sec-hdr" style="padding-top:20px;"><span class="sec-ttl">Uloga i Profesija</span></div>
+            <div class="set-row" onclick="go('role')">
+                <span class="set-ico">👤</span>
+                <div style="flex:1;">
+                    <div class="set-lbl">Uloga u aplikaciji</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;" id="settings-role-desc">Artist</div>
+                </div>
+                <span class="set-arr">›</span>
+            </div>
+            <!-- Add seller role (only shown for artist-only) -->
+            <div class="set-row" id="settings-add-seller-row" onclick="showAddSellerInfo()" style="display:none;">
+                <span class="set-ico">🛍</span>
+                <div style="flex:1;">
+                    <div class="set-lbl">Postani prodavac</div>
+                    <div style="font-size:11px;color:var(--muted);margin-top:2px;">Dodaj Prodavac ulogu — prodaj beauty proizvode</div>
+                </div>
+                <span style="font-size:10px;font-weight:800;background:rgba(92,184,122,.12);color:#5CB87A;border:1px solid rgba(92,184,122,.3);padding:3px 8px;border-radius:10px;white-space:nowrap;">Besplatno</span>
+            </div>
             <div class="set-row" onclick="go('profession')">
                 <span class="set-ico">✦</span>
-                <span class="set-lbl">Profesija</span>
+                <span class="set-lbl">Profesije</span>
                 <span class="set-val" id="settings-profession">Lash Artist</span><span class="set-arr">›</span>
             </div>
             <div class="set-row">
@@ -1090,10 +1249,488 @@
             <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
             <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
             <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn" id="nav-shop-btn-settings" onclick="go('shop')" style="display:none;"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
             <button class="nav-btn active" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
         </div>
     </div>
 
+
+    <!-- ════════════════════════ SELLER DASHBOARD ════════════════════════ -->
+    <div class="screen" id="s-seller">
+        <div class="hdr">
+            <div class="hdr-row">
+                <div>
+                    <p class="eyebrow">BeautyPro · Prodavac</p>
+                    <h1>Prodavnica</h1>
+                </div>
+                <button class="btn-outline" onclick="openAddProduct()">+ Dodaj</button>
+            </div>
+        </div>
+        <div class="scroll">
+            <!-- Stats row -->
+            <div style="display:flex;gap:10px;padding:14px 16px 8px;">
+                <div class="stat-tile">
+                    <div class="st-val">12</div>
+                    <div class="st-lbl">Aktivnih</div>
+                </div>
+                <div class="stat-tile">
+                    <div class="st-val">4.8 ⭐</div>
+                    <div class="st-lbl">Ocena</div>
+                </div>
+                <div class="stat-tile">
+                    <div class="st-val">38</div>
+                    <div class="st-lbl">Recenzija</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:10px;padding:0 16px 16px;">
+                <div class="stat-tile">
+                    <div class="st-val">142.500 din</div>
+                    <div class="st-lbl">Prihod (mes.)</div>
+                </div>
+                <div class="stat-tile">
+                    <div class="st-val">57</div>
+                    <div class="st-lbl">Narudžbina</div>
+                </div>
+            </div>
+
+            <!-- My products list -->
+            <div class="sec-hdr">
+                <span class="sec-ttl">Moji proizvodi</span>
+                <span class="sec-act" onclick="openAddProduct()">+ Dodaj novi</span>
+            </div>
+            <div style="padding:0 16px;display:flex;flex-direction:column;gap:10px;padding-bottom:24px;">
+                <!-- Product row -->
+                <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;" onclick="go('product',0)">
+                    <div style="width:54px;height:54px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">💆</div>
+                    <div style="flex:1;">
+                        <div style="font-size:14px;font-weight:700;color:var(--white);">Lash Serum Pro</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:2px;">BeautyLab · 30ml</div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+                            <span class="stars"><span class="star-filled">★★★★★</span></span>
+                            <span style="font-size:11px;color:var(--muted);">4.9 (23)</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:15px;font-weight:800;color:var(--gold);">2.490 din</div>
+                        <div style="font-size:10px;color:#5CB87A;font-weight:700;margin-top:3px;">● Aktivan</div>
+                    </div>
+                </div>
+                <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;" onclick="go('product',1)">
+                    <div style="width:54px;height:54px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">🌸</div>
+                    <div style="flex:1;">
+                        <div style="font-size:14px;font-weight:700;color:var(--white);">Micelarna voda Sensitive</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:2px;">PureClean · 200ml</div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+                            <span class="stars"><span class="star-filled">★★★★</span><span class="star-empty">★</span></span>
+                            <span style="font-size:11px;color:var(--muted);">4.2 (11)</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:15px;font-weight:800;color:var(--gold);">1.290 din</div>
+                        <div style="font-size:10px;color:#5CB87A;font-weight:700;margin-top:3px;">● Aktivan</div>
+                    </div>
+                </div>
+                <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;" onclick="go('product',2)">
+                    <div style="width:54px;height:54px;border-radius:10px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">✦</div>
+                    <div style="flex:1;">
+                        <div style="font-size:14px;font-weight:700;color:var(--white);">Lash Glue Pro-Bond</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:2px;">LashKing · 5ml</div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-top:5px;">
+                            <span class="stars"><span class="star-filled">★★★★★</span></span>
+                            <span style="font-size:11px;color:var(--muted);">4.8 (4)</span>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:15px;font-weight:800;color:var(--gold);">890 din</div>
+                        <div style="font-size:10px;color:var(--muted);font-weight:700;margin-top:3px;">● Neaktivan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Seller nav -->
+        <div class="nav">
+            <button class="nav-btn active" onclick="go('seller')"><span class="ico">🛍</span><span class="lbl">Prodavnica</span></button>
+            <button class="nav-btn" onclick="go('shop')"><span class="ico">🔍</span><span class="lbl">Istraži</span></button>
+            <button class="nav-btn" onclick="go('seller-stats')"><span class="ico">📊</span><span class="lbl">Statistika</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ SHOP (browse) ════════════════════════ -->
+    <div class="screen" id="s-shop">
+        <div class="hdr">
+            <div class="hdr-row">
+                <div>
+                    <p class="eyebrow">BeautyPro</p>
+                    <h1>Shop</h1>
+                </div>
+                <button class="btn-ghost" style="font-size:22px;">🔍</button>
+            </div>
+            <!-- Search bar -->
+            <div style="margin-top:10px;">
+                <input class="field" style="padding:11px 15px;" placeholder="Pretraži proizvode...">
+            </div>
+        </div>
+        <div class="scroll">
+            <!-- Category pills -->
+            <div style="display:flex;gap:8px;overflow-x:auto;padding:12px 16px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none;">
+                <button class="cat-pill active" onclick="shopFilter('sve')">Sve</button>
+                <button class="cat-pill" onclick="shopFilter('lash')">Lash</button>
+                <button class="cat-pill" onclick="shopFilter('nails')">Nails</button>
+                <button class="cat-pill" onclick="shopFilter('nega')">Nega</button>
+                <button class="cat-pill" onclick="shopFilter('alati')">Alati</button>
+                <button class="cat-pill" onclick="shopFilter('kozmetika')">Kozmetika</button>
+            </div>
+
+            <!-- Featured banner -->
+            <div style="margin:8px 16px;background:linear-gradient(135deg,rgba(200,168,75,.15),rgba(200,168,75,.05));border:1px solid var(--border);border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;">
+                <span style="font-size:36px;">⚡</span>
+                <div>
+                    <div style="font-size:10px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;">Akcija tjedna</div>
+                    <div style="font-size:15px;font-weight:800;color:var(--white);">Do 30% popusta</div>
+                    <div style="font-size:12px;color:var(--muted);margin-top:2px;">Na odabrane lash proizvode</div>
+                </div>
+            </div>
+
+            <!-- Products grid -->
+            <div style="padding:10px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-bottom:24px;">
+
+                <div class="product-card" onclick="go('product',0)">
+                    <div class="product-img">💆</div>
+                    <div class="product-info">
+                        <div class="product-name">Lash Serum Pro</div>
+                        <div class="product-brand">BeautyLab · 30ml</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★★★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">4.9 (23)</span>
+                        </div>
+                        <div><span class="product-price">2.490 din</span></div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="go('product',1)">
+                    <div class="product-img">🌸</div>
+                    <div class="product-info">
+                        <div class="product-name">Micelarna voda Sensitive</div>
+                        <div class="product-brand">PureClean · 200ml</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★★</span><span class="star-empty">★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">4.2 (11)</span>
+                        </div>
+                        <div><span class="product-price">1.290 din</span><span class="product-old-price">1.590 din</span></div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="go('product',2)">
+                    <div class="product-img">✦</div>
+                    <div class="product-info">
+                        <div class="product-name">Lash Glue Pro-Bond</div>
+                        <div class="product-brand">LashKing · 5ml</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★★★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">4.8 (4)</span>
+                        </div>
+                        <div><span class="product-price">890 din</span></div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="go('product',3)">
+                    <div class="product-img">💅</div>
+                    <div class="product-info">
+                        <div class="product-name">Gel lak Base Coat</div>
+                        <div class="product-brand">NailPro · 15ml</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★★</span><span class="star-empty">★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">4.5 (8)</span>
+                        </div>
+                        <div><span class="product-price">750 din</span></div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="go('product',4)">
+                    <div class="product-img">🧴</div>
+                    <div class="product-info">
+                        <div class="product-name">Hijaluronski krem</div>
+                        <div class="product-brand">SkinGlow · 50ml</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★★★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">4.7 (16)</span>
+                        </div>
+                        <div><span class="product-price">1.890 din</span><span class="product-old-price">2.200 din</span></div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="go('product',5)">
+                    <div class="product-img">🌟</div>
+                    <div class="product-info">
+                        <div class="product-name">Brow Henna Kit</div>
+                        <div class="product-brand">BrowArt · set</div>
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                            <span class="stars" style="font-size:11px;"><span class="star-filled">★★★</span><span class="star-empty">★★</span></span>
+                            <span style="font-size:10px;color:var(--muted);">3.8 (6)</span>
+                        </div>
+                        <div><span class="product-price">3.200 din</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Nav (for artists with shop access, or seller browsing) -->
+        <div class="nav" id="shop-nav-artist">
+            <button class="nav-btn" onclick="go('dashboard')"><span class="ico">🗓</span><span class="lbl">Kalendar</span></button>
+            <button class="nav-btn" onclick="go('clients')"><span class="ico">👤</span><span class="lbl">Klijenti</span></button>
+            <button class="nav-btn" onclick="go('finance')"><span class="ico">💰</span><span class="lbl">Finansije</span></button>
+            <button class="nav-btn active"><span class="ico">🛍</span><span class="lbl">Shop</span></button>
+            <button class="nav-btn" onclick="go('settings')"><span class="ico">⚙️</span><span class="lbl">Podešavanja</span></button>
+        </div>
+    </div>
+
+    <!-- ════════════════════════ PRODUCT DETAIL ════════════════════════ -->
+    <div class="screen" id="s-product">
+        <div style="display:flex;flex-direction:column;height:100%;">
+            <!-- Back header -->
+            <div style="padding:48px 16px 12px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="btn-ghost" onclick="goBack()" style="font-size:22px;padding:4px 2px;">‹</button>
+                    <span style="font-size:16px;font-weight:700;color:var(--white);" id="product-title">Lash Serum Pro</span>
+                </div>
+            </div>
+            <div class="scroll">
+                <!-- Product hero -->
+                <div id="product-hero" style="width:100%;height:180px;background:linear-gradient(135deg,var(--bg3),var(--bg2));display:flex;align-items:center;justify-content:center;font-size:80px;">💆</div>
+
+                <div style="padding:16px;">
+                    <!-- Product info -->
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;">
+                        <div>
+                            <div id="product-name" style="font-size:20px;font-weight:800;color:var(--white);">Lash Serum Pro</div>
+                            <div id="product-brand-line" style="font-size:13px;color:var(--muted);margin-top:3px;">BeautyLab · 30ml</div>
+                        </div>
+                        <div style="text-align:right;flex-shrink:0;">
+                            <div id="product-price-main" style="font-size:22px;font-weight:800;color:var(--gold);">2.490 din</div>
+                        </div>
+                    </div>
+
+                    <!-- Rating bar -->
+                    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+                        <div style="display:flex;align-items:center;gap:14px;">
+                            <div style="text-align:center;">
+                                <div id="product-rating-big" style="font-size:36px;font-weight:800;color:var(--gold);line-height:1;">4.9</div>
+                                <div class="stars lg" style="margin-top:4px;"><span class="star-filled">★★★★★</span></div>
+                                <div id="product-review-count" style="font-size:10px;color:var(--muted);margin-top:4px;">23 recenzija</div>
+                            </div>
+                            <div style="flex:1;">
+                                <!-- Mini bar chart -->
+                                <div style="display:flex;flex-direction:column;gap:4px;">
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <span style="font-size:10px;color:var(--muted);width:10px;">5</span>
+                                        <div style="flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;"><div style="width:85%;height:100%;background:var(--gold);border-radius:3px;"></div></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <span style="font-size:10px;color:var(--muted);width:10px;">4</span>
+                                        <div style="flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;"><div style="width:10%;height:100%;background:var(--gold-dark);border-radius:3px;"></div></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <span style="font-size:10px;color:var(--muted);width:10px;">3</span>
+                                        <div style="flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;"><div style="width:5%;height:100%;background:var(--muted);border-radius:3px;"></div></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <span style="font-size:10px;color:var(--muted);width:10px;">2</span>
+                                        <div style="flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;"><div style="width:0%;height:100%;background:var(--red);border-radius:3px;"></div></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:6px;">
+                                        <span style="font-size:10px;color:var(--muted);width:10px;">1</span>
+                                        <div style="flex:1;height:5px;border-radius:3px;background:var(--bg3);overflow:hidden;"><div style="width:0%;height:100%;background:var(--red);border-radius:3px;"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Seller info -->
+                    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="go('seller-profile')">
+                        <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#000;flex-shrink:0;">L</div>
+                        <div style="flex:1;">
+                            <div style="font-size:14px;font-weight:800;color:var(--white);">LashGlow Studio</div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-top:3px;">
+                                <span class="verified-badge">Verifikovan</span>
+                                <span style="font-size:11px;color:var(--muted);">4.8 ⭐ · 38 recenzija</span>
+                            </div>
+                        </div>
+                        <span style="color:var(--gold);font-size:18px;">›</span>
+                    </div>
+
+                    <!-- Description -->
+                    <div style="margin-bottom:14px;">
+                        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;">Opis proizvoda</div>
+                        <p id="product-desc" style="font-size:13px;color:var(--muted);line-height:1.7;">Profesionalni serum za jačanje i regeneraciju prirodnih trepavica. Bogat vitaminima E i B5, biotinom i keratin kompleksom. Nanosi se svake večeri na liniju trepavica. Vidljivi rezultati već posle 3-4 nedelje redovne primene.</p>
+                    </div>
+
+                    <!-- Buy button -->
+                    <button class="btn-primary" style="margin-bottom:20px;" onclick="openModal('m-buy-confirm')">Naruči · 2.490 din</button>
+
+                    <!-- Reviews section -->
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;">Recenzije</div>
+                        <button onclick="openModal('m-write-review')" style="background:none;border:none;color:var(--gold);font-size:12px;font-weight:700;cursor:pointer;">+ Napiši recenziju</button>
+                    </div>
+                </div>
+
+                <!-- Review cards -->
+                <div style="border-top:1px solid var(--border);">
+                    <div class="review-card">
+                        <div class="review-hdr">
+                            <div class="review-ava">JM</div>
+                            <div>
+                                <div class="review-name">Jovana M.</div>
+                                <div class="review-date">12. Mart 2026</div>
+                            </div>
+                            <div style="margin-left:auto;"><span class="stars" style="font-size:13px;"><span class="star-filled">★★★★★</span></span></div>
+                        </div>
+                        <div class="review-text">Odličan serum! Koristim ga već 6 nedelja i trepavice su mi vidno duže i gušće. Preporučujem svima koji žele prirodni rast.</div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-hdr">
+                            <div class="review-ava">AS</div>
+                            <div>
+                                <div class="review-name">Ana S.</div>
+                                <div class="review-date">8. Mart 2026</div>
+                            </div>
+                            <div style="margin-left:auto;"><span class="stars" style="font-size:13px;"><span class="star-filled">★★★★★</span></span></div>
+                        </div>
+                        <div class="review-text">Super proizvod, stigao brzo i zapakovan lepo. Miris je prijatan, ne iritira oči. Vidim razliku posle 4 nedelje.</div>
+                        <!-- Seller reply -->
+                        <div class="review-reply">
+                            <div class="review-reply-lbl">Odgovor prodavca</div>
+                            <div class="review-reply-txt">Hvala Ana! Drago nam je da si zadovoljna. ✦ Ako imaš pitanja, uvek smo tu.</div>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-hdr">
+                            <div class="review-ava">MN</div>
+                            <div>
+                                <div class="review-name">Milica N.</div>
+                                <div class="review-date">1. Mart 2026</div>
+                            </div>
+                            <div style="margin-left:auto;"><span class="stars" style="font-size:13px;"><span class="star-filled">★★★★</span><span class="star-empty">★</span></span></div>
+                        </div>
+                        <div class="review-text">Dobro, ali sporo vidim rezultate. Možda sam očekivala previše za prvih par nedelja. Nastavićiću da koristim.</div>
+                    </div>
+
+                    <div style="padding:16px;text-align:center;">
+                        <button style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:13px;font-weight:700;padding:10px 24px;cursor:pointer;font-family:inherit;">Pogledaj sve recenzije (23)</button>
+                    </div>
+                </div>
+                <div style="height:16px;"></div>
+            </div>
+
+            <!-- Buy sticky bar (for artists viewing shop) — Bottom area-->
+        </div>
+    </div>
+
+    <!-- ════════════════════════ SELLER PROFILE (public) ════════════════════════ -->
+    <div class="screen" id="s-seller-profile">
+        <div style="display:flex;flex-direction:column;height:100%;">
+            <div style="padding:48px 16px 12px;background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <button class="btn-ghost" onclick="goBack()" style="font-size:22px;padding:4px 2px;">‹</button>
+                    <span style="font-size:16px;font-weight:700;color:var(--white);">Profil prodavca</span>
+                </div>
+            </div>
+            <div class="scroll">
+                <!-- Seller header -->
+                <div style="padding:20px 16px;">
+                    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+                        <div style="width:66px;height:66px;border-radius:16px;background:linear-gradient(135deg,var(--gold-dark),var(--gold));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#000;flex-shrink:0;">L</div>
+                        <div>
+                            <div style="font-size:18px;font-weight:800;color:var(--white);">LashGlow Studio</div>
+                            <div style="display:flex;align-items:center;gap:8px;margin-top:5px;flex-wrap:wrap;">
+                                <span class="verified-badge">Verifikovan prodavac</span>
+                            </div>
+                            <div style="font-size:12px;color:var(--muted);margin-top:5px;">Član od Januara 2024</div>
+                        </div>
+                    </div>
+                    <!-- Stats row -->
+                    <div style="display:flex;gap:8px;">
+                        <div style="flex:1;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;">
+                            <div style="font-size:18px;font-weight:800;color:var(--gold);">4.8</div>
+                            <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Ocena</div>
+                        </div>
+                        <div style="flex:1;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;">
+                            <div style="font-size:18px;font-weight:800;color:var(--gold);">38</div>
+                            <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Recenzija</div>
+                        </div>
+                        <div style="flex:1;text-align:center;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 8px;">
+                            <div style="font-size:18px;font-weight:800;color:var(--gold);">12</div>
+                            <div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;">Proizvoda</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products from this seller -->
+                <div class="sec-hdr"><span class="sec-ttl">Proizvodi</span></div>
+                <div style="padding:0 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-bottom:16px;">
+                    <div class="product-card" onclick="go('product',0)">
+                        <div class="product-img" style="height:100px;font-size:36px;">💆</div>
+                        <div class="product-info" style="padding:10px 12px 12px;">
+                            <div class="product-name" style="font-size:13px;">Lash Serum Pro</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                                <span class="product-price" style="font-size:14px;">2.490 din</span>
+                                <span style="font-size:11px;color:var(--muted);">⭐ 4.9</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-card" onclick="go('product',2)">
+                        <div class="product-img" style="height:100px;font-size:36px;">✦</div>
+                        <div class="product-info" style="padding:10px 12px 12px;">
+                            <div class="product-name" style="font-size:13px;">Lash Glue Pro-Bond</div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px;">
+                                <span class="product-price" style="font-size:14px;">890 din</span>
+                                <span style="font-size:11px;color:var(--muted);">⭐ 4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seller reviews -->
+                <div class="sec-hdr"><span class="sec-ttl">Recenzije prodavca (38)</span></div>
+                <div style="font-size:10px;color:var(--muted);padding:0 16px 10px;font-style:italic;">Recenzije ne mogu biti obrisane od strane prodavca.</div>
+                <div style="border-top:1px solid var(--border);">
+                    <div class="review-card">
+                        <div class="review-hdr">
+                            <div class="review-ava">TV</div>
+                            <div>
+                                <div class="review-name">Tijana V.</div>
+                                <div class="review-date">14. Mart 2026</div>
+                            </div>
+                            <div style="margin-left:auto;"><span class="stars" style="font-size:13px;"><span class="star-filled">★★★★★</span></span></div>
+                        </div>
+                        <div class="review-text">Brza isporuka, kvalitetni proizvodi, sjajno pakovanje. Preporučujem ovog prodavca svima!</div>
+                        <div class="review-reply">
+                            <div class="review-reply-lbl">Odgovor prodavca</div>
+                            <div class="review-reply-txt">Hvala Tijana! Tvoja podrška nam mnogo znači. ✦</div>
+                        </div>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-hdr">
+                            <div class="review-ava">BK</div>
+                            <div>
+                                <div class="review-name">Bojana K.</div>
+                                <div class="review-date">10. Mart 2026</div>
+                            </div>
+                            <div style="margin-left:auto;"><span class="stars" style="font-size:13px;"><span class="star-filled">★★★★</span><span class="star-empty">★</span></span></div>
+                        </div>
+                        <div class="review-text">Dobri proizvodi, malo duže čekala na dostavu ali vredelo je. Komunikacija odlična.</div>
+                    </div>
+                    <div style="padding:16px;text-align:center;">
+                        <button style="background:none;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:13px;font-weight:700;padding:10px 24px;cursor:pointer;font-family:inherit;">Pogledaj sve (38)</button>
+                    </div>
+                </div>
+                <div style="height:16px;"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- ════════════════════════ MODALS ════════════════════════ -->
 
@@ -1798,9 +2435,100 @@
         </div>
     </div>
 
+    <!-- ════════ MODAL: Buy confirm ════════ -->
+    <div class="modal-overlay" id="m-buy-confirm">
+        <div class="modal-sheet" style="padding:24px 20px 32px;">
+            <div style="text-align:center;margin-bottom:18px;">
+                <div style="font-size:36px;margin-bottom:10px;">🛍</div>
+                <div style="font-size:18px;font-weight:800;color:var(--white);margin-bottom:6px;">Potvrdi narudžbinu</div>
+                <div style="font-size:13px;color:var(--muted);">Lash Serum Pro · BeautyLab</div>
+            </div>
+            <div style="background:var(--bg3);border-radius:13px;padding:14px 16px;margin-bottom:18px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-size:13px;color:var(--muted);">Cena</span>
+                    <span style="font-size:13px;font-weight:700;color:var(--white);">2.490 din</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+                    <span style="font-size:13px;color:var(--muted);">Dostava</span>
+                    <span style="font-size:13px;font-weight:700;color:var(--white);">350 din</span>
+                </div>
+                <div style="height:1px;background:var(--border);margin:10px 0;"></div>
+                <div style="display:flex;justify-content:space-between;">
+                    <span style="font-size:14px;font-weight:800;color:var(--white);">Ukupno</span>
+                    <span style="font-size:16px;font-weight:800;color:var(--gold);">2.840 din</span>
+                </div>
+            </div>
+            <button class="btn-primary" style="margin-bottom:10px;" onclick="closeModal('m-buy-confirm');alert('✓ Narudžbina primljena! Prodavac će te kontaktirati u roku od 24h.')">Naruči · 2.840 din</button>
+            <button onclick="closeModal('m-buy-confirm')" style="width:100%;background:none;border:none;color:var(--muted);font-size:14px;font-weight:700;cursor:pointer;padding:8px;font-family:inherit;">Otkaži</button>
+        </div>
+    </div>
+
+    <!-- ════════ MODAL: Write review ════════ -->
+    <div class="modal-overlay" id="m-write-review">
+        <div class="modal-sheet" style="padding:20px 20px 30px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div style="font-size:16px;font-weight:800;color:var(--white);">Napiši recenziju</div>
+                <button onclick="closeModal('m-write-review')" class="btn-ghost">✕</button>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label class="lbl-s">Ocena</label>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="review-star-btn" onclick="setReviewStar(1)" style="font-size:28px;background:none;border:none;cursor:pointer;color:#F5C518;">★</button>
+                    <button class="review-star-btn" onclick="setReviewStar(2)" style="font-size:28px;background:none;border:none;cursor:pointer;color:#F5C518;">★</button>
+                    <button class="review-star-btn" onclick="setReviewStar(3)" style="font-size:28px;background:none;border:none;cursor:pointer;color:#F5C518;">★</button>
+                    <button class="review-star-btn" onclick="setReviewStar(4)" style="font-size:28px;background:none;border:none;cursor:pointer;color:#F5C518;">★</button>
+                    <button class="review-star-btn" onclick="setReviewStar(5)" style="font-size:28px;background:none;border:none;cursor:pointer;color:#F5C518;">★</button>
+                </div>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Komentar</label>
+                <textarea class="field" rows="4" placeholder="Kako si zadovoljna/zadovoljan ovim proizvodom?" style="resize:none;min-height:90px;"></textarea>
+            </div>
+            <button class="btn-primary" onclick="closeModal('m-write-review');alert('✓ Recenzija poslata! Zahvaljujemo na povratnoj informaciji.')">Objavi recenziju</button>
+            <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px;">Recenzije ne mogu biti obrisane od strane prodavca.</p>
+        </div>
+    </div>
+
+    <!-- ════════ MODAL: Add product (seller) ════════ -->
+    <div class="modal-overlay" id="m-add-product">
+        <div class="modal-sheet" style="padding:20px 20px 30px;overflow-y:auto;max-height:90%;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+                <div style="font-size:16px;font-weight:800;color:var(--white);">Novi proizvod</div>
+                <button onclick="closeModal('m-add-product')" class="btn-ghost">✕</button>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Naziv proizvoda</label>
+                <input class="field" placeholder="npr. Lash Serum 30ml">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Brend / Proizvođač</label>
+                <input class="field" placeholder="npr. BeautyLab">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Kategorija</label>
+                <select class="field">
+                    <option>Lash</option>
+                    <option>Nails</option>
+                    <option>Nega lica</option>
+                    <option>Alati i oprema</option>
+                    <option>Kozmetika</option>
+                    <option>Ostalo</option>
+                </select>
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Cena (din)</label>
+                <input class="field" type="number" placeholder="0">
+            </div>
+            <div class="form-r">
+                <label class="lbl-s">Opis</label>
+                <textarea class="field" rows="3" placeholder="Opis proizvoda..." style="resize:none;"></textarea>
+            </div>
+            <button class="btn-primary" onclick="closeModal('m-add-product');alert('✓ Proizvod dodat i čeka odobrenje!')">Dodaj proizvod</button>
+        </div>
+    </div>
+
 </div><!-- /phone -->
 
-<p class="proto-label">LashPro · Interaktivni Prototip</p>
 
 <script>
 // ── Client data ──────────────────────────────────────────────────
@@ -2014,28 +2742,7 @@ const PROFESSION_CONFIG = {
     },
 };
 
-function selectProfession(key) {
-    // Deselect all
-    document.querySelectorAll('.prof-card').forEach(c => {
-        c.style.borderColor = 'var(--border)';
-        c.style.background  = 'var(--bg2)';
-    });
-    document.querySelectorAll('[id^="pc-check-"]').forEach(c => c.style.display = 'none');
-    // Select this one
-    const card  = document.getElementById('pc-' + key);
-    const check = document.getElementById('pc-check-' + key);
-    if (card)  { card.style.borderColor = 'var(--gold)'; card.style.background = 'rgba(200,168,75,.08)'; }
-    if (check) check.style.display = 'inline';
-    currentProfession = key;
-    // Enable button
-    const btn = document.getElementById('btn-start-app');
-    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
-}
-
-function startApp() {
-    applyProfessionConfig(currentProfession);
-    go('dashboard');
-}
+// selectProfession() and startApp() defined later (role-aware, multi-select versions)
 
 function applyProfessionConfig(key) {
     const cfg = PROFESSION_CONFIG[key] || PROFESSION_CONFIG['lash'];
@@ -2045,7 +2752,13 @@ function applyProfessionConfig(key) {
     // Show/hide lash profile card (hide it for non-lash)
     // Update settings profession display
     const profDisplay = document.getElementById('settings-profession');
-    if (profDisplay) profDisplay.textContent = cfg.name;
+    if (profDisplay) {
+        if (selectedProfessions && selectedProfessions.length > 1) {
+            profDisplay.textContent = selectedProfessions.map(k => PROFESSION_CONFIG[k]?.name || k).join(', ');
+        } else {
+            profDisplay.textContent = cfg.name;
+        }
+    }
     // Update header eyebrow everywhere
     document.querySelectorAll('.eyebrow').forEach(el => {
         if (el.textContent === 'BeautyPro' || el.textContent === 'LashPro') el.textContent = 'BeautyPro';
@@ -2056,8 +2769,11 @@ function applyProfessionConfig(key) {
 let navStack = ['login'];
 let currentClientIdx = 0;
 const screenIds = {
-    login: 's-login', profession: 's-profession', dashboard: 's-dashboard', clients: 's-clients',
-    profile: 's-profile', finance: 's-finance', settings: 's-settings'
+    login: 's-login', role: 's-role', profession: 's-profession',
+    dashboard: 's-dashboard', clients: 's-clients', profile: 's-profile',
+    finance: 's-finance', settings: 's-settings',
+    seller: 's-seller', shop: 's-shop', product: 's-product',
+    'seller-profile': 's-seller-profile'
 };
 
 function go(name, clientIndex) {
@@ -3918,17 +4634,210 @@ initSvcPicker('svc-ta');
 renderTodayAppts();
 renderPricesTab();
 
+// ── Role & Multi-profession state ─────────────────────────────────
+let currentRole = 'artist';          // 'artist' | 'seller' | 'both'
+let selectedProfessions = [];        // multi-profession array
+let activeProfession = 'lash';       // currently active profession
+
+// ── Role selection ─────────────────────────────────────────────────
+function selectRole(role) {
+    currentRole = role;
+    // Update UI
+    ['artist','seller','both'].forEach(r => {
+        const card = document.getElementById('rc-' + r);
+        if (card) card.classList.toggle('selected', r === role);
+    });
+    // Enable next button
+    const btn = document.getElementById('btn-role-next');
+    if (btn) { btn.style.opacity = '1'; btn.style.pointerEvents = 'auto'; }
+}
+
+function afterRoleSelect() {
+    if (currentRole === 'seller') {
+        // Seller-only: skip profession, go straight to seller dashboard after brief setup
+        selectedProfessions = [];
+        startApp();
+    } else {
+        // Artist or Both: need to pick profession(s)
+        // Update profession screen heading for 'both' context
+        go('profession');
+    }
+}
+
+// ── Multi-profession selection ─────────────────────────────────────
+// Override the original selectProfession to be multi-select
+function selectProfession(key) {
+    const idx = selectedProfessions.indexOf(key);
+    if (idx === -1) {
+        selectedProfessions.push(key);
+    } else {
+        selectedProfessions.splice(idx, 1);
+    }
+    // Update card visual state
+    document.querySelectorAll('.prof-card').forEach(c => {
+        c.style.borderColor = 'var(--border)';
+        c.style.background  = 'var(--bg2)';
+    });
+    document.querySelectorAll('[id^="pc-check-"]').forEach(c => c.style.display = 'none');
+    selectedProfessions.forEach(k => {
+        const card  = document.getElementById('pc-' + k);
+        const check = document.getElementById('pc-check-' + k);
+        if (card)  { card.style.borderColor = 'var(--gold)'; card.style.background = 'rgba(200,168,75,.08)'; }
+        if (check) check.style.display = 'inline';
+    });
+    // Set first selection as active profession
+    if (selectedProfessions.length > 0) {
+        activeProfession = selectedProfessions[0];
+        currentProfession = activeProfession;
+    }
+    // Update count text
+    const countEl = document.getElementById('prof-sel-count');
+    if (countEl) {
+        if (selectedProfessions.length === 0) {
+            countEl.textContent = 'Odaberite barem jednu profesiju';
+        } else if (selectedProfessions.length === 1) {
+            countEl.textContent = 'Izabrana 1 profesija';
+        } else {
+            countEl.textContent = `Izabrane ${selectedProfessions.length} profesije — prelazak dostupan u aplikaciji`;
+        }
+    }
+    // Enable/disable button
+    const btn = document.getElementById('btn-start-app');
+    if (btn) {
+        const hasSelection = selectedProfessions.length > 0;
+        btn.style.opacity = hasSelection ? '1' : '.4';
+        btn.style.pointerEvents = hasSelection ? 'auto' : 'none';
+    }
+}
+
+// ── Start app (role-aware) ─────────────────────────────────────────
+function startApp() {
+    if (currentRole === 'seller') {
+        // Seller-only: show seller dashboard
+        applyRoleToSettings();
+        go('seller');
+    } else {
+        // Artist or Both
+        if (selectedProfessions.length > 0) {
+            activeProfession = selectedProfessions[0];
+            currentProfession = activeProfession;
+        }
+        applyProfessionConfig(currentProfession);
+        applyRoleToSettings();
+        // Show profession switcher if multi-profession
+        renderProfSwitcher();
+        go('dashboard');
+    }
+}
+
+// ── Apply role-based UI ────────────────────────────────────────────
+function applyRoleToSettings() {
+    // Update role description in settings
+    const roleDesc = document.getElementById('settings-role-desc');
+    const addSellerRow = document.getElementById('settings-add-seller-row');
+    if (roleDesc) {
+        if (currentRole === 'artist')       roleDesc.textContent = 'Artist';
+        else if (currentRole === 'seller')  roleDesc.textContent = 'Prodavac';
+        else                                roleDesc.textContent = 'Artist + Prodavac';
+    }
+    // Show "add seller" row only for artist-only
+    if (addSellerRow) addSellerRow.style.display = currentRole === 'artist' ? 'flex' : 'none';
+
+    // Show/hide Shop nav buttons for artists with 'both' role
+    const showShop = currentRole === 'both';
+    ['dashboard','clients','profile','finance','settings'].forEach(screen => {
+        const btn = document.getElementById('nav-shop-btn-' + screen);
+        if (btn) btn.style.display = showShop ? 'flex' : 'none';
+    });
+}
+
+// ── Profession switcher bar ────────────────────────────────────────
+function renderProfSwitcher() {
+    if (selectedProfessions.length <= 1) return; // no switcher needed
+    // Add a profession switcher bar at top of dashboard
+    const dashHdr = document.querySelector('#s-dashboard .hdr');
+    if (!dashHdr) return;
+    let bar = document.getElementById('prof-switch-bar');
+    if (!bar) {
+        bar = document.createElement('div');
+        bar.id = 'prof-switch-bar';
+        bar.className = 'prof-switch-bar';
+        dashHdr.parentNode.insertBefore(bar, dashHdr.nextSibling);
+    }
+    bar.innerHTML = selectedProfessions.map(key => {
+        const cfg = PROFESSION_CONFIG[key];
+        const isActive = key === activeProfession;
+        return `<button class="prof-pill ${isActive ? 'active' : ''}" onclick="switchProfession('${key}')">${cfg.icon} ${cfg.name}</button>`;
+    }).join('');
+}
+
+function switchProfession(key) {
+    activeProfession = key;
+    currentProfession = key;
+    applyProfessionConfig(key);
+    renderProfSwitcher();
+}
+
+// ── Show add seller info ───────────────────────────────────────────
+function showAddSellerInfo() {
+    const confirmed = confirm('Dodati ulogu Prodavca? Dobićeš poseban dashboard za upravljanje proizvodima. Prodaja je besplatna — BeautyPro uzima % proviziju.');
+    if (confirmed) {
+        currentRole = 'both';
+        applyRoleToSettings();
+        alert('✓ Uloga Prodavca dodata! Sada imaš pristup Shop-u i Prodavac dashboardu.');
+    }
+}
+
+// ── Login handler ──────────────────────────────────────────────────
+function doLogin() {
+    // Existing user flow: show restore notice then go to role selection
+    const notice = document.getElementById('restore-notice');
+    if (notice) notice.style.display = 'flex';
+    setTimeout(() => {
+        if (notice) notice.style.display = 'none';
+        // Simulate returning user: set role to 'both' and profession lash
+        currentRole = 'both';
+        selectedProfessions = ['lash'];
+        activeProfession = 'lash';
+        currentProfession = 'lash';
+        applyProfessionConfig('lash');
+        applyRoleToSettings();
+        renderProfSwitcher();
+        go('dashboard');
+    }, 1800);
+}
+
+// screenIds already includes all screens (defined earlier in navigation section)
+
+// ── Shop filter ────────────────────────────────────────────────────
+function shopFilter(cat) {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+// ── Add product (seller) ────────────────────────────────────────────
+function openAddProduct() {
+    openModal('m-add-product');
+}
+
+// ── Write review modal ─────────────────────────────────────────────
+let reviewStarSelected = 5;
+function setReviewStar(n) {
+    reviewStarSelected = n;
+    const stars = document.querySelectorAll('.review-star-btn');
+    stars.forEach((s, i) => {
+        s.textContent = i < n ? '★' : '☆';
+        s.style.color = i < n ? '#F5C518' : '#555';
+    });
+}
+
 // ── Sign In — simulate new-device restore ─────────────────────────
 const originalSignIn = document.querySelector('#s-login .btn-primary');
-originalSignIn.onclick = function() {
-    // Show restore notice briefly before navigating
-    const notice = document.getElementById('restore-notice');
-    notice.style.display = 'flex';
-    setTimeout(() => {
-        go('dashboard');
-        notice.style.display = 'none';
-    }, 1800);
-};
+if (originalSignIn) {
+    originalSignIn.onclick = function() {
+        doLogin();
+    };
+}
 </script>
 </body>
 </html>
