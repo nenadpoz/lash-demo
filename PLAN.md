@@ -320,17 +320,17 @@ Studio Plan    → faza 2, više artista u salonu
 - [ ] Settings (tema, jezik, valuta, profil salona, backup)
 - [ ] Cloud backup (Supabase Realtime)
 
-### Faza 7 — Web aplikacija
-- [ ] Next.js scaffold, isti `packages/`
-- [ ] Supabase SSR autentikacija
-- [ ] Svi ekrani adaptirani za desktop layout
-- [ ] Deploy na Vercel
-
-### Faza 8 — Store release
+### Faza 7 — Store release
 - [ ] EAS Build setup
 - [ ] App Store (iOS) — screenshots, opis, review
 - [ ] Google Play (Android) — screenshots, opis, review
 - [ ] Post-launch monitoring
+
+### Faza 8 — Web aplikacija
+- [ ] Next.js scaffold, isti `packages/`
+- [ ] Supabase SSR autentikacija
+- [ ] Svi ekrani adaptirani za desktop layout
+- [ ] Deploy na Vercel
 
 ---
 
