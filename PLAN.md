@@ -36,6 +36,7 @@ BeautyPro je aplikacija za upravljanje beauty studiom namenjena individualnim ar
 
 ### Web (faza 8)
 - **Next.js 14+** — SSR, App Router, Vercel deploy
+- **React.js** — UI komponente (shared sa `packages/ui/` gde je moguće)
 - **TypeScript**
 
 ### Monorepo
