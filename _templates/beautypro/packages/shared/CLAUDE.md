@@ -15,18 +15,30 @@ src/
 
 ## Hook Pattern
 
-All data hooks wrap Supabase queries via TanStack Query:
+Koristimo `useSuspenseQuery` + `queryKeys` iz `src/queryKeys.ts`:
 
 ```typescript
+// src/hooks/useClients.ts
 export function useClients() {
-  return useQuery({
-    queryKey: ['clients'],
-    queryFn: () => clientQueries.getAll(),  // from packages/supabase/queries/
+  return useSuspenseQuery({
+    queryKey: queryKeys.clients.all(),
+    queryFn: () => clientQueries.getAll(),
   })
 }
 ```
 
-Mutation hooks return `useMutation` with `onSuccess: () => queryClient.invalidateQueries(...)`.
+Mutacije uvek invalidiraju queryKey:
+```typescript
+export function useCreateClient() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: clientQueries.create,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.clients.all() }),
+  })
+}
+```
+
+Svi `queryKey`-evi centralizovani u `src/queryKeys.ts` — nikad inline stringovi.
 
 ## Zustand Store Pattern
 
